@@ -1,7 +1,61 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`loader should work: errors 1`] = `Array []`;
+exports[`loader should work: runner_result 1`] = `
+"export interface Category {
+  id?: number;
+  name?: string;
+}
 
-exports[`loader should work: result 1`] = `"foo"`;
+export interface Pet {
+  id?: number;
+  category?: Category;
+  name: string;
+  photoUrls: string[];
+  tags?: Tag[];
+  /**
+   * pet status in the store
+   */
+  status?: \\"available\\" | \\"pending\\" | \\"sold\\";
+}
 
-exports[`loader should work: warnings 1`] = `Array []`;
+export interface Tag {
+  id?: number;
+  name?: string;
+}
+
+export interface ApiResponse {
+  code?: number;
+  type?: string;
+  message?: string;
+}
+
+export interface Order {
+  id?: number;
+  petId?: number;
+  quantity?: number;
+  shipDate?: string;
+  /**
+   * Order Status
+   */
+  status?: \\"placed\\" | \\"approved\\" | \\"delivered\\";
+  complete?: boolean;
+}
+
+export interface User {
+  id?: number;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  phone?: string;
+  /**
+   * User Status
+   */
+  userStatus?: number;
+}
+
+const runtime = \\"runtime line\\";
+const apis = \\"apis line\\";
+"
+`;

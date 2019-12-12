@@ -17,7 +17,7 @@ export default (fixture, loaderOptions = {}, config = {}) => {
     module: {
       rules: [
         {
-          test: /\.js$/i,
+          test: /\.yaml$/i,
           rules: [
             {
               loader: path.resolve(__dirname, '../../src'),

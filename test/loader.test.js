@@ -1,21 +1,10 @@
-import {
-  compile,
-  execute,
-  getCompiler,
-  getErrors,
-  getWarnings,
-  readAsset,
-} from './helpers';
+import { getRunner, getRunnerResult } from './helpers';
 
 describe('loader', () => {
   it('should work', async () => {
-    const compiler = getCompiler('simple.js');
-    const stats = await compile(compiler);
+    const runner = getRunner('petstore.yaml');
+    const stats = await runner();
 
-    expect(
-      execute(readAsset('main.bundle.js', compiler, stats))
-    ).toMatchSnapshot('result');
-    expect(getErrors(stats)).toMatchSnapshot('errors');
-    expect(getWarnings(stats)).toMatchSnapshot('warnings');
+    expect(getRunnerResult(stats)).toMatchSnapshot('runner_result');
   });
 });

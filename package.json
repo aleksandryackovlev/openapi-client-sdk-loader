@@ -1,6 +1,6 @@
 {
   "name": "openapi-client-sdk-loader",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Load client sdk from Open API documentation",
   "license": "MIT",
   "repository": "null/openapi-client-sdk-loader",

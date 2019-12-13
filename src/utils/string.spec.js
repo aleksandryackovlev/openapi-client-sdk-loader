@@ -1,4 +1,4 @@
-import { capitalize, basepath } from './string';
+import { capitalize, basepath, dashes2capitals } from './string';
 
 describe('utils', () => {
   describe('string:capitalize', () => {
@@ -14,6 +14,16 @@ describe('utils', () => {
 
     it('should return the given string if there are no / in it', async () => {
       expect(basepath('case')).toBe('case');
+    });
+  });
+
+  describe('string:dashes2capitals', () => {
+    it('should return the capitalized version of the given dashed string', async () => {
+      expect(dashes2capitals('-test-some--case')).toBe('TestSomeCase');
+    });
+
+    it('should return the given string capitalized if there are no - in it', async () => {
+      expect(dashes2capitals('case')).toBe('Case');
     });
   });
 });

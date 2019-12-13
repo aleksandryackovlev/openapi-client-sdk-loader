@@ -55,6 +55,20 @@ export interface User {
   userStatus?: number;
 }
 
+export type OffsetParamParam = number;
+
+export interface AnotherParamParam {
+  dateFrom?: string;
+  dateTo?: string;
+}
+
+export type ErrorRequestBodyJson = User;
+
+export interface ErrorRequestBodyXml {
+  id?: string;
+  title?: string;
+}
+
 const runtime = \\"runtime line\\";
 const apis = \\"apis line\\";
 "

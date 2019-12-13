@@ -1,5 +1,4 @@
 import { endsWith, cloneDeep } from 'lodash';
-import { format } from 'json-schema-to-typescript/dist/src/formatter';
 import { generate } from 'json-schema-to-typescript/dist/src/generator';
 import { normalize } from 'json-schema-to-typescript/dist/src/normalizer';
 import { optimize } from 'json-schema-to-typescript/dist/src/optimizer';
@@ -8,6 +7,8 @@ import { dereference } from 'json-schema-to-typescript/dist/src/resolver';
 import { validate } from 'json-schema-to-typescript/dist/src/validator';
 import { traverse } from 'json-schema-to-typescript/dist/src/utils';
 import { ValidationError } from 'json-schema-to-typescript';
+
+import format from '../format';
 
 export const defaultOptions = {
   $refOptions: {},

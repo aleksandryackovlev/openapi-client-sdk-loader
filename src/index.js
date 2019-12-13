@@ -1,30 +1,36 @@
 import { getOptions } from 'loader-utils';
-import validateOptions from 'schema-utils';
 
-import SwaggerParser from 'swagger-parser';
-import { format } from 'json-schema-to-typescript/dist/src/formatter';
-
-import { defaultOptions } from './utils/schema2typescript';
-
-import { compileModels, compileRuntime, compileApis } from './compile';
-import schema from './options.json';
+import {
+  validate as validateOptions,
+  normalize as normalizeOptions,
+} from './options';
+import format from './format';
+import compileTemplate from './templates';
 
 export const raw = true;
 
 export default function loader() {
   const callback = this.async();
+  const options = normalizeOptions(getOptions(this));
 
-  const options = getOptions(this) || {};
+  try {
+    validateOptions(options);
+  } catch (error) {
+    return callback(error);
+  }
 
-  validateOptions(schema, options, 'Loader');
+  // TODO: addDependencies for watching yaml doc files
+  // TODO: validate open api schema
 
-  SwaggerParser.parse(this.resourcePath, (err, api) =>
-    Promise.all([
-      compileModels(api, options),
-      compileRuntime(api, options),
-      compileApis(api, options),
-    ]).then((results) => {
-      callback(null, format(results.join('\n'), defaultOptions));
-    })
-  ).catch((e) => callback(e, null));
+  return options.parser.parse(this.resourcePath, (error, api) => {
+    if (error) {
+      return callback(error);
+    }
+
+    return options
+      .compiler(api, options)
+      .then((result) => compileTemplate(result, options.template))
+      .then((result) => callback(null, format(result, options)))
+      .catch((compilationError) => callback(compilationError));
+  });
 }

@@ -1,24 +1,13 @@
-import schemaToTypescript from '../utils/schema2typescript';
+import { schema2typescript, basepath, dashes2capitals } from '../../utils';
 
-const capitalize = (string) =>
-  `${string.charAt(0).toUpperCase()}${string.slice(1)}`;
-
-const prepareMimeType = (mimeType) => {
-  const mimeFragments = mimeType.split('/');
-
-  // TODO: Add wildcards handling. For example: image/*
-  return mimeFragments[mimeFragments.length - 1]
-    .split('-')
-    .map(capitalize)
-    .join('');
-};
+const prepareMimeType = (mimeType) => dashes2capitals(basepath(mimeType));
 
 const compile = (schemas, transform) =>
   schemas
     ? Promise.all(
-        Object.keys(schemas).map((schemaName) =>
-          schemaToTypescript(...transform(schemas, schemaName))
-        )
+        Object.keys(schemas).map((schemaName) => {
+          return schema2typescript(...transform(schemas, schemaName));
+        })
       ).then((interfaces) => interfaces.join('\n'))
     : Promise.resolve('');
 

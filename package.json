@@ -3,10 +3,10 @@
   "version": "0.0.2",
   "description": "Load client sdk from Open API documentation",
   "license": "MIT",
-  "repository": "null/openapi-client-sdk-loader",
-  "author": "Aleksandr Yackovlev",
-  "homepage": "https://github.com/null/openapi-client-sdk-loader",
-  "bugs": "https://github.com/null/openapi-client-sdk-loader/issues",
+  "repository": "git@github.com:aleksandryackovlev/openapi-client-sdk-loader.git",
+  "author": "Aleksandr Yackovlev <aleksandryackovlev@yandex.ru>",
+  "homepage": "https://github.com/aleksandryackovlev/openapi-client-sdk-loader",
+  "bugs": "https://github.com/aleksandryackovlev/openapi-client-sdk-loader/issues",
   "main": "index.js",
   "engines": {
     "node": ">= 10.13.0"

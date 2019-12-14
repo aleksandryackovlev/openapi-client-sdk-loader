@@ -81,6 +81,11 @@
       "**/(src|test)/**/*.(spec|test).js"
     ]
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "./scripts/process-staged-files"
+    }
+  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"

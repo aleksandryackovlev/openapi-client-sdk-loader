@@ -1,5 +1,4 @@
-export const capitalize = (string) =>
-  `${string.charAt(0).toUpperCase()}${string.slice(1)}`;
+export const capitalize = (string) => `${string.charAt(0).toUpperCase()}${string.slice(1)}`;
 
 export const basepath = (string) => {
   const pathFragments = string.split('/');

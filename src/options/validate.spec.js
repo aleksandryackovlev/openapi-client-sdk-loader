@@ -31,9 +31,7 @@ describe('options', () => {
       };
 
       const validateOptions = () => validate(options);
-      expect(validateOptions).toThrow(
-        'The specified template directory does not exist'
-      );
+      expect(validateOptions).toThrow('The specified template directory does not exist');
     });
 
     it('should throw an error if a template directory is not set', async () => {
@@ -43,9 +41,7 @@ describe('options', () => {
       };
 
       const validateOptions = () => validate(options);
-      expect(validateOptions).toThrow(
-        'The specified template directory does not exist'
-      );
+      expect(validateOptions).toThrow('The specified template directory does not exist');
     });
 
     it('should throw an error if a parser is not specified', async () => {

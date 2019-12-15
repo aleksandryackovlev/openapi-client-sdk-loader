@@ -24,10 +24,7 @@ const compileBodies = (bodies, nameSuffix) =>
 export default async (api) =>
   Promise.all([
     compile(api.components.schemas, (schemas, name) => [schemas[name], name]),
-    compile(api.components.parameters, (schemas, name) => [
-      schemas[name].schema,
-      `${name}Param`,
-    ]),
+    compile(api.components.parameters, (schemas, name) => [schemas[name].schema, `${name}Param`]),
     ...compileBodies(api.components.requestBodies, 'RequestBody'),
     ...compileBodies(api.components.responses, 'Response'),
   ]).then((interfaces) => interfaces.join('\n'));

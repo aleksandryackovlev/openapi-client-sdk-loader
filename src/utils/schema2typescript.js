@@ -31,10 +31,7 @@ export const defaultOptions = {
 
 /* eslint-disable no-param-reassign */
 function hasType(schema, type) {
-  return (
-    schema.type === type ||
-    (Array.isArray(schema.type) && schema.type.includes(type))
-  );
+  return schema.type === type || (Array.isArray(schema.type) && schema.type.includes(type));
 }
 function isObjectType(schema) {
   return typeof schema.properties !== 'undefined' || hasType(schema, 'object');
@@ -55,9 +52,7 @@ function rule(schema) {
 function normalizeRefs(schema, filename) {
   const clonedSchema = cloneDeep(schema);
 
-  traverse(clonedSchema, (schemaToConvert) =>
-    rule(schemaToConvert, clonedSchema, filename)
-  );
+  traverse(clonedSchema, (schemaToConvert) => rule(schemaToConvert, clonedSchema, filename));
 
   return clonedSchema;
 }
@@ -76,12 +71,7 @@ async function compile(schema, name, options = defaultOptions) {
 
   return format(
     generate(
-      optimize(
-        parse(
-          await dereference(normalize(normalizeRefs(schema), name), options),
-          options
-        )
-      ),
+      optimize(parse(await dereference(normalize(normalizeRefs(schema), name), options), options)),
       options
     ),
     options

@@ -1,9 +1,6 @@
 import { getOptions } from 'loader-utils';
 
-import {
-  validate as validateOptions,
-  normalize as normalizeOptions,
-} from './options';
+import { validate as validateOptions, normalize as normalizeOptions } from './options';
 import format from './format';
 import compileTemplate from './templates';
 
@@ -22,7 +19,7 @@ export default function loader() {
   // TODO: addDependencies for watching yaml doc files
   // TODO: validate open api schema
 
-  return options.parser.parse(this.resourcePath, (error, api) => {
+  return options.parser.bundle(this.resourcePath, (error, api) => {
     if (error) {
       return callback(error);
     }

@@ -1,7 +1,5 @@
 import compileModels from './compileModels';
 
-const compileRuntime = async () => 'const runtime = "runtime line";';
-
 const createOperations = (api, deref) => {
   const operations = [];
 
@@ -10,7 +8,8 @@ const createOperations = (api, deref) => {
       const operation = deref.paths[path][method];
 
       let schema = {
-        method,
+        method: method.toUpperCase(),
+        path,
         mimeType: 'application/json',
         name: operation.operationId,
       };
@@ -19,18 +18,20 @@ const createOperations = (api, deref) => {
         const params = {};
 
         operation.parameters.forEach(({ name, in: inPath, required, schema: paramSchema }) => {
-          if (!params[inPath]) {
-            params[inPath] = {
+          const inName = inPath === 'path' ? 'params' : inPath;
+
+          if (!params[inName]) {
+            params[inName] = {
               type: 'object',
               required: [],
               properties: {},
             };
           }
 
-          params[inPath].properties[name] = paramSchema;
+          params[inName].properties[name] = paramSchema;
 
           if (required) {
-            params[inPath].required.push(name);
+            params[inName].required.push(name);
           }
         });
 
@@ -42,7 +43,7 @@ const createOperations = (api, deref) => {
 
         Object.keys(requestBody).forEach((mimeType) => {
           schema.mimeType = mimeType;
-          schema.body = requestBody[mimeType].schema;
+          schema.data = requestBody[mimeType].schema;
         });
       }
 
@@ -54,16 +55,13 @@ const createOperations = (api, deref) => {
 };
 
 const compileApis = (api, options) =>
-  options.parser.dereference(api).then((deref) => {
-    return JSON.stringify(createOperations(api, deref));
-  });
+  options.parser.dereference(api).then((deref) => createOperations(api, deref));
 
 export default (api, options) => {
-  return Promise.all([
-    compileModels(api, options),
-    compileRuntime(api, options),
-    compileApis(api, options),
-  ]).then((results) => {
-    return results.join('\n');
-  });
+  return Promise.all([compileModels(api, options), compileApis(api, options)]).then(
+    ([models, operations]) => ({
+      models,
+      operations,
+    })
+  );
 };

@@ -1,0 +1,9 @@
+{{#if header}}
+  const headersSchema = {{json header}};
+  const isHeadersValid = ajv.validate(headersSchema, headers);
+
+  if (!isHeadersValid) {
+    const error = new Error('Request headers schema validation error');
+    throw error;
+  }
+{{/if}}

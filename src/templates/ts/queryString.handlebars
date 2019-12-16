@@ -1,0 +1,13 @@
+{{#if query}}
+  const querySchema = {{json query}};
+  const isQueryValid = ajv.validate(querySchema, query);
+
+  if (!isQueryValid) {
+    const error = new Error('Query string schema validation error');
+    throw error;
+  }
+
+  if (Object.keys(query)) {
+    requestUrl = `${requestUrl}?${stringify(params, { arrayFormat: 'brackets' })}`;
+  }
+{{/if}}

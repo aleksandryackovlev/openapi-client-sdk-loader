@@ -1,0 +1,47 @@
+let response;
+let responseHeaders;
+let responseStatus;
+
+try {
+  const responseObject = await fetch(requestUrl, requestParams);
+  responseHeaders = responseObject.headers;
+  responseStatus = responseObject.status;
+  response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    if (!response) {
+      throw new EmptyErroneousResponseError({
+        headers: responseHeaders,
+        status: responseStatus,
+      });
+    }
+
+    throw new ApiError(response, {
+      headers: responseHeaders,
+      status: responseStatus,
+    });
+  }
+} catch (error) {
+  throw new ApiError(
+    {
+      meta: {
+        code: 400,
+        errorMessage: error.message || 'Something went wrong',
+        type: 'UIApiCallException',
+      },
+    },
+    {
+      headers: {},
+      status: 400,
+    }
+  );
+}
+
+if (!response) {
+  throw new EmptyResponseError({
+    headers: responseHeaders,
+    status: responseStatus,
+  });
+}
+
+return response;

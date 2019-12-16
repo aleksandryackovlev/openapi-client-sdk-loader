@@ -1,0 +1,75 @@
+import Ajv from 'ajv';
+import { stringify } from 'query-string';
+
+const ajv = new Ajv();
+
+{{models}}
+
+{{#each operations}}
+  {{#if (or query header params data)}}
+    export const {{name}} = async ({
+      {{#if query}}
+        query = {},
+      {{/if}}
+      {{#if params}}
+        params = {},
+      {{/if}}
+      {{#if data}}
+        data = {},
+      {{/if}}
+      {{#if header}}
+        headers = {},
+      {{/if}}
+    } = {}) => {
+  {{else}}
+    export const {{name}} = async () => {
+  {{/if}}
+  let requestUrl = '{{path}}';
+
+  {{> queryString this}}
+
+  {{> parameters this}}
+
+  {{#if data}}
+    const bodySchema = {{json data}};
+    const isBodyValid = ajv.validate(bodySchema, data);
+
+    if (!isBodyValid) {
+      const error = new Error('Request body schema validation error');
+      throw error;
+    }
+    const requestParams = {
+      method: '{{method}}',
+      {{#if (and header (eq mimeType 'multipart/form-data'))}}
+        headers,
+      {{else}}
+        headers: {
+          'Content-Type': '{{mimeType}}',
+          {{#if header}}
+          ...headers,
+          {{/if}}
+        }
+      {{/if}}
+    };
+
+    if (data) {
+      requestParams.body = data instanceof FormData ? data : JSON.stringify(data);
+    }
+  {{else}}
+    const requestParams = {
+      method: '{{method}}',
+      headers: {
+        'Content-Type': '{{mimeType}}',
+        {{#if header}}
+        ...headers,
+        {{/if}}
+      },
+    };
+  {{/if}}
+
+  {{> headers this}}
+
+  {{> request this}}
+  }
+{{/each}}
+

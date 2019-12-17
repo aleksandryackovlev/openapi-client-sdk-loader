@@ -1,14 +1,23 @@
 {{#if params}}
   const paramsSchema = {{json params}};
-  const isParamsValid = ajv.validate(paramsSchema, params);
 
-  if (!isParamsValid) {
+  function isParams(obj: unknown): obj is {{capitalize name}}Params {
+    const isValid = ajv.validate(paramsSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isParams(params)) {
     const error = new Error('Params schema validation error');
     throw error;
   }
 
-  if (Object.keys(params)) {
-    Object.keys(params).forEach((param) => {
+  type {{capitalize name}}ParamsKeys = keyof {{capitalize name}}Params;
+
+  const paramsKeys = Object.keys(params) as {{capitalize name}}ParamsKeys[];
+
+  if (paramsKeys.length) {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(`{${param}}`, encodeURIComponent(String(params[param])));
     });
   }

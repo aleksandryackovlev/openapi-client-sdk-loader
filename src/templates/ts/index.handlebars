@@ -3,11 +3,34 @@ import { stringify } from 'query-string';
 
 const ajv = new Ajv();
 
+class ApiError extends Error {}
+class EmptyErroneousResponseError extends Error {}
+class EmptyResponseError extends Error {}
+
 {{models}}
 
 {{#each operations}}
+  {{models}}
+{{/each}}
+{{#each operations}}
   {{#if (or query header params data)}}
-    export const {{name}} = async ({
+    export interface {{capitalize name}}Request {
+      {{#if query}}
+      query?: {{capitalize name}}Query;
+      {{/if}}
+      {{#if params}}
+      params?: {{capitalize name}}Params;
+      {{/if}}
+      {{#if data}}
+      data?: {{capitalize name}}RequestBody;
+      {{/if}}
+      {{#if header}}
+      headers?: {{capitalize name}}Headers,
+      {{/if}}
+    }
+  {{/if}}
+  {{#if (or query header params data)}}
+    export const {{name}}: (request: {{capitalize name}}Request) => Promise<{{capitalize name}}Response> = async ({
       {{#if query}}
         query = {},
       {{/if}}

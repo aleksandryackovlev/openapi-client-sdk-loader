@@ -4,12 +4,17 @@ import path from 'path';
 import Handlebars from 'handlebars';
 import glob from 'glob';
 
+import { capitalize } from '../utils';
+
 export default (source, templatePath) => {
   const template = fs.readFileSync(`${templatePath}/index.handlebars`);
 
   Handlebars.registerHelper({
     json(context) {
       return JSON.stringify(context);
+    },
+    capitalize(context) {
+      return capitalize(context);
     },
     eq(v1, v2) {
       return v1 === v2;

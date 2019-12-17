@@ -1,4 +1,10 @@
-import { schema2typescript, capitalize } from '../../utils';
+import { cloneDeep } from 'lodash';
+
+import { schema2typescript, basepath, dashes2capitals, capitalize } from '../../utils';
+
+import { compile } from './compileModels';
+
+const prepareMimeType = (mimeType) => dashes2capitals(basepath(mimeType));
 
 const createOperations = (api, deref) =>
   Promise.all(
@@ -7,6 +13,7 @@ const createOperations = (api, deref) =>
         ...result,
         ...Object.keys(deref.paths[path]).map(async (method) => {
           const operation = deref.paths[path][method];
+          const unrefedOperation = api.paths[path][method];
 
           let schema = {
             method: method.toUpperCase(),
@@ -51,9 +58,18 @@ const createOperations = (api, deref) =>
           if (operation.requestBody) {
             const requestBody = operation.requestBody.content;
 
-            Object.keys(requestBody).forEach((mimeType) => {
+            const models = await compile(unrefedOperation.requestBody.content, (schemas, name) => [
+              schemas[name].schema,
+              `${schema.name}RequestBody${prepareMimeType(name)}`,
+            ]);
+
+            Object.keys(requestBody).forEach((mimeType, index, mimeTypes) => {
               schema.mimeType = mimeType;
+              schema.mimeTypeSuffix = prepareMimeType(mimeType);
               schema.data = requestBody[mimeType].schema;
+              if (index === mimeTypes.length - 1) {
+                schema.models = schema.models ? `${schema.models}\n${models}` : models;
+              }
             });
           }
 
@@ -64,4 +80,4 @@ const createOperations = (api, deref) =>
   );
 
 export default (api, options) =>
-  options.parser.dereference(api).then((deref) => createOperations(api, deref));
+  options.parser.dereference(cloneDeep(api)).then((deref) => createOperations(api, deref));

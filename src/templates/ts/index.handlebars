@@ -22,7 +22,7 @@ class EmptyResponseError extends Error {}
       params?: {{capitalize name}}Params;
       {{/if}}
       {{#if data}}
-      data?: {{capitalize name}}RequestBody;
+        data?: {{capitalize name}}RequestBody{{capitalize mimeTypeSuffix}};
       {{/if}}
       {{#if header}}
       headers?: {{capitalize name}}Headers,

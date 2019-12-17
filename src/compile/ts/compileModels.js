@@ -2,7 +2,7 @@ import { schema2typescript, basepath, dashes2capitals } from '../../utils';
 
 const prepareMimeType = (mimeType) => dashes2capitals(basepath(mimeType));
 
-const compile = (schemas, transform) =>
+export const compile = (schemas, transform) =>
   schemas
     ? Promise.all(
         Object.keys(schemas).map((schemaName) => {

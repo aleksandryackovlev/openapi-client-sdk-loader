@@ -1,3 +1,5 @@
+import path from 'path';
+
 import { getOptions } from 'loader-utils';
 
 import { validate as validateOptions, normalize as normalizeOptions } from './options';
@@ -6,13 +8,20 @@ import compileTemplate from './templates';
 
 export const raw = true;
 
-export default function loader() {
+export default function loader(source) {
   const callback = this.async();
   const options = normalizeOptions(getOptions(this));
+
+  const validExts = ['.yml', '.yaml'];
+
+  if (!validExts.includes(path.extname(this.resourcePath))) {
+    return callback(null, source);
+  }
 
   try {
     validateOptions(options);
   } catch (error) {
+    // TODO: don't throw if option throwOnInvalidFile is set to false
     return callback(error);
   }
 

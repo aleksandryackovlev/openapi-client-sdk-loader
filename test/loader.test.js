@@ -16,7 +16,7 @@ describe('loader', () => {
     const runner = getRunner('petstore.yaml');
     const stats = await runner();
 
-    // fs.writeFileSync('./result.ts', getRunnerResult(stats))
+    // fs.writeFileSync(`${__dirname}/api.ts`, getRunnerResult(stats));
     expect(getRunnerResult(stats)).toMatchSnapshot('runner_result');
   });
 

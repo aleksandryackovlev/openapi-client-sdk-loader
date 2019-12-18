@@ -8,8 +8,11 @@
   }
 
   if (!isQuery(query)) {
-    const error = new Error('Query string schema validation error');
-    throw error;
+    throw new RequestValidationError({
+      message: 'Request query string schema validation error',
+      method: '{{name}}',
+      element: 'query',
+    });
   }
 
 

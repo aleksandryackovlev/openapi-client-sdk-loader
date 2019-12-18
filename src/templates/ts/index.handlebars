@@ -4,8 +4,62 @@ import { stringify } from 'query-string';
 const ajv = new Ajv();
 
 class ApiError extends Error {}
-class EmptyErroneousResponseError extends Error {}
-class EmptyResponseError extends Error {}
+class ClientCodeError extends Error {}
+
+class RequestValidationError extends Error {
+  element: 'query' | 'params' | 'body' | 'headers';
+
+  method: string;
+
+  errors: any[];
+
+  constructor({
+    message,
+    element,
+    method,
+    errors = [],
+    }: {
+      message: string;
+      element: 'query' | 'params' | 'body' | 'headers';
+      method: string;
+      errors?: any[];
+    }) {
+    super(message);
+
+    this.element = element;
+    this.method = method;
+    this.errors = errors;
+  }
+}
+
+class ResponseValidationError extends Error {
+  method: string;
+
+  errors: any[];
+
+  constructor({
+    message,
+    method,
+    errors = [],
+  }: {
+    message: string;
+    method: string;
+    errors?: any[];
+  }) {
+    super(message);
+
+    this.method = method;
+    this.errors = errors;
+  }
+}
+
+export interface Config {
+  baseUrl: string;
+}
+
+const defaultConfig: Config = {
+  baseUrl: process.env.API_BASE_URL || '{{info.server}}',
+};
 
 {{models}}
 
@@ -30,7 +84,7 @@ class EmptyResponseError extends Error {}
     }
   {{/if}}
   {{#if (or query header params data)}}
-    export const {{name}}: (request: {{capitalize name}}Request) => Promise<{{capitalize name}}Response> = async ({
+    export const {{name}}: (request: {{capitalize name}}Request, config: Config) => Promise<{{capitalize name}}Response> = async ({
       {{#if query}}
         query = {},
       {{/if}}
@@ -43,54 +97,56 @@ class EmptyResponseError extends Error {}
       {{#if header}}
         headers = {},
       {{/if}}
-    } = {}) => {
+    } = {}, config = defaultConfig) => {
   {{else}}
-    export const {{name}} = async () => {
+    export const {{name}}: (config: Config) => Promise<{{capitalize name}}Response> = async (config = defaultConfig) => {
   {{/if}}
-  let requestUrl = '{{path}}';
+  {{#if (or query params)}}
+    let requestUrl = `${config.baseUrl}{{path}}`;
+  {{else}}
+    const requestUrl = `${config.baseUrl}{{path}}`;
+  {{/if}}
 
   {{> queryString this}}
 
   {{> parameters this}}
+
+  {{> headers this}}
 
   {{#if data}}
     const bodySchema = {{json data}};
     const isBodyValid = ajv.validate(bodySchema, data);
 
     if (!isBodyValid) {
-      const error = new Error('Request body schema validation error');
-      throw error;
+      throw new RequestValidationError({
+        message: 'Request body schema validation error',
+        method: '{{name}}',
+        element: 'body',
+      });
     }
-    const requestParams = {
-      method: '{{method}}',
-      {{#if (and header (eq mimeType 'multipart/form-data'))}}
-        headers,
-      {{else}}
-        headers: {
-          'Content-Type': '{{mimeType}}',
-          {{#if header}}
-          ...headers,
-          {{/if}}
-        }
-      {{/if}}
-    };
+
+    let requestParams;
 
     if (data) {
-      requestParams.body = data instanceof FormData ? data : JSON.stringify(data);
+      requestParams = {
+        method: '{{method}}',
+        headers: requestHeaders,
+        body: data instanceof FormData ? data : JSON.stringify(data),
+      };
+    } else {
+      requestParams = {
+        method: '{{method}}',
+        headers: requestHeaders,
+      };
     }
+
   {{else}}
     const requestParams = {
       method: '{{method}}',
-      headers: {
-        'Content-Type': '{{mimeType}}',
-        {{#if header}}
-        ...headers,
-        {{/if}}
-      },
+      headers: requestHeaders,
     };
   {{/if}}
 
-  {{> headers this}}
 
   {{> request this}}
   }

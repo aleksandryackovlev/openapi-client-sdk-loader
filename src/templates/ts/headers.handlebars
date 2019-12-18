@@ -8,7 +8,21 @@
   }
 
   if (!isHeaders(headers)) {
-    const error = new Error('Request headers schema validation error');
-    throw error;
+    throw new RequestValidationError({
+      message: 'Request headers schema validation error',
+      method: '{{name}}',
+      element: 'headers',
+    });
   }
+{{/if}}
+
+{{#if (and header (eq mimeType 'multipart/form-data'))}}
+  const requestHeaders = headers;
+{{else}}
+  const requestHeaders = {
+    'Content-Type': '{{mimeType}}',
+    {{#if header}}
+    ...headers,
+    {{/if}}
+  };
 {{/if}}

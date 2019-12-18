@@ -1,26 +1,35 @@
-let response;
-let responseHeaders;
-let responseStatus;
+let response: unknown;
 
 try {
-  const responseObject = await fetch(requestUrl, requestParams);
-  responseHeaders = responseObject.headers;
-  responseStatus = responseObject.status;
+  const responseObject = await fetch(requestUrl, requestParams{{#if header}} as RequestInit{{/if}});
   response = await responseObject.json();
 
   if (!responseObject.ok) {
-    if (!response) {
-      throw new EmptyErroneousResponseError('Empty response');
-    }
-
     throw new ApiError('Api error');
   }
 } catch (error) {
-  throw new ApiError('Api error');
+  if (error instanceof ApiError) {
+    throw error;
+  } else {
+    throw error as ClientCodeError;
+  }
 }
 
-if (!response) {
-  throw new EmptyResponseError('Empty response');
-}
+{{#if response}}
+  const responseSchema = {{json response}};
+
+  function isResponse(obj: unknown): obj is {{capitalize name}}Response {
+    const isValid = ajv.validate(responseSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isResponse(response)) {
+    throw new ResponseValidationError({
+      message: 'Response schema validation error',
+      method: '{{name}}',
+    });
+  }
+{{/if}}
 
 return response;

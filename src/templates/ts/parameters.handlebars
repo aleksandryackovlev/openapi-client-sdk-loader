@@ -8,8 +8,11 @@
   }
 
   if (!isParams(params)) {
-    const error = new Error('Params schema validation error');
-    throw error;
+    throw new RequestValidationError({
+      message: 'Request params schema validation error',
+      method: '{{name}}',
+      element: 'params',
+    });
   }
 
   type {{capitalize name}}ParamsKeys = keyof {{capitalize name}}Params;

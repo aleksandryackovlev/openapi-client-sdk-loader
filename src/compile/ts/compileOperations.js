@@ -73,6 +73,37 @@ const createOperations = (api, deref) =>
             });
           }
 
+          let responseModel = `export type ${capitalize(schema.name)}Response = unknown;`;
+
+          // Support only 200 responses with the Content-Type application/json
+          if (operation.responses && (operation.responses['200'] || operation.responses['201'])) {
+            if (
+              operation.responses['200'] &&
+              operation.responses['200'].content &&
+              operation.responses['200'].content['application/json']
+            ) {
+              responseModel = await schema2typescript(
+                unrefedOperation.responses['200'].content['application/json'].schema,
+                `${schema.name}Response`
+              );
+
+              schema.response = operation.responses['200'].content['application/json'].schema;
+            } else if (
+              operation.responses['201'] &&
+              operation.responses['201'].content &&
+              operation.responses['201'].content['application/json']
+            ) {
+              responseModel = await schema2typescript(
+                unrefedOperation.responses['201'].content['application/json'].schema,
+                `${schema.name}Response`
+              );
+
+              schema.response = operation.responses['201'].content['application/json'].schema;
+            }
+          }
+
+          schema.models = schema.models ? `${schema.models}\n${responseModel}` : responseModel;
+
           return schema;
         }),
       ];

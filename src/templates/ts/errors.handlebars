@@ -1,0 +1,78 @@
+class ApiError extends Error {
+  status: number;
+
+  statusText: string;
+
+  headers: Headers;
+
+  response: any;
+
+  constructor({
+    status,
+    statusText,
+    response,
+    message,
+    headers,
+  }: {
+    status: number;
+    statusText: string;
+    response: any;
+    message: string;
+    headers: Headers;
+  }) {
+    super(message);
+    this.status = status;
+    this.response = response;
+    this.statusText = statusText;
+    this.headers = headers;
+  }
+}
+
+class ClientCodeError extends Error {}
+
+class RequestValidationError extends Error {
+  element: 'query' | 'params' | 'body' | 'headers';
+
+  method: string;
+
+  errors: any[];
+
+  constructor({
+    message,
+    element,
+    method,
+    errors = [],
+    }: {
+      message: string;
+      element: 'query' | 'params' | 'body' | 'headers';
+      method: string;
+      errors?: any[];
+    }) {
+    super(message);
+
+    this.element = element;
+    this.method = method;
+    this.errors = errors;
+  }
+}
+
+class ResponseValidationError extends Error {
+  method: string;
+
+  errors: any[];
+
+  constructor({
+    message,
+    method,
+    errors = [],
+  }: {
+    message: string;
+    method: string;
+    errors?: any[];
+  }) {
+    super(message);
+
+    this.method = method;
+    this.errors = errors;
+  }
+}

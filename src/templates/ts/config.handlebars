@@ -1,0 +1,9 @@
+export interface Config {
+  baseUrl: string;
+  preMiddleware: (url: string, params: RequestInit) => Promise<[string, RequestInit]>;
+}
+
+const defaultConfig: Config = {
+  baseUrl: process.env.API_BASE_URL || '{{info.server}}',
+  preMiddleware: (url: string, params: RequestInit) => Promise.resolve([url, params]),
+};

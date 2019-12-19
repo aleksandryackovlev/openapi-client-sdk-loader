@@ -5,7 +5,13 @@ try {
   response = await responseObject.json();
 
   if (!responseObject.ok) {
-    throw new ApiError('Api error');
+    throw new ApiError({
+      message: 'Api error fetching {{name}}',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 } catch (error) {
   if (error instanceof ApiError) {

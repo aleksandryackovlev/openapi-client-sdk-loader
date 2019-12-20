@@ -30,6 +30,10 @@ export default function loader(source) {
 
   return options.parser.bundle(this.resourcePath, (error, api) => {
     if (error) {
+      if (options.skipInvalid) {
+        return callback(null, source);
+      }
+
       return callback(error);
     }
 

@@ -10,6 +10,7 @@ export default {
     validateResponse: true,
   },
   parser: SwaggerParser,
+  skipInvalid: true,
   style: {
     singleQuote: true,
     trailingComma: 'es5',

@@ -1,23 +1,25 @@
-{{#if params}}
-  const paramsSchema = {{json params}};
+{{#if operation.params}}
+  {{#if options.validateRequest}}
+    const paramsSchema = {{json operation.params}};
 
-  function isParams(obj: unknown): obj is {{capitalize name}}Params {
-    const isValid = ajv.validate(paramsSchema, obj);
+    function isParams(obj: unknown): obj is {{capitalize operation.name}}Params {
+      const isValid = ajv.validate(paramsSchema, obj);
 
-    return !!isValid;
-  }
+      return !!isValid;
+    }
 
-  if (!isParams(params)) {
-    throw new RequestValidationError({
-      message: 'Request params schema validation error',
-      method: '{{name}}',
-      element: 'params',
-    });
-  }
+    if (!isParams(params)) {
+      throw new RequestValidationError({
+        message: 'Request params schema validation error',
+        method: '{{operation.name}}',
+        element: 'params',
+      });
+    }
+  {{/if}}
 
-  type {{capitalize name}}ParamsKeys = keyof {{capitalize name}}Params;
+  type {{capitalize operation.name}}ParamsKeys = keyof {{capitalize operation.name}}Params;
 
-  const paramsKeys = Object.keys(params) as {{capitalize name}}ParamsKeys[];
+  const paramsKeys = Object.keys(params) as {{capitalize operation.name}}ParamsKeys[];
 
   if (paramsKeys.length) {
     paramsKeys.forEach((param) => {

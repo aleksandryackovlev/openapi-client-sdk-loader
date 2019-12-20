@@ -1,13 +1,17 @@
+{{#if options.validateResponse}}
 let response: unknown;
+{{else}}
+let response: any;
+{{/if}}
 
 try {
-  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams{{#if header}} as RequestInit{{/if}})
-  const responseObject = await fetch(processedUrl, processedParams{{#if header}} as RequestInit{{/if}});
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams{{#if operation.header}} as RequestInit{{/if}})
+  const responseObject = await fetch(processedUrl, processedParams{{#if operation.header}} as RequestInit{{/if}});
   response = await responseObject.json();
 
   if (!responseObject.ok) {
     throw new ApiError({
-      message: 'Api error while fetching {{name}}',
+      message: 'Api error while fetching {{operation.name}}',
       status: responseObject.status,
       statusText: responseObject.statusText,
       response,
@@ -22,10 +26,10 @@ try {
   }
 }
 
-{{#if response}}
-  const responseSchema = {{json response}};
+{{#if (and operation.response options.validateResponse)}}
+  const responseSchema = {{json operation.response}};
 
-  function isResponse(obj: unknown): obj is {{capitalize name}}Response {
+  function isResponse(obj: unknown): obj is {{capitalize operation.name}}Response {
     const isValid = ajv.validate(responseSchema, obj);
 
     return !!isValid;
@@ -34,9 +38,12 @@ try {
   if (!isResponse(response)) {
     throw new ResponseValidationError({
       message: 'Response schema validation error',
-      method: '{{name}}',
+      method: '{{operation.name}}',
     });
   }
+
+  return response;
+{{else}}
+  return response as {{capitalize operation.name}}Response;
 {{/if}}
 
-return response;

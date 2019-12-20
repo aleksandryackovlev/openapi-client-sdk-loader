@@ -53,48 +53,15 @@ const ajv = new Ajv();
     const requestUrl = `${config.baseUrl}{{path}}`;
   {{/if}}
 
-  {{> queryString this}}
+  {{> queryString operation=this options=../options }}
 
-  {{> parameters this}}
+  {{> parameters operation=this options=../options }}
 
-  {{> headers this}}
+  {{> headers operation=this options=../options }}
 
-  {{#if data}}
-    const bodySchema = {{json data}};
-    const isBodyValid = ajv.validate(bodySchema, data);
+  {{> body operation=this options=../options }}
 
-    if (!isBodyValid) {
-      throw new RequestValidationError({
-        message: 'Request body schema validation error',
-        method: '{{name}}',
-        element: 'body',
-      });
-    }
-
-    let requestParams;
-
-    if (data) {
-      requestParams = {
-        method: '{{method}}',
-        headers: requestHeaders,
-        body: data instanceof FormData ? data : JSON.stringify(data),
-      };
-    } else {
-      requestParams = {
-        method: '{{method}}',
-        headers: requestHeaders,
-      };
-    }
-
-  {{else}}
-    const requestParams = {
-      method: '{{method}}',
-      headers: requestHeaders,
-    };
-  {{/if}}
-
-
-  {{> request this}}
+  {{> request operation=this options=../options }}
   }
 {{/each}}
 

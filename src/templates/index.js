@@ -6,7 +6,7 @@ import glob from 'glob';
 
 import { capitalize } from '../utils';
 
-export default (source, templatePath) => {
+export default (source, { template: templatePath, templateOptions }) => {
   const template = fs.readFileSync(`${templatePath}/index.handlebars`);
 
   Handlebars.registerHelper({
@@ -56,5 +56,5 @@ export default (source, templatePath) => {
 
   const compiled = Handlebars.compile(template.toString(), { noEscape: true });
 
-  return compiled(source);
+  return compiled({ ...source, options: templateOptions || {} });
 };

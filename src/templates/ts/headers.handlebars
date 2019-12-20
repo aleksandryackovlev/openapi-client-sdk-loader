@@ -1,7 +1,7 @@
-{{#if header}}
-  const headersSchema = {{json header}};
+{{#if (and operation.header options.validateRequest)}}
+  const headersSchema = {{json operation.header}};
 
-  function isHeaders(obj: unknown): obj is {{capitalize name}}Headers {
+  function isHeaders(obj: unknown): obj is {{capitalize operation.name}}Headers {
     const isValid = ajv.validate(headersSchema, obj);
 
     return !!isValid;
@@ -10,18 +10,18 @@
   if (!isHeaders(headers)) {
     throw new RequestValidationError({
       message: 'Request headers schema validation error',
-      method: '{{name}}',
+      method: '{{operation.name}}',
       element: 'headers',
     });
   }
 {{/if}}
 
-{{#if (and header (eq mimeType 'multipart/form-data'))}}
+{{#if (and operation.header (eq operation.mimeType 'multipart/form-data'))}}
   const requestHeaders = headers;
 {{else}}
   const requestHeaders = {
-    'Content-Type': '{{mimeType}}',
-    {{#if header}}
+    'Content-Type': '{{operation.mimeType}}',
+    {{#if operation.header}}
     ...headers,
     {{/if}}
   };

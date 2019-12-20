@@ -35,7 +35,7 @@ export default function loader(source) {
 
     return options
       .compiler(api, options)
-      .then((result) => compileTemplate(result, options.template))
+      .then((result) => compileTemplate(result, options))
       .then((result) => callback(null, format(result, options)))
       .catch((compilationError) => callback(compilationError));
   });

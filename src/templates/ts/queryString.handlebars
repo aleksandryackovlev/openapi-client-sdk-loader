@@ -1,19 +1,21 @@
-{{#if query}}
-  const querySchema = {{json query}};
+{{#if operation.query}}
+  {{#if options.validateRequest}}
+    const querySchema = {{json operation.query}};
 
-  function isQuery(obj: unknown): obj is {{capitalize name}}Query {
-    const isValid = ajv.validate(querySchema, obj);
+    function isQuery(obj: unknown): obj is {{capitalize operation.name}}Query {
+      const isValid = ajv.validate(querySchema, obj);
 
-    return !!isValid;
-  }
+      return !!isValid;
+    }
 
-  if (!isQuery(query)) {
-    throw new RequestValidationError({
-      message: 'Request query string schema validation error',
-      method: '{{name}}',
-      element: 'query',
-    });
-  }
+    if (!isQuery(query)) {
+      throw new RequestValidationError({
+        message: 'Request query string schema validation error',
+        method: '{{operation.name}}',
+        element: 'query',
+      });
+    }
+  {{/if}}
 
 
   if (Object.keys(query)) {

@@ -10,7 +10,7 @@ exports[`loader should work: runner_result 1`] = `
 "import Ajv from 'ajv';
 import { stringify } from 'query-string';
 
-const ajv = new Ajv();
+const ajv = new Ajv({ unknownFormats: ['int32', 'int64'] });
 
 class ApiError extends Error {
   status: number;
@@ -298,7 +298,7 @@ export interface GetPetByIdRequest {
 }
 export const getPetById: (
   request: GetPetByIdRequest,
-  config: Config
+  config?: Config
 ) => Promise<GetPetByIdResponse> = async ({ params = {} } = {}, config = defaultConfig) => {
   let requestUrl = \`\${config.baseUrl}/pet/{petId}\`;
 
@@ -420,7 +420,7 @@ export interface UpdatePetWithFormRequest {
 }
 export const updatePetWithForm: (
   request: UpdatePetWithFormRequest,
-  config: Config
+  config?: Config
 ) => Promise<UpdatePetWithFormResponse> = async (
   { params = {}, data = {} } = {},
   config = defaultConfig
@@ -524,7 +524,7 @@ export interface DeletePetRequest {
 }
 export const deletePet: (
   request: DeletePetRequest,
-  config: Config
+  config?: Config
 ) => Promise<DeletePetResponse> = async (
   { params = {}, headers = {} } = {},
   config = defaultConfig
@@ -626,7 +626,7 @@ export interface UploadFileRequest {
 }
 export const uploadFile: (
   request: UploadFileRequest,
-  config: Config
+  config?: Config
 ) => Promise<UploadFileResponse> = async (
   { params = {}, data = {} } = {},
   config = defaultConfig
@@ -751,7 +751,7 @@ export interface UpdatePetRequest {
 }
 export const updatePet: (
   request: UpdatePetRequest,
-  config: Config
+  config?: Config
 ) => Promise<UpdatePetResponse> = async ({ data = {} } = {}, config = defaultConfig) => {
   const requestUrl = \`\${config.baseUrl}/pet\`;
 
@@ -846,7 +846,7 @@ export const updatePet: (
 export interface AddPetRequest {
   data?: AddPetRequestBodyXml;
 }
-export const addPet: (request: AddPetRequest, config: Config) => Promise<AddPetResponse> = async (
+export const addPet: (request: AddPetRequest, config?: Config) => Promise<AddPetResponse> = async (
   { data = {} } = {},
   config = defaultConfig
 ) => {
@@ -945,7 +945,7 @@ export interface FindPetsByStatusRequest {
 }
 export const findPetsByStatus: (
   request: FindPetsByStatusRequest,
-  config: Config
+  config?: Config
 ) => Promise<FindPetsByStatusResponse> = async ({ query = {} } = {}, config = defaultConfig) => {
   let requestUrl = \`\${config.baseUrl}/pet/findByStatus\`;
 
@@ -1068,7 +1068,7 @@ export interface FindPetsByTagsRequest {
 }
 export const findPetsByTags: (
   request: FindPetsByTagsRequest,
-  config: Config
+  config?: Config
 ) => Promise<FindPetsByTagsResponse> = async ({ query = {} } = {}, config = defaultConfig) => {
   let requestUrl = \`\${config.baseUrl}/pet/findByTags\`;
 
@@ -1181,7 +1181,7 @@ export const findPetsByTags: (
 
   return response;
 };
-export const getInventory: (config: Config) => Promise<GetInventoryResponse> = async (
+export const getInventory: (config?: Config) => Promise<GetInventoryResponse> = async (
   config = defaultConfig
 ) => {
   const requestUrl = \`\${config.baseUrl}/store/inventory\`;
@@ -1244,7 +1244,7 @@ export interface GetOrderByIdRequest {
 }
 export const getOrderById: (
   request: GetOrderByIdRequest,
-  config: Config
+  config?: Config
 ) => Promise<GetOrderByIdResponse> = async ({ params = {} } = {}, config = defaultConfig) => {
   let requestUrl = \`\${config.baseUrl}/store/order/{orderId}\`;
 
@@ -1348,7 +1348,7 @@ export interface DeleteOrderRequest {
 }
 export const deleteOrder: (
   request: DeleteOrderRequest,
-  config: Config
+  config?: Config
 ) => Promise<DeleteOrderResponse> = async ({ params = {} } = {}, config = defaultConfig) => {
   let requestUrl = \`\${config.baseUrl}/store/order/{orderId}\`;
 
@@ -1422,7 +1422,7 @@ export interface PlaceOrderRequest {
 }
 export const placeOrder: (
   request: PlaceOrderRequest,
-  config: Config
+  config?: Config
 ) => Promise<PlaceOrderResponse> = async ({ data = {} } = {}, config = defaultConfig) => {
   const requestUrl = \`\${config.baseUrl}/store/order\`;
 
@@ -1532,7 +1532,7 @@ export interface GetUserByNameRequest {
 }
 export const getUserByName: (
   request: GetUserByNameRequest,
-  config: Config
+  config?: Config
 ) => Promise<GetUserByNameResponse> = async ({ params = {} } = {}, config = defaultConfig) => {
   let requestUrl = \`\${config.baseUrl}/user/{username}\`;
 
@@ -1635,7 +1635,7 @@ export interface UpdateUserRequest {
 }
 export const updateUser: (
   request: UpdateUserRequest,
-  config: Config
+  config?: Config
 ) => Promise<UpdateUserResponse> = async (
   { params = {}, data = {} } = {},
   config = defaultConfig
@@ -1746,7 +1746,7 @@ export interface DeleteUserRequest {
 }
 export const deleteUser: (
   request: DeleteUserRequest,
-  config: Config
+  config?: Config
 ) => Promise<DeleteUserResponse> = async ({ params = {} } = {}, config = defaultConfig) => {
   let requestUrl = \`\${config.baseUrl}/user/{username}\`;
 
@@ -1820,7 +1820,7 @@ export interface LoginUserRequest {
 }
 export const loginUser: (
   request: LoginUserRequest,
-  config: Config
+  config?: Config
 ) => Promise<LoginUserResponse> = async ({ query = {} } = {}, config = defaultConfig) => {
   let requestUrl = \`\${config.baseUrl}/user/login\`;
 
@@ -1898,7 +1898,7 @@ export const loginUser: (
 
   return response;
 };
-export const logoutUser: (config: Config) => Promise<LogoutUserResponse> = async (
+export const logoutUser: (config?: Config) => Promise<LogoutUserResponse> = async (
   config = defaultConfig
 ) => {
   const requestUrl = \`\${config.baseUrl}/user/logout\`;
@@ -1943,7 +1943,7 @@ export interface CreateUserRequest {
 }
 export const createUser: (
   request: CreateUserRequest,
-  config: Config
+  config?: Config
 ) => Promise<CreateUserResponse> = async ({ data = {} } = {}, config = defaultConfig) => {
   const requestUrl = \`\${config.baseUrl}/user\`;
 
@@ -2021,7 +2021,7 @@ export interface CreateUsersWithArrayInputRequest {
 }
 export const createUsersWithArrayInput: (
   request: CreateUsersWithArrayInputRequest,
-  config: Config
+  config?: Config
 ) => Promise<CreateUsersWithArrayInputResponse> = async (
   { data = {} } = {},
   config = defaultConfig
@@ -2105,7 +2105,7 @@ export interface CreateUsersWithListInputRequest {
 }
 export const createUsersWithListInput: (
   request: CreateUsersWithListInputRequest,
-  config: Config
+  config?: Config
 ) => Promise<CreateUsersWithListInputResponse> = async (
   { data = {} } = {},
   config = defaultConfig

@@ -13,6 +13,8 @@ const createOperations = (api, deref) =>
         ...result,
         ...Object.keys(deref.paths[path]).map(async (method) => {
           const operation = deref.paths[path][method];
+          const globalSecurity = api.security;
+          const localSecurity = operation.security;
           const unrefedOperation = api.paths[path][method];
 
           let schema = {
@@ -53,6 +55,36 @@ const createOperations = (api, deref) =>
             );
 
             schema = { ...schema, ...params, models: models.join('\n') };
+          }
+
+          schema.securityScheme = null;
+
+          if (globalSecurity || localSecurity) {
+            if (localSecurity) {
+              schema.securityScheme = localSecurity
+                .map((security) => Object.keys(security)[0])
+                .map(
+                  (securitySchema) =>
+                    api.components &&
+                    api.components.securitySchemes && {
+                      name: securitySchema,
+                      ...api.components.securitySchemes[securitySchema],
+                    }
+                )
+                .filter(Boolean);
+            } else {
+              schema.securityScheme = localSecurity
+                .map((security) => Object.keys(security)[0])
+                .map(
+                  (securitySchema) =>
+                    api.components &&
+                    api.components.securitySchemes && {
+                      name: securitySchema,
+                      ...api.components.securitySchemes[securitySchema],
+                    }
+                )
+                .filter(Boolean);
+            }
           }
 
           if (operation.requestBody) {

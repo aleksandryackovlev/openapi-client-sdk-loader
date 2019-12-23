@@ -1,7 +1,7 @@
 import Ajv from 'ajv';
 import { stringify } from 'query-string';
 
-const ajv = new Ajv();
+const ajv = new Ajv({ unknownFormats: ['int32', 'int64']});
 
 {{> errors this}}
 
@@ -30,7 +30,7 @@ const ajv = new Ajv();
     }
   {{/if}}
   {{#if (or query header params data)}}
-    export const {{name}}: (request: {{capitalize name}}Request, config: Config) => Promise<{{capitalize name}}Response> = async ({
+    export const {{name}}: (request: {{capitalize name}}Request, config?: Config) => Promise<{{capitalize name}}Response> = async ({
       {{#if query}}
         query = {},
       {{/if}}
@@ -45,7 +45,7 @@ const ajv = new Ajv();
       {{/if}}
     } = {}, config = defaultConfig) => {
   {{else}}
-    export const {{name}}: (config: Config) => Promise<{{capitalize name}}Response> = async (config = defaultConfig) => {
+    export const {{name}}: (config?: Config) => Promise<{{capitalize name}}Response> = async (config = defaultConfig) => {
   {{/if}}
   {{#if (or query params)}}
     let requestUrl = `${config.baseUrl}{{path}}`;

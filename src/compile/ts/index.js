@@ -6,7 +6,9 @@ export default (api, options) => {
     ([models, operations]) => ({
       models,
       operations,
-      info: api.servers ? api.servers[0].url : '',
+      info: {
+        server: api.servers ? api.servers[0].url : '',
+      },
     })
   );
 };

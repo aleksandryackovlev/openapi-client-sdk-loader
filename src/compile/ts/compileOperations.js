@@ -73,7 +73,7 @@ const createOperations = (api, deref) =>
                 )
                 .filter(Boolean);
             } else {
-              schema.securityScheme = localSecurity
+              schema.securityScheme = globalSecurity
                 .map((security) => Object.keys(security)[0])
                 .map(
                   (securitySchema) =>

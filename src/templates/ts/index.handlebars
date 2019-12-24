@@ -1,7 +1,7 @@
 import Ajv from 'ajv';
 import { stringify } from 'query-string';
 
-const ajv = new Ajv({ unknownFormats: ['int32', 'int64']});
+const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary']});
 
 {{> errors this}}
 

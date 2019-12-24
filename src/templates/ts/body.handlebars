@@ -1,14 +1,16 @@
 {{#if operation.data}}
   {{#if options.validateRequest}}
-    const bodySchema = {{json operation.data}};
-    const isBodyValid = ajv.validate(bodySchema, data);
+    if (!(data instanceof FormData)) {
+      const bodySchema = {{json operation.data}};
+      const isBodyValid = ajv.validate(bodySchema, data);
 
-    if (!isBodyValid) {
-      throw new RequestValidationError({
-        message: 'Request body schema validation error',
-        method: '{{operation.name}}',
-        element: 'body',
-      });
+      if (!isBodyValid) {
+        throw new RequestValidationError({
+          message: 'Request body schema validation error',
+          method: '{{operation.name}}',
+          element: 'body',
+        });
+      }
     }
   {{/if}}
 

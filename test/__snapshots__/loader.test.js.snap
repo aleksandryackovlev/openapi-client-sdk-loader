@@ -10,7 +10,7 @@ exports[`loader should work: runner_result 1`] = `
 "import Ajv from 'ajv';
 import { stringify } from 'query-string';
 
-const ajv = new Ajv({ unknownFormats: ['int32', 'int64'] });
+const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary'] });
 
 class ApiError extends Error {
   status: number;
@@ -179,15 +179,23 @@ export interface UpdatePetWithFormParams {
   petId: number;
 }
 
-export interface UpdatePetWithFormRequestBodyXWwwFormUrlencoded {
+export interface UpdatePetWithFormRequestBodyJson {
+  id?: number;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  phone?: string;
   /**
-   * Updated name of the pet
+   * User Status
    */
-  name?: string;
-  /**
-   * Updated status of the pet
-   */
-  status?: string;
+  userStatus?: number;
+}
+
+export interface UpdatePetWithFormRequestBodyXml {
+  id?: string;
+  title?: string;
 }
 
 export type UpdatePetWithFormResponse = unknown;
@@ -217,14 +225,78 @@ export interface UploadFileRequestBodyFormData {
 
 export type UploadFileResponse = ApiResponse;
 
-export type UpdatePetRequestBodyJson = Pet;
+export interface UpdatePetRequestBodyJson {
+  id?: number;
+  category?: {
+    id?: number;
+    name?: string;
+  };
+  name: string;
+  photoUrls: string[];
+  tags?: {
+    id?: number;
+    name?: string;
+  }[];
+  /**
+   * pet status in the store
+   */
+  status?: 'available' | 'pending' | 'sold';
+}
 
-export type UpdatePetRequestBodyXml = Pet;
+export interface UpdatePetRequestBodyXml {
+  id?: number;
+  category?: {
+    id?: number;
+    name?: string;
+  };
+  name: string;
+  photoUrls: string[];
+  tags?: {
+    id?: number;
+    name?: string;
+  }[];
+  /**
+   * pet status in the store
+   */
+  status?: 'available' | 'pending' | 'sold';
+}
 
 export type UpdatePetResponse = unknown;
-export type AddPetRequestBodyJson = Pet;
+export interface AddPetRequestBodyJson {
+  id?: number;
+  category?: {
+    id?: number;
+    name?: string;
+  };
+  name: string;
+  photoUrls: string[];
+  tags?: {
+    id?: number;
+    name?: string;
+  }[];
+  /**
+   * pet status in the store
+   */
+  status?: 'available' | 'pending' | 'sold';
+}
 
-export type AddPetRequestBodyXml = Pet;
+export interface AddPetRequestBodyXml {
+  id?: number;
+  category?: {
+    id?: number;
+    name?: string;
+  };
+  name: string;
+  photoUrls: string[];
+  tags?: {
+    id?: number;
+    name?: string;
+  }[];
+  /**
+   * pet status in the store
+   */
+  status?: 'available' | 'pending' | 'sold';
+}
 
 export type AddPetResponse = unknown;
 export interface FindPetsByStatusQuery {
@@ -254,7 +326,17 @@ export interface DeleteOrderParams {
 }
 
 export type DeleteOrderResponse = unknown;
-export type PlaceOrderRequestBodyJson = Order;
+export interface PlaceOrderRequestBodyJson {
+  id?: number;
+  petId?: number;
+  quantity?: number;
+  shipDate?: string;
+  /**
+   * Order Status
+   */
+  status?: 'placed' | 'approved' | 'delivered';
+  complete?: boolean;
+}
 
 export type PlaceOrderResponse = Order;
 
@@ -268,7 +350,19 @@ export interface UpdateUserParams {
   username: string;
 }
 
-export type UpdateUserRequestBodyJson = User;
+export interface UpdateUserRequestBodyJson {
+  id?: number;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  phone?: string;
+  /**
+   * User Status
+   */
+  userStatus?: number;
+}
 
 export type UpdateUserResponse = unknown;
 export interface DeleteUserParams {
@@ -284,13 +378,49 @@ export interface LoginUserQuery {
 export type LoginUserResponse = string;
 
 export type LogoutUserResponse = unknown;
-export type CreateUserRequestBodyJson = User;
+export interface CreateUserRequestBodyJson {
+  id?: number;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  phone?: string;
+  /**
+   * User Status
+   */
+  userStatus?: number;
+}
 
 export type CreateUserResponse = unknown;
-export type CreateUsersWithArrayInputRequestBodyJson = User[];
+export type CreateUsersWithArrayInputRequestBodyJson = {
+  id?: number;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  phone?: string;
+  /**
+   * User Status
+   */
+  userStatus?: number;
+}[];
 
 export type CreateUsersWithArrayInputResponse = unknown;
-export type CreateUsersWithListInputRequestBodyJson = User[];
+export type CreateUsersWithListInputRequestBodyJson = {
+  id?: number;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  phone?: string;
+  /**
+   * User Status
+   */
+  userStatus?: number;
+}[];
 
 export type CreateUsersWithListInputResponse = unknown;
 export interface GetPetByIdRequest {
@@ -416,7 +546,7 @@ export const getPetById: (
 };
 export interface UpdatePetWithFormRequest {
   params?: UpdatePetWithFormParams;
-  data?: FormData | UpdatePetWithFormRequestBodyXWwwFormUrlencoded;
+  data?: FormData | UpdatePetWithFormRequestBodyXml;
 }
 export const updatePetWithForm: (
   request: UpdatePetWithFormRequest,
@@ -458,15 +588,13 @@ export const updatePetWithForm: (
   }
 
   const requestHeaders = {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/xml',
   };
 
   if (!(data instanceof FormData)) {
     const bodySchema = {
-      properties: {
-        name: { type: 'string', description: 'Updated name of the pet' },
-        status: { type: 'string', description: 'Updated status of the pet' },
-      },
+      type: 'object',
+      properties: { id: { type: 'string' }, title: { type: 'string' } },
     };
     const isBodyValid = ajv.validate(bodySchema, data);
 

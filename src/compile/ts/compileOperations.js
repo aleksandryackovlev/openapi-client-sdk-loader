@@ -90,7 +90,7 @@ const createOperations = (api, deref) =>
           if (operation.requestBody) {
             const requestBody = operation.requestBody.content;
 
-            const models = await compile(unrefedOperation.requestBody.content, (schemas, name) => [
+            const models = await compile(operation.requestBody.content, (schemas, name) => [
               schemas[name].schema,
               `${schema.name}RequestBody${prepareMimeType(name)}`,
             ]);

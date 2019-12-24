@@ -22,7 +22,7 @@ const ajv = new Ajv({ unknownFormats: ['int32', 'int64']});
       params?: {{capitalize name}}Params;
       {{/if}}
       {{#if data}}
-        data?: {{capitalize name}}RequestBody{{capitalize mimeTypeSuffix}};
+        data?: FormData | {{capitalize name}}RequestBody{{capitalize mimeTypeSuffix}};
       {{/if}}
       {{#if header}}
       headers?: {{capitalize name}}Headers,

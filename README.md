@@ -6,7 +6,7 @@
 
 # openapi-client-sdk-loader
 
-Load client sdk from Open API documentation
+Generates the client sdk from [Open API 3.0](https://swagger.io/docs/specification/about/) documentation.
 
 ## Getting Started
 
@@ -104,7 +104,7 @@ Default: `{ validateRequest: true, validateResponse: true }`
 
 A set of options passed to handlebars templates during compilation.
 
-It is passed to the handlebars template as the `options` property. This option can have any shape. For the default typescript template it contains only two properties.
+It is passed to the handlebars template as the `options` property. This option can have any shape. For the default typescript template it contains only two properties. See [`Templates`](#Templates) for more info.
 
 ### `skipInvalid`
 
@@ -123,6 +123,122 @@ Default: `{ singleQuote: true, trailingComma: 'es5', printWidth: 100 }`
 A set of options to pass into prettier for formatting function.
 
 If you use source maps, the generated code will be shown in the sources panel. Formatting can make it easier too read. See [`Prettier docs`](https://github.com/prettier/prettier) for the list of all available options.
+
+## Templates
+
+### ts template
+A built-in template for the typescript client sdk generation. Creates an sdk method for every operation. Every operation in the documentation has to have the `operationId`, this id is used as a name of a generated function in the resulting code.
+
+#### Template options
+|                    Name                     |            Type             | Default  | Description                                                            |
+| :-----------------------------------------: | :-------------------------: | :------: | :--------------------------------------------------------------------- |
+|        **validateRequest**        |         `{Boolean}`         | `true`  | Enables/Disables json schema validation for parameters, query strings, headers and request bodies                             |
+|        **validateResponse**        |         `{Boolean}`         | `true`  | Enables/Disables json schema validation for responses                             |
+
+#### Example
+
+**api.yaml**
+```
+openapi: 3.0.1
+info:
+  title: Swagger Doc
+  description: 'This is a sample server.'
+  version: 1.0.3
+servers:
+- url: https://petstore.swagger.io/v2
+- url: http://petstore.swagger.io/v2
+paths:
+  /some-path/{id}:
+    post:
+      summary: Summary
+      description: Returns a single element
+      operationId: someApiMethod
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: tag
+        in: query
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Desc
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ order ]
+              properties:
+                order:
+                  type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+```
+
+**file.ts**
+
+```js
+import { someApiMethod } from './api.yaml';
+
+someApiMethod({
+    params: {
+        id: 3,
+    },
+    query: {
+        tag: 'some tag',
+    },
+    data: {
+        order: 'asc'
+    }
+})
+    .then(doSomeStuffWithTheResult)
+    .catch(handleError)
+```
+
+**webpack.config.js**
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.(yaml|ts)$/i,
+        rules: [
+          {
+            loader: require.resolve('ts-loader'),
+            options: {
+              configFile: path.resolve(__dirname, '../tsconfig.json'),
+              appendTsSuffixTo: [/\.yaml$/],
+            },
+          },
+          {
+            loader: require.resolve('openapi-client-sdk-loader'),
+            options: {
+              compiler: 'ts',
+              templateOptions: {
+                validateRequest: true,
+                validateResponse: true,
+              },
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+```
 
 ## Contributing
 

@@ -82,7 +82,7 @@ And run `webpack` via your preferred method.
 Type: `String|Function`
 Default: `'ts'`
 
-Compiler that is going to be used while processing the api object returned from the SwaggerParser.
+Compiler that is going to be used while processing the api object returned from the [`SwaggerParser`](https://github.com/APIDevTools/swagger-parser).
 
 #### `String`
 The name of one of the build-in compilers. (For now, there is only one ts compiler).
@@ -95,7 +95,7 @@ Custom function that receives the api object and the loader options, and returns
 Type: `String`
 Default: `'path_to_project/node_modules/openapi-client-sdk-loader/src/templates/ts'`
 
-Absolute path to the directory with the handlebars template that is going to be used during code generation.  In the folder there should be at least one file `index.handlebars`. If there are more handlebars files in the given directory, others become partials that can be used by their names in every handlebars file.
+Absolute path to the directory with the handlebars template that is going to be used during code generation.  In the folder there should be at least one file `index.handlebars`. If there are more handlebars files in the given directory, others become partials that can be used by their names in every handlebars file. See [`Handlebars docs`](https://github.com/wycats/handlebars.js) for more info on templates.
 
 ### `templateOptions`
 
@@ -122,7 +122,7 @@ Default: `{ singleQuote: true, trailingComma: 'es5', printWidth: 100 }`
 
 A set of options to pass into prettier for formatting function.
 
-If you use source maps, the generated code will be shown in the sources panel. Formatting can make it easier too read.
+If you use source maps, the generated code will be shown in the sources panel. Formatting can make it easier too read. See [`Prettier docs`](https://github.com/prettier/prettier) for the list of all available options.
 
 ## Contributing
 

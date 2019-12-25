@@ -70,7 +70,7 @@ And run `webpack` via your preferred method.
 
 |                    Name                     |            Type             | Default  | Description                                                            |
 | :-----------------------------------------: | :-------------------------: | :------: | :--------------------------------------------------------------------- |
-|              **[`compiler`](#compiler)**              |    `{String\|Function}`    |  `'ts'`  | Compiler to use for the processing of an swagger api object                  |
+|              **[`compiler`](#compiler)**              |    `{String\|Function}`    |  `'ts'`  | Compiler to use for the processing of a swagger api object                  |
 |           **[`template`](#template)**           |    `{String}`    |  `'path_to_project/node_modules/openapi-client-sdk-loader/src/templates/ts'`  | Absolute path to the directory with a handlebars template                           |
 |          **[`templateOptions`](#templateOptions)**          | `{Object}` | `{ validateRequest: true, validateResponse: true }`  | A set of options passed to handlebars files during compilation                   |
 |        **[`skipInvalid`](#skipInvalid)**        |         `{Boolean}`         | `true`  | Enables/Disables failing on importing invalid swagger documents                             |

@@ -207,36 +207,263 @@ someApiMethod({
     .catch(handleError)
 ```
 
-**webpack.config.js**
+**generated code**
 
 ```js
-module.exports = {
-  module: {
-    rules: [
-      {
-        test: /\.(yaml|ts)$/i,
-        rules: [
-          {
-            loader: require.resolve('ts-loader'),
-            options: {
-              configFile: path.resolve(__dirname, '../tsconfig.json'),
-              appendTsSuffixTo: [/\.yaml$/],
-            },
-          },
-          {
-            loader: require.resolve('openapi-client-sdk-loader'),
-            options: {
-              compiler: 'ts',
-              templateOptions: {
-                validateRequest: true,
-                validateResponse: true,
-              },
-            },
-          },
-        ],
-      },
-    ],
-  },
+import Ajv from 'ajv';
+import { stringify } from 'query-string';
+
+const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary'] });
+
+class ApiError extends Error {
+  status: number;
+
+  statusText: string;
+
+  headers: Headers;
+
+  response: any;
+
+  constructor({
+    status,
+    statusText,
+    response,
+    message,
+    headers,
+  }: {
+    status: number;
+    statusText: string;
+    response: any;
+    message: string;
+    headers: Headers;
+  }) {
+    super(message);
+    this.status = status;
+    this.response = response;
+    this.statusText = statusText;
+    this.headers = headers;
+  }
+}
+
+class ClientCodeError extends Error {}
+
+class RequestValidationError extends Error {
+  element: 'query' | 'params' | 'body' | 'headers';
+
+  method: string;
+
+  errors: any[];
+
+  constructor({
+    message,
+    element,
+    method,
+    errors = [],
+  }: {
+    message: string;
+    element: 'query' | 'params' | 'body' | 'headers';
+    method: string;
+    errors?: any[];
+  }) {
+    super(message);
+
+    this.element = element;
+    this.method = method;
+    this.errors = errors;
+  }
+}
+
+class ResponseValidationError extends Error {
+  method: string;
+
+  errors: any[];
+
+  constructor({
+    message,
+    method,
+    errors = [],
+  }: {
+    message: string;
+    method: string;
+    errors?: any[];
+  }) {
+    super(message);
+
+    this.method = method;
+    this.errors = errors;
+  }
+}
+
+export interface Config {
+  baseUrl: string;
+  preMiddleware: (url: string, params: RequestInit) => Promise<[string, RequestInit]>;
+}
+
+const defaultConfig: Config = {
+  baseUrl: process.env.API_BASE_URL || 'https://petstore.swagger.io/v2',
+  preMiddleware: (url: string, params: RequestInit) => Promise.resolve([url, params]),
+};
+
+export interface SomeApiMethodParams {
+  id: number;
+}
+
+export interface SomeApiMethodQuery {
+  tag: string;
+}
+
+export interface SomeApiMethodRequestBodyJson {
+  order: string;
+}
+
+export interface SomeApiMethodResponse {
+  id?: string;
+}
+
+export interface SomeApiMethodRequest {
+  query?: SomeApiMethodQuery;
+  params?: SomeApiMethodParams;
+  data?: FormData | SomeApiMethodRequestBodyJson;
+}
+export const someApiMethod: (
+  request: SomeApiMethodRequest,
+  config?: Config
+) => Promise<SomeApiMethodResponse> = async (
+  { query = {}, params = {}, data = {} } = {},
+  config = defaultConfig
+) => {
+  let requestUrl = `${config.baseUrl}/some-path/{id}`;
+
+  const querySchema = {
+    type: 'object',
+    required: ['tag'],
+    properties: { tag: { type: 'string' } },
+  };
+
+  function isQuery(obj: unknown): obj is SomeApiMethodQuery {
+    const isValid = ajv.validate(querySchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isQuery(query)) {
+    throw new RequestValidationError({
+      message: 'Request query string schema validation error',
+      method: 'someApiMethod',
+      element: 'query',
+    });
+  }
+
+  if (Object.keys(query)) {
+    requestUrl = `${requestUrl}?${stringify(query, { arrayFormat: 'bracket' })}`;
+  }
+
+  const paramsSchema = {
+    type: 'object',
+    required: ['id'],
+    properties: { id: { type: 'integer', format: 'int64' } },
+  };
+
+  function isParams(obj: unknown): obj is SomeApiMethodParams {
+    const isValid = ajv.validate(paramsSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isParams(params)) {
+    throw new RequestValidationError({
+      message: 'Request params schema validation error',
+      method: 'someApiMethod',
+      element: 'params',
+    });
+  }
+
+  type SomeApiMethodParamsKeys = keyof SomeApiMethodParams;
+
+  const paramsKeys = Object.keys(params) as SomeApiMethodParamsKeys[];
+
+  if (paramsKeys.length) {
+    paramsKeys.forEach(param => {
+      requestUrl = requestUrl.replace(`{${param}}`, encodeURIComponent(String(params[param])));
+    });
+  }
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  if (!(data instanceof FormData)) {
+    const bodySchema = {
+      type: 'object',
+      required: ['order'],
+      properties: { order: { type: 'string' } },
+    };
+    const isBodyValid = ajv.validate(bodySchema, data);
+
+    if (!isBodyValid) {
+      throw new RequestValidationError({
+        message: 'Request body schema validation error',
+        method: 'someApiMethod',
+        element: 'body',
+      });
+    }
+  }
+
+  let requestParams;
+
+  if (data) {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    };
+  } else {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+    };
+  }
+
+  let response: unknown;
+
+  try {
+    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+    const responseObject = await fetch(processedUrl, processedParams);
+    response = await responseObject.json();
+
+    if (!responseObject.ok) {
+      throw new ApiError({
+        message: 'Api error while fetching someApiMethod',
+        status: responseObject.status,
+        statusText: responseObject.statusText,
+        response,
+        headers: responseObject.headers,
+      });
+    }
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    } else {
+      throw error as ClientCodeError;
+    }
+  }
+
+  const responseSchema = { type: 'object', properties: { id: { type: 'string' } } };
+
+  function isResponse(obj: unknown): obj is SomeApiMethodResponse {
+    const isValid = ajv.validate(responseSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isResponse(response)) {
+    throw new ResponseValidationError({
+      message: 'Response schema validation error',
+      method: 'someApiMethod',
+    });
+  }
+
+  return response;
 };
 ```
 

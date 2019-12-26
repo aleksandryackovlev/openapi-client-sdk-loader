@@ -9,6 +9,7 @@
           message: 'Request body schema validation error',
           method: '{{operation.name}}',
           element: 'body',
+          errors: ajv.errors || [],
         });
       }
     }

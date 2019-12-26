@@ -39,6 +39,7 @@ try {
     throw new ResponseValidationError({
       message: 'Response schema validation error',
       method: '{{operation.name}}',
+      errors: ajv.errors || [],
     });
   }
 

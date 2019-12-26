@@ -12,6 +12,7 @@
       message: 'Request headers schema validation error',
       method: '{{operation.name}}',
       element: 'headers',
+      errors: ajv.errors || [],
     });
   }
 {{/if}}

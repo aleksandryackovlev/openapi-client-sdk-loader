@@ -13,6 +13,7 @@
         message: 'Request params schema validation error',
         method: '{{operation.name}}',
         element: 'params',
+        errors: ajv.errors || [],
       });
     }
   {{/if}}

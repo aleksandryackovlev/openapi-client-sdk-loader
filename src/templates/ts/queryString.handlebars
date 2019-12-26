@@ -13,6 +13,7 @@
         message: 'Request query string schema validation error',
         method: '{{operation.name}}',
         element: 'query',
+        errors: ajv.errors || [],
       });
     }
   {{/if}}

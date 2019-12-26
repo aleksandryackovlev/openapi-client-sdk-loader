@@ -1,4 +1,7 @@
 <div align="center">
+  <a href="https://swagger.io/docs/specification/about/">
+    <img src="https://rawgit.com/aleksandryackovlev/openapi-client-sdk-loader/master/assests/openapi-logo.png" alt="Open API logo" width="200" height="200">
+  </a>
   <a href="https://github.com/webpack/webpack">
     <img width="200" height="200" src="https://webpack.js.org/assets/icon-square-big.svg">
   </a>

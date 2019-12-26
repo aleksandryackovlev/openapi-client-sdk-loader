@@ -7,7 +7,7 @@
   "author": "Aleksandr Yackovlev <aleksandryackovlev@yandex.ru>",
   "homepage": "https://github.com/aleksandryackovlev/openapi-client-sdk-loader",
   "bugs": "https://github.com/aleksandryackovlev/openapi-client-sdk-loader/issues",
-  "main": "index.js",
+  "main": "dist/cjs.js",
   "engines": {
     "node": ">= 10.13.0"
   },

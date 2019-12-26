@@ -12,7 +12,7 @@ import { stringify } from 'query-string';
 
 const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary'] });
 
-class ApiError extends Error {
+export class ApiError extends Error {
   status: number;
 
   statusText: string;
@@ -42,9 +42,9 @@ class ApiError extends Error {
   }
 }
 
-class ClientCodeError extends Error {}
+export class ClientCodeError extends Error {}
 
-class RequestValidationError extends Error {
+export class RequestValidationError extends Error {
   element: 'query' | 'params' | 'body' | 'headers';
 
   method: string;
@@ -70,7 +70,7 @@ class RequestValidationError extends Error {
   }
 }
 
-class ResponseValidationError extends Error {
+export class ResponseValidationError extends Error {
   method: string;
 
   errors: any[];

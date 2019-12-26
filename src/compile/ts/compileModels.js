@@ -23,10 +23,10 @@ const compileBodies = (bodies, nameSuffix) =>
 
 export default async (api) =>
   Promise.all([
-    api.components && api.components.shemas
+    api.components && api.components.schemas
       ? compile(api.components.schemas, (schemas, name) => [schemas[name], name])
       : Promise.resolve(''),
-    api.components && api.components.shemas
+    api.components && api.components.schemas
       ? compile(api.components.parameters, (schemas, name) => [
           schemas[name].schema,
           `${name}Param`,

@@ -27,5 +27,5 @@ describe('loader', () => {
     expect(execute(readAsset('main.bundle.js', compiler, stats))).toMatchSnapshot('result');
     expect(getErrors(stats)).toMatchSnapshot('errors');
     expect(getWarnings(stats)).toMatchSnapshot('warnings');
-  });
+  }, 10000);
 });

@@ -12,14 +12,14 @@ import { stringify } from 'query-string';
 
 const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary'] });
 
-export class ApiError extends Error {
+export class ApiError<T> extends Error {
   status: number;
 
   statusText: string;
 
   headers: Headers;
 
-  response: any;
+  response: T;
 
   constructor({
     status,
@@ -30,7 +30,7 @@ export class ApiError extends Error {
   }: {
     status: number;
     statusText: string;
-    response: any;
+    response: T;
     message: string;
     headers: Headers;
   }) {
@@ -482,7 +482,7 @@ export const getPetById: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching getPetById',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -638,7 +638,7 @@ export const updatePetWithForm: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching updatePetWithForm',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -744,7 +744,7 @@ export const deletePet: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching deletePet',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -854,7 +854,7 @@ export const uploadFile: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching uploadFile',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -979,7 +979,7 @@ export const updatePet: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching updatePet',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -1081,7 +1081,7 @@ export const addPet: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching addPet',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -1160,7 +1160,7 @@ export const findPetsByStatus: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching findPetsByStatus',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -1285,7 +1285,7 @@ export const findPetsByTags: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching findPetsByTags',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -1378,7 +1378,7 @@ export const getInventory: (config?: Partial<Config>) => Promise<GetInventoryRes
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching getInventory',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -1477,7 +1477,7 @@ export const getOrderById: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching getOrderById',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -1585,7 +1585,7 @@ export const deleteOrder: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching deleteOrder',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -1670,7 +1670,7 @@ export const placeOrder: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching placeOrder',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -1781,7 +1781,7 @@ export const getUserByName: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching getUserByName',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -1928,7 +1928,7 @@ export const updateUser: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching updateUser',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -2005,7 +2005,7 @@ export const deleteUser: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching deleteUser',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -2076,7 +2076,7 @@ export const loginUser: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching loginUser',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -2134,7 +2134,7 @@ export const logoutUser: (config?: Partial<Config>) => Promise<LogoutUserRespons
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching logoutUser',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -2217,7 +2217,7 @@ export const createUser: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching createUser',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -2306,7 +2306,7 @@ export const createUsersWithArrayInput: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching createUsersWithArrayInput',
         status: responseObject.status,
         statusText: responseObject.statusText,
@@ -2395,7 +2395,7 @@ export const createUsersWithListInput: (
     response = await responseObject.json();
 
     if (!responseObject.ok) {
-      throw new ApiError({
+      throw new ApiError<typeof response>({
         message: 'Api error while fetching createUsersWithListInput',
         status: responseObject.status,
         statusText: responseObject.statusText,

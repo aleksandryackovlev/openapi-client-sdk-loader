@@ -10,7 +10,7 @@ try {
   response = await responseObject.json();
 
   if (!responseObject.ok) {
-    throw new ApiError({
+    throw new ApiError<typeof response>({
       message: 'Api error while fetching {{operation.name}}',
       status: responseObject.status,
       statusText: responseObject.statusText,

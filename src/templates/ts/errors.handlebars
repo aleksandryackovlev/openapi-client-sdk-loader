@@ -1,11 +1,11 @@
-export class ApiError extends Error {
+export class ApiError<T> extends Error {
   status: number;
 
   statusText: string;
 
   headers: Headers;
 
-  response: any;
+  response: T;
 
   constructor({
     status,
@@ -16,7 +16,7 @@ export class ApiError extends Error {
   }: {
     status: number;
     statusText: string;
-    response: any;
+    response: T;
     message: string;
     headers: Headers;
   }) {

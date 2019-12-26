@@ -241,7 +241,7 @@ someApiMethod({
         url,
         {
             ...params,
-            headers: { ...params.headers, Authorization }
+            headers: { ...params.headers, Authorization: token },
         }
         ];
    },

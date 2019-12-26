@@ -195,22 +195,62 @@ paths:
 ```js
 import { someApiMethod } from './api.yaml';
 
+// Basic use case
 someApiMethod({
+    // url parameters
     params: {
         id: 3,
     },
+    // query parameters
     query: {
         tag: 'some tag',
     },
+    // request body
     data: {
         order: 'asc'
     }
 })
     .then(doSomeStuffWithTheResult)
-    .catch(handleError)
+    .catch(handleError);
+    
+// Request with custom options
+someApiMethod({
+    // url parameters
+    params: {
+        id: 3,
+    },
+    // query parameters
+    query: {
+        tag: 'some tag',
+    },
+    // request body
+    data: {
+        order: 'asc',
+    },
+}, {
+    // API base url
+   baseUrl: 'https://github.com', // default process.env.API_BASE_URL || '{{api.server.url}}'
+   
+   // Middleware to run before fetching the request
+   preMiddleware: async (url: string, params: RequestInit): Promise<[string, RequestInit]> => { // default (url: string, params: RequestInit) => Promise.resolve([url, params])
+       // do some manipulation with the data. for example, get an auth token
+       const token = await getSomeTokenAsync(url, params);
+       
+       // return a tuple
+       return [
+        url,
+        {
+            ...params,
+            headers: { ...params.headers, Authorization }
+        }
+        ];
+   },
+})
+    .then(doSomeStuffWithTheResult)
+    .catch(handleError);
 ```
 
-**generated code**
+**Generated code of the sdk client:**
 
 ```js
 import Ajv from 'ajv';

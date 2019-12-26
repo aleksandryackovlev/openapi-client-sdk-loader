@@ -49,7 +49,7 @@ export class RequestValidationError extends Error {
 
   method: string;
 
-  errors: any[];
+  errors: Ajv.ErrorObject[];
 
   constructor({
     message,
@@ -60,7 +60,7 @@ export class RequestValidationError extends Error {
     message: string;
     element: 'query' | 'params' | 'body' | 'headers';
     method: string;
-    errors?: any[];
+    errors?: Ajv.ErrorObject[];
   }) {
     super(message);
 
@@ -73,7 +73,7 @@ export class RequestValidationError extends Error {
 export class ResponseValidationError extends Error {
   method: string;
 
-  errors: any[];
+  errors: Ajv.ErrorObject[];
 
   constructor({
     message,
@@ -82,7 +82,7 @@ export class ResponseValidationError extends Error {
   }: {
     message: string;
     method: string;
-    errors?: any[];
+    errors?: Ajv.ErrorObject[];
   }) {
     super(message);
 
@@ -451,6 +451,7 @@ export const getPetById: (
       message: 'Request params schema validation error',
       method: 'getPetById',
       element: 'params',
+      errors: ajv.errors || [],
     });
   }
 
@@ -541,6 +542,7 @@ export const getPetById: (
     throw new ResponseValidationError({
       message: 'Response schema validation error',
       method: 'getPetById',
+      errors: ajv.errors || [],
     });
   }
 
@@ -578,6 +580,7 @@ export const updatePetWithForm: (
       message: 'Request params schema validation error',
       method: 'updatePetWithForm',
       element: 'params',
+      errors: ajv.errors || [],
     });
   }
 
@@ -607,6 +610,7 @@ export const updatePetWithForm: (
         message: 'Request body schema validation error',
         method: 'updatePetWithForm',
         element: 'body',
+        errors: ajv.errors || [],
       });
     }
   }
@@ -684,6 +688,7 @@ export const deletePet: (
       message: 'Request params schema validation error',
       method: 'deletePet',
       element: 'params',
+      errors: ajv.errors || [],
     });
   }
 
@@ -714,6 +719,7 @@ export const deletePet: (
       message: 'Request headers schema validation error',
       method: 'deletePet',
       element: 'headers',
+      errors: ajv.errors || [],
     });
   }
 
@@ -788,6 +794,7 @@ export const uploadFile: (
       message: 'Request params schema validation error',
       method: 'uploadFile',
       element: 'params',
+      errors: ajv.errors || [],
     });
   }
 
@@ -819,6 +826,7 @@ export const uploadFile: (
         message: 'Request body schema validation error',
         method: 'uploadFile',
         element: 'body',
+        errors: ajv.errors || [],
       });
     }
   }
@@ -881,6 +889,7 @@ export const uploadFile: (
     throw new ResponseValidationError({
       message: 'Response schema validation error',
       method: 'uploadFile',
+      errors: ajv.errors || [],
     });
   }
 
@@ -942,6 +951,7 @@ export const updatePet: (
         message: 'Request body schema validation error',
         method: 'updatePet',
         element: 'body',
+        errors: ajv.errors || [],
       });
     }
   }
@@ -1043,6 +1053,7 @@ export const addPet: (
         message: 'Request body schema validation error',
         method: 'addPet',
         element: 'body',
+        errors: ajv.errors || [],
       });
     }
   }
@@ -1124,6 +1135,7 @@ export const findPetsByStatus: (
       message: 'Request query string schema validation error',
       method: 'findPetsByStatus',
       element: 'query',
+      errors: ajv.errors || [],
     });
   }
 
@@ -1211,6 +1223,7 @@ export const findPetsByStatus: (
     throw new ResponseValidationError({
       message: 'Response schema validation error',
       method: 'findPetsByStatus',
+      errors: ajv.errors || [],
     });
   }
 
@@ -1247,6 +1260,7 @@ export const findPetsByTags: (
       message: 'Request query string schema validation error',
       method: 'findPetsByTags',
       element: 'query',
+      errors: ajv.errors || [],
     });
   }
 
@@ -1334,6 +1348,7 @@ export const findPetsByTags: (
     throw new ResponseValidationError({
       message: 'Response schema validation error',
       method: 'findPetsByTags',
+      errors: ajv.errors || [],
     });
   }
 
@@ -1394,6 +1409,7 @@ export const getInventory: (config?: Partial<Config>) => Promise<GetInventoryRes
     throw new ResponseValidationError({
       message: 'Response schema validation error',
       method: 'getInventory',
+      errors: ajv.errors || [],
     });
   }
 
@@ -1430,6 +1446,7 @@ export const getOrderById: (
       message: 'Request params schema validation error',
       method: 'getOrderById',
       element: 'params',
+      errors: ajv.errors || [],
     });
   }
 
@@ -1503,6 +1520,7 @@ export const getOrderById: (
     throw new ResponseValidationError({
       message: 'Response schema validation error',
       method: 'getOrderById',
+      errors: ajv.errors || [],
     });
   }
 
@@ -1536,6 +1554,7 @@ export const deleteOrder: (
       message: 'Request params schema validation error',
       method: 'deleteOrder',
       element: 'params',
+      errors: ajv.errors || [],
     });
   }
 
@@ -1623,6 +1642,7 @@ export const placeOrder: (
         message: 'Request body schema validation error',
         method: 'placeOrder',
         element: 'body',
+        errors: ajv.errors || [],
       });
     }
   }
@@ -1693,6 +1713,7 @@ export const placeOrder: (
     throw new ResponseValidationError({
       message: 'Response schema validation error',
       method: 'placeOrder',
+      errors: ajv.errors || [],
     });
   }
 
@@ -1729,6 +1750,7 @@ export const getUserByName: (
       message: 'Request params schema validation error',
       method: 'getUserByName',
       element: 'params',
+      errors: ajv.errors || [],
     });
   }
 
@@ -1800,6 +1822,7 @@ export const getUserByName: (
     throw new ResponseValidationError({
       message: 'Response schema validation error',
       method: 'getUserByName',
+      errors: ajv.errors || [],
     });
   }
 
@@ -1837,6 +1860,7 @@ export const updateUser: (
       message: 'Request params schema validation error',
       method: 'updateUser',
       element: 'params',
+      errors: ajv.errors || [],
     });
   }
 
@@ -1876,6 +1900,7 @@ export const updateUser: (
         message: 'Request body schema validation error',
         method: 'updateUser',
         element: 'body',
+        errors: ajv.errors || [],
       });
     }
   }
@@ -1949,6 +1974,7 @@ export const deleteUser: (
       message: 'Request params schema validation error',
       method: 'deleteUser',
       element: 'params',
+      errors: ajv.errors || [],
     });
   }
 
@@ -2025,6 +2051,7 @@ export const loginUser: (
       message: 'Request query string schema validation error',
       method: 'loginUser',
       element: 'query',
+      errors: ajv.errors || [],
     });
   }
 
@@ -2077,6 +2104,7 @@ export const loginUser: (
     throw new ResponseValidationError({
       message: 'Response schema validation error',
       method: 'loginUser',
+      errors: ajv.errors || [],
     });
   }
 
@@ -2161,6 +2189,7 @@ export const createUser: (
         message: 'Request body schema validation error',
         method: 'createUser',
         element: 'body',
+        errors: ajv.errors || [],
       });
     }
   }
@@ -2249,6 +2278,7 @@ export const createUsersWithArrayInput: (
         message: 'Request body schema validation error',
         method: 'createUsersWithArrayInput',
         element: 'body',
+        errors: ajv.errors || [],
       });
     }
   }
@@ -2337,6 +2367,7 @@ export const createUsersWithListInput: (
         message: 'Request body schema validation error',
         method: 'createUsersWithListInput',
         element: 'body',
+        errors: ajv.errors || [],
       });
     }
   }

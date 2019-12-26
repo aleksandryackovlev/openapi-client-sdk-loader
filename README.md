@@ -250,8 +250,12 @@ someApiMethod({
     .catch(handleError);
 ```
 
-**Generated code of the sdk client:**
 
+**Generated code of the sdk client:**
+<details>
+  <summary>See code</summary>
+  
+  
 ```js
 import Ajv from 'ajv';
 import { stringify } from 'query-string';
@@ -509,6 +513,7 @@ export const someApiMethod: (
   return response;
 };
 ```
+</details>
 
 ## Contributing
 

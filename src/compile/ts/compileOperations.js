@@ -6,6 +6,28 @@ import { compile } from './compileModels';
 
 const prepareMimeType = (mimeType) => dashes2capitals(basepath(mimeType));
 
+const getParams = (schemas) =>
+  schemas.reduce((prevParams, { name, in: inPath, required, schema: paramSchema }) => {
+    const inName = inPath === 'path' ? 'params' : inPath;
+    const params = { ...prevParams };
+
+    if (!params[inName]) {
+      params[inName] = {
+        type: 'object',
+        required: [],
+        properties: {},
+      };
+    }
+
+    params[inName].properties[name] = paramSchema;
+
+    if (required) {
+      params[inName].required.push(name);
+    }
+
+    return params;
+  }, {});
+
 const createOperations = (api, deref) =>
   Promise.all(
     Object.keys(deref.paths).reduce((result, path) => {
@@ -13,9 +35,10 @@ const createOperations = (api, deref) =>
         ...result,
         ...Object.keys(deref.paths[path]).map(async (method) => {
           const operation = deref.paths[path][method];
+          const unrefedOperation = api.paths[path][method];
+
           const globalSecurity = api.security;
           const localSecurity = operation.security;
-          const unrefedOperation = api.paths[path][method];
 
           let schema = {
             method: method.toUpperCase(),
@@ -25,36 +48,13 @@ const createOperations = (api, deref) =>
           };
 
           if (operation.parameters) {
-            const params = {};
+            const params = getParams(operation.parameters);
+            const models = await compile(params, (schemas, name) => [
+              schemas[name],
+              `${schema.name}${capitalize(name)}${name === 'header' ? 's' : ''}`,
+            ]);
 
-            operation.parameters.forEach(({ name, in: inPath, required, schema: paramSchema }) => {
-              const inName = inPath === 'path' ? 'params' : inPath;
-
-              if (!params[inName]) {
-                params[inName] = {
-                  type: 'object',
-                  required: [],
-                  properties: {},
-                };
-              }
-
-              params[inName].properties[name] = paramSchema;
-
-              if (required) {
-                params[inName].required.push(name);
-              }
-            });
-
-            const models = await Promise.all(
-              Object.keys(params).map((param) => {
-                return schema2typescript(
-                  params[param],
-                  `${schema.name}${capitalize(param)}${param === 'header' ? 's' : ''}`
-                );
-              })
-            );
-
-            schema = { ...schema, ...params, models: models.join('\n') };
+            schema = { ...schema, ...params, models };
           }
 
           schema.securityScheme = null;

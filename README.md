@@ -7,6 +7,8 @@
   </a>
 </div>
 
+[![Build Status](https://travis-ci.org/aleksandryackovlev/openapi-client-sdk-loader.svg?branch=master)](https://travis-ci.org/aleksandryackovlev/openapi-client-sdk-loader)
+
 # openapi-client-sdk-loader
 
 Generates the client sdk from [Open API 3.0](https://swagger.io/docs/specification/about/) documentation.

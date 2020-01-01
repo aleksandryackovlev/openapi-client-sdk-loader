@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://swagger.io/docs/specification/about/">
-    <img src="https://github.com/aleksandryackovlev/openapi-client-sdk-loader/blob/master/assets/openapi-logo.png" alt="Open API logo" width="200" height="200">
+    <img src="https://raw.githubusercontent.com/aleksandryackovlev/openapi-client-sdk-loader/master/assets/openapi-logo.png" alt="Open API logo" width="200" height="200">
   </a>
   <a href="https://github.com/webpack/webpack">
     <img width="200" height="200" src="https://webpack.js.org/assets/icon-square-big.svg">
@@ -8,6 +8,8 @@
 </div>
 
 [![Build Status](https://travis-ci.org/aleksandryackovlev/openapi-client-sdk-loader.svg?branch=master)](https://travis-ci.org/aleksandryackovlev/openapi-client-sdk-loader)
+[![npm][npm]][npm-url]
+[![size](https://packagephobia.now.sh/badge?p=openapi-client-sdk-loader)](https://packagephobia.now.sh/result?p=openapi-client-sdk-loader)
 
 # openapi-client-sdk-loader
 
@@ -526,3 +528,7 @@ Please take a moment to read our contributing guidelines if you haven't yet done
 ## License
 
 [MIT](./LICENSE)
+
+
+[npm]: https://img.shields.io/npm/v/openapi-client-sdk-loader.svg
+[npm-url]: https://npmjs.com/package/openapi-client-sdk-loader

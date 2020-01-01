@@ -24,10 +24,6 @@ export default function loader(source) {
     return callback(error);
   }
 
-  // TODO: addDependencies for watching yaml doc files
-  // TODO: validate open api schema
-  // TODO: don't throw on invalid schema if option throwOnInvalidFile is set to false
-
   return options.parser.bundle(this.resourcePath, (error, api) => {
     if (error) {
       if (options.skipInvalid) {

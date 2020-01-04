@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v0.1.1...v0.1.2) (2020-01-04)
+
+
+### Features
+
+* **compile:** add js compiler ([72a137d](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/72a137dbf3ea370bc84b71a8368e0ebc8a1b7eb6))
+* **template:** generate js code from swagger ([812a52c](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/812a52c5eb211a4ceec5a80a61d678f943f20a2d))
+
+
+### Bug Fixes
+
+* **options:** change templates depending on compiler name ([39a1e86](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/39a1e86a7e394064a01ad03ae81326d23d67597c))
+
 ### [0.1.1](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v0.1.0...v0.1.1) (2020-01-01)
 
 ## [0.1.0](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v0.0.2...v0.1.0) (2020-01-01)

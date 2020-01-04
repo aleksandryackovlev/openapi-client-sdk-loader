@@ -1,0 +1,28 @@
+{{#if operation.params}}
+  {{#if options.validateRequest}}
+    const paramsSchema = {{json operation.params}};
+
+    function isParams(obj) {
+      const isValid = ajv.validate(paramsSchema, obj);
+
+      return !!isValid;
+    }
+
+    if (!isParams(params)) {
+      throw new RequestValidationError({
+        message: 'Request params schema validation error',
+        method: '{{operation.name}}',
+        element: 'params',
+        errors: ajv.errors || [],
+      });
+    }
+  {{/if}}
+
+  const paramsKeys = Object.keys(params);
+
+  if (paramsKeys.length) {
+    paramsKeys.forEach((param) => {
+      requestUrl = requestUrl.replace(`{${param}}`, encodeURIComponent(String(params[param])));
+    });
+  }
+{{/if}}

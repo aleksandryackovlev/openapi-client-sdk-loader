@@ -3,7 +3,7 @@ import path from 'path';
 import webpack from 'webpack';
 import { createFsFromVolume, Volume } from 'memfs';
 
-export default (fixture, loaderOptions = {}, config = {}) => {
+export default (fixture, template = 'ts', loaderOptions = {}, config = {}) => {
   const fullConfig = {
     mode: 'development',
     devtool: config.devtool || false,
@@ -23,13 +23,17 @@ export default (fixture, loaderOptions = {}, config = {}) => {
         {
           test: /\.(yaml|ts)$/i,
           rules: [
-            {
-              loader: require.resolve('ts-loader'),
-              options: {
-                configFile: path.resolve(__dirname, '../tsconfig.json'),
-                appendTsSuffixTo: [/\.yaml$/],
-              },
-            },
+            template === 'ts'
+              ? {
+                  loader: require.resolve('ts-loader'),
+                  options: {
+                    configFile: path.resolve(__dirname, '../tsconfig.json'),
+                    appendTsSuffixTo: [/\.yaml$/],
+                  },
+                }
+              : {
+                  loader: require.resolve('babel-loader'),
+                },
             {
               loader: path.resolve(__dirname, '../../src'),
               options: loaderOptions || {},

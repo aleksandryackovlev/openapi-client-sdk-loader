@@ -1,0 +1,49 @@
+import Ajv from 'ajv';
+import { stringify } from 'query-string';
+
+const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary']});
+
+{{> errors this}}
+
+{{> config this}}
+
+{{#each operations}}
+  {{#if (or query header params data)}}
+    export const {{name}} = async ({
+      {{#if query}}
+        query = {},
+      {{/if}}
+      {{#if params}}
+        params = {},
+      {{/if}}
+      {{#if data}}
+        data = {},
+      {{/if}}
+      {{#if header}}
+        headers = {},
+      {{/if}}
+    } = {}, currentConfig = defaultConfig) => {
+  {{else}}
+    export const {{name}} = async (currentConfig = defaultConfig) => {
+  {{/if}}
+  const config = { ...defaultConfig, ...currentConfig };
+
+  {{#if (or query params)}}
+    let requestUrl = `${config.baseUrl}{{path}}`;
+  {{else}}
+    const requestUrl = `${config.baseUrl}{{path}}`;
+  {{/if}}
+
+
+  {{> queryString operation=this options=../options }}
+
+  {{> parameters operation=this options=../options }}
+
+  {{> headers operation=this options=../options }}
+
+  {{> body operation=this options=../options }}
+
+  {{> request operation=this options=../options }}
+  }
+{{/each}}
+

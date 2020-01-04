@@ -1,0 +1,45 @@
+export class ApiError extends Error {
+  constructor({
+    status,
+    statusText,
+    response,
+    message,
+    headers,
+  }) {
+    super(message);
+    this.status = status;
+    this.response = response;
+    this.statusText = statusText;
+    this.headers = headers;
+  }
+}
+
+export class ClientCodeError extends Error {}
+
+export class RequestValidationError extends Error {
+  constructor({
+    message,
+    element,
+    method,
+    errors = [],
+    }) {
+    super(message);
+
+    this.element = element;
+    this.method = method;
+    this.errors = errors;
+  }
+}
+
+export class ResponseValidationError extends Error {
+  constructor({
+    message,
+    method,
+    errors = [],
+  }) {
+    super(message);
+
+    this.method = method;
+    this.errors = errors;
+  }
+}

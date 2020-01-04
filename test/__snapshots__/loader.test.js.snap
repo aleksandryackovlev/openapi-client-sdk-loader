@@ -1,12 +1,1698 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`loader should work with ts-loader: errors 1`] = `Array []`;
+exports[`loader should work with babel-loader: errors 1`] = `Array []`;
 
-exports[`loader should work with ts-loader: result 1`] = `undefined`;
+exports[`loader should work with babel-loader: result 1`] = `undefined`;
 
-exports[`loader should work with ts-loader: warnings 1`] = `Array []`;
+exports[`loader should work with babel-loader: warnings 1`] = `Array []`;
 
-exports[`loader should work: runner_result 1`] = `
+exports[`loader should work with js compiler: runner_result_js 1`] = `
+"import Ajv from 'ajv';
+import { stringify } from 'query-string';
+
+const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary'] });
+
+export class ApiError extends Error {
+  constructor({ status, statusText, response, message, headers }) {
+    super(message);
+    this.status = status;
+    this.response = response;
+    this.statusText = statusText;
+    this.headers = headers;
+  }
+}
+
+export class ClientCodeError extends Error {}
+
+export class RequestValidationError extends Error {
+  constructor({ message, element, method, errors = [] }) {
+    super(message);
+
+    this.element = element;
+    this.method = method;
+    this.errors = errors;
+  }
+}
+
+export class ResponseValidationError extends Error {
+  constructor({ message, method, errors = [] }) {
+    super(message);
+
+    this.method = method;
+    this.errors = errors;
+  }
+}
+
+const defaultConfig = {
+  baseUrl: process.env.API_BASE_URL || 'https://petstore.swagger.io/v2',
+  preMiddleware: (url, params) => Promise.resolve([url, params]),
+};
+
+export const getPetById = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  let requestUrl = \`\${config.baseUrl}/pet/{petId}\`;
+
+  const paramsSchema = {
+    type: 'object',
+    required: ['petId'],
+    properties: { petId: { type: 'integer', format: 'int64' } },
+  };
+
+  function isParams(obj) {
+    const isValid = ajv.validate(paramsSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isParams(params)) {
+    throw new RequestValidationError({
+      message: 'Request params schema validation error',
+      method: 'getPetById',
+      element: 'params',
+      errors: ajv.errors || [],
+    });
+  }
+
+  const paramsKeys = Object.keys(params);
+
+  if (paramsKeys.length) {
+    paramsKeys.forEach((param) => {
+      requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
+    });
+  }
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const requestParams = {
+    method: 'GET',
+    headers: requestHeaders,
+  };
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching getPetById',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  const responseSchema = {
+    required: ['name', 'photoUrls'],
+    type: 'object',
+    properties: {
+      id: { type: 'integer', format: 'int64' },
+      category: {
+        type: 'object',
+        properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
+        xml: { name: 'Category' },
+      },
+      name: { type: 'string', example: 'doggie' },
+      photoUrls: {
+        type: 'array',
+        xml: { wrapped: true },
+        items: { type: 'string', xml: { name: 'photoUrl' } },
+      },
+      tags: {
+        type: 'array',
+        xml: { wrapped: true },
+        items: {
+          type: 'object',
+          properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
+          xml: { name: 'Tag' },
+        },
+      },
+      status: {
+        type: 'string',
+        description: 'pet status in the store',
+        enum: ['available', 'pending', 'sold'],
+      },
+    },
+    xml: { name: 'Pet' },
+  };
+
+  function isResponse(obj) {
+    const isValid = ajv.validate(responseSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isResponse(response)) {
+    throw new ResponseValidationError({
+      message: 'Response schema validation error',
+      method: 'getPetById',
+      errors: ajv.errors || [],
+    });
+  }
+
+  return response;
+};
+export const updatePetWithForm = async (
+  { params = {}, data = {} } = {},
+  currentConfig = defaultConfig
+) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  let requestUrl = \`\${config.baseUrl}/pet/{petId}\`;
+
+  const paramsSchema = {
+    type: 'object',
+    required: ['petId'],
+    properties: { petId: { type: 'integer', format: 'int64' } },
+  };
+
+  function isParams(obj) {
+    const isValid = ajv.validate(paramsSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isParams(params)) {
+    throw new RequestValidationError({
+      message: 'Request params schema validation error',
+      method: 'updatePetWithForm',
+      element: 'params',
+      errors: ajv.errors || [],
+    });
+  }
+
+  const paramsKeys = Object.keys(params);
+
+  if (paramsKeys.length) {
+    paramsKeys.forEach((param) => {
+      requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
+    });
+  }
+
+  const requestHeaders = {
+    'Content-Type': 'application/xml',
+  };
+
+  if (!(data instanceof FormData)) {
+    const bodySchema = {
+      type: 'object',
+      properties: { id: { type: 'string' }, title: { type: 'string' } },
+    };
+    const isBodyValid = ajv.validate(bodySchema, data);
+
+    if (!isBodyValid) {
+      throw new RequestValidationError({
+        message: 'Request body schema validation error',
+        method: 'updatePetWithForm',
+        element: 'body',
+        errors: ajv.errors || [],
+      });
+    }
+  }
+
+  let requestParams;
+
+  if (data) {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    };
+  } else {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+    };
+  }
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching updatePetWithForm',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  return response;
+};
+export const deletePet = async (
+  { params = {}, headers = {} } = {},
+  currentConfig = defaultConfig
+) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  let requestUrl = \`\${config.baseUrl}/pet/{petId}\`;
+
+  const paramsSchema = {
+    type: 'object',
+    required: ['petId'],
+    properties: { petId: { type: 'integer', format: 'int64' } },
+  };
+
+  function isParams(obj) {
+    const isValid = ajv.validate(paramsSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isParams(params)) {
+    throw new RequestValidationError({
+      message: 'Request params schema validation error',
+      method: 'deletePet',
+      element: 'params',
+      errors: ajv.errors || [],
+    });
+  }
+
+  const paramsKeys = Object.keys(params);
+
+  if (paramsKeys.length) {
+    paramsKeys.forEach((param) => {
+      requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
+    });
+  }
+
+  const headersSchema = {
+    type: 'object',
+    required: [],
+    properties: { api_key: { type: 'string' } },
+  };
+
+  function isHeaders(obj) {
+    const isValid = ajv.validate(headersSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isHeaders(headers)) {
+    throw new RequestValidationError({
+      message: 'Request headers schema validation error',
+      method: 'deletePet',
+      element: 'headers',
+      errors: ajv.errors || [],
+    });
+  }
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+    ...headers,
+  };
+
+  const requestParams = {
+    method: 'DELETE',
+    headers: requestHeaders,
+  };
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching deletePet',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  return response;
+};
+export const uploadFile = async (
+  { params = {}, data = {} } = {},
+  currentConfig = defaultConfig
+) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  let requestUrl = \`\${config.baseUrl}/pet/{petId}/uploadImage\`;
+
+  const paramsSchema = {
+    type: 'object',
+    required: ['petId'],
+    properties: { petId: { type: 'integer', format: 'int64' } },
+  };
+
+  function isParams(obj) {
+    const isValid = ajv.validate(paramsSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isParams(params)) {
+    throw new RequestValidationError({
+      message: 'Request params schema validation error',
+      method: 'uploadFile',
+      element: 'params',
+      errors: ajv.errors || [],
+    });
+  }
+
+  const paramsKeys = Object.keys(params);
+
+  if (paramsKeys.length) {
+    paramsKeys.forEach((param) => {
+      requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
+    });
+  }
+
+  const requestHeaders = {
+    'Content-Type': 'multipart/form-data',
+  };
+
+  if (!(data instanceof FormData)) {
+    const bodySchema = {
+      properties: {
+        additionalMetadata: { type: 'string', description: 'Additional data to pass to server' },
+        file: { type: 'string', description: 'file to upload', format: 'binary' },
+      },
+    };
+    const isBodyValid = ajv.validate(bodySchema, data);
+
+    if (!isBodyValid) {
+      throw new RequestValidationError({
+        message: 'Request body schema validation error',
+        method: 'uploadFile',
+        element: 'body',
+        errors: ajv.errors || [],
+      });
+    }
+  }
+
+  let requestParams;
+
+  if (data) {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    };
+  } else {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+    };
+  }
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching uploadFile',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  const responseSchema = {
+    type: 'object',
+    properties: {
+      code: { type: 'integer', format: 'int32' },
+      type: { type: 'string' },
+      message: { type: 'string' },
+    },
+  };
+
+  function isResponse(obj) {
+    const isValid = ajv.validate(responseSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isResponse(response)) {
+    throw new ResponseValidationError({
+      message: 'Response schema validation error',
+      method: 'uploadFile',
+      errors: ajv.errors || [],
+    });
+  }
+
+  return response;
+};
+export const updatePet = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  const requestUrl = \`\${config.baseUrl}/pet\`;
+
+  const requestHeaders = {
+    'Content-Type': 'application/xml',
+  };
+
+  if (!(data instanceof FormData)) {
+    const bodySchema = {
+      required: ['name', 'photoUrls'],
+      type: 'object',
+      properties: {
+        id: { type: 'integer', format: 'int64' },
+        category: {
+          type: 'object',
+          properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
+          xml: { name: 'Category' },
+        },
+        name: { type: 'string', example: 'doggie' },
+        photoUrls: {
+          type: 'array',
+          xml: { wrapped: true },
+          items: { type: 'string', xml: { name: 'photoUrl' } },
+        },
+        tags: {
+          type: 'array',
+          xml: { wrapped: true },
+          items: {
+            type: 'object',
+            properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
+            xml: { name: 'Tag' },
+          },
+        },
+        status: {
+          type: 'string',
+          description: 'pet status in the store',
+          enum: ['available', 'pending', 'sold'],
+        },
+      },
+      xml: { name: 'Pet' },
+    };
+    const isBodyValid = ajv.validate(bodySchema, data);
+
+    if (!isBodyValid) {
+      throw new RequestValidationError({
+        message: 'Request body schema validation error',
+        method: 'updatePet',
+        element: 'body',
+        errors: ajv.errors || [],
+      });
+    }
+  }
+
+  let requestParams;
+
+  if (data) {
+    requestParams = {
+      method: 'PUT',
+      headers: requestHeaders,
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    };
+  } else {
+    requestParams = {
+      method: 'PUT',
+      headers: requestHeaders,
+    };
+  }
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching updatePet',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  return response;
+};
+export const addPet = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  const requestUrl = \`\${config.baseUrl}/pet\`;
+
+  const requestHeaders = {
+    'Content-Type': 'application/xml',
+  };
+
+  if (!(data instanceof FormData)) {
+    const bodySchema = {
+      required: ['name', 'photoUrls'],
+      type: 'object',
+      properties: {
+        id: { type: 'integer', format: 'int64' },
+        category: {
+          type: 'object',
+          properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
+          xml: { name: 'Category' },
+        },
+        name: { type: 'string', example: 'doggie' },
+        photoUrls: {
+          type: 'array',
+          xml: { wrapped: true },
+          items: { type: 'string', xml: { name: 'photoUrl' } },
+        },
+        tags: {
+          type: 'array',
+          xml: { wrapped: true },
+          items: {
+            type: 'object',
+            properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
+            xml: { name: 'Tag' },
+          },
+        },
+        status: {
+          type: 'string',
+          description: 'pet status in the store',
+          enum: ['available', 'pending', 'sold'],
+        },
+      },
+      xml: { name: 'Pet' },
+    };
+    const isBodyValid = ajv.validate(bodySchema, data);
+
+    if (!isBodyValid) {
+      throw new RequestValidationError({
+        message: 'Request body schema validation error',
+        method: 'addPet',
+        element: 'body',
+        errors: ajv.errors || [],
+      });
+    }
+  }
+
+  let requestParams;
+
+  if (data) {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    };
+  } else {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+    };
+  }
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching addPet',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  return response;
+};
+export const findPetsByStatus = async ({ query = {} } = {}, currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  let requestUrl = \`\${config.baseUrl}/pet/findByStatus\`;
+
+  const querySchema = {
+    type: 'object',
+    required: ['status'],
+    properties: {
+      status: {
+        type: 'array',
+        items: { type: 'string', default: 'available', enum: ['available', 'pending', 'sold'] },
+      },
+    },
+  };
+
+  function isQuery(obj) {
+    const isValid = ajv.validate(querySchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isQuery(query)) {
+    throw new RequestValidationError({
+      message: 'Request query string schema validation error',
+      method: 'findPetsByStatus',
+      element: 'query',
+      errors: ajv.errors || [],
+    });
+  }
+
+  if (Object.keys(query)) {
+    requestUrl = \`\${requestUrl}?\${stringify(query, { arrayFormat: 'bracket' })}\`;
+  }
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const requestParams = {
+    method: 'GET',
+    headers: requestHeaders,
+  };
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching findPetsByStatus',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  const responseSchema = {
+    type: 'array',
+    items: {
+      required: ['name', 'photoUrls'],
+      type: 'object',
+      properties: {
+        id: { type: 'integer', format: 'int64' },
+        category: {
+          type: 'object',
+          properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
+          xml: { name: 'Category' },
+        },
+        name: { type: 'string', example: 'doggie' },
+        photoUrls: {
+          type: 'array',
+          xml: { wrapped: true },
+          items: { type: 'string', xml: { name: 'photoUrl' } },
+        },
+        tags: {
+          type: 'array',
+          xml: { wrapped: true },
+          items: {
+            type: 'object',
+            properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
+            xml: { name: 'Tag' },
+          },
+        },
+        status: {
+          type: 'string',
+          description: 'pet status in the store',
+          enum: ['available', 'pending', 'sold'],
+        },
+      },
+      xml: { name: 'Pet' },
+    },
+  };
+
+  function isResponse(obj) {
+    const isValid = ajv.validate(responseSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isResponse(response)) {
+    throw new ResponseValidationError({
+      message: 'Response schema validation error',
+      method: 'findPetsByStatus',
+      errors: ajv.errors || [],
+    });
+  }
+
+  return response;
+};
+export const findPetsByTags = async ({ query = {} } = {}, currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  let requestUrl = \`\${config.baseUrl}/pet/findByTags\`;
+
+  const querySchema = {
+    type: 'object',
+    required: ['tags'],
+    properties: { tags: { type: 'array', items: { type: 'string' } } },
+  };
+
+  function isQuery(obj) {
+    const isValid = ajv.validate(querySchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isQuery(query)) {
+    throw new RequestValidationError({
+      message: 'Request query string schema validation error',
+      method: 'findPetsByTags',
+      element: 'query',
+      errors: ajv.errors || [],
+    });
+  }
+
+  if (Object.keys(query)) {
+    requestUrl = \`\${requestUrl}?\${stringify(query, { arrayFormat: 'bracket' })}\`;
+  }
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const requestParams = {
+    method: 'GET',
+    headers: requestHeaders,
+  };
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching findPetsByTags',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  const responseSchema = {
+    type: 'array',
+    items: {
+      required: ['name', 'photoUrls'],
+      type: 'object',
+      properties: {
+        id: { type: 'integer', format: 'int64' },
+        category: {
+          type: 'object',
+          properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
+          xml: { name: 'Category' },
+        },
+        name: { type: 'string', example: 'doggie' },
+        photoUrls: {
+          type: 'array',
+          xml: { wrapped: true },
+          items: { type: 'string', xml: { name: 'photoUrl' } },
+        },
+        tags: {
+          type: 'array',
+          xml: { wrapped: true },
+          items: {
+            type: 'object',
+            properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
+            xml: { name: 'Tag' },
+          },
+        },
+        status: {
+          type: 'string',
+          description: 'pet status in the store',
+          enum: ['available', 'pending', 'sold'],
+        },
+      },
+      xml: { name: 'Pet' },
+    },
+  };
+
+  function isResponse(obj) {
+    const isValid = ajv.validate(responseSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isResponse(response)) {
+    throw new ResponseValidationError({
+      message: 'Response schema validation error',
+      method: 'findPetsByTags',
+      errors: ajv.errors || [],
+    });
+  }
+
+  return response;
+};
+export const getInventory = async (currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  const requestUrl = \`\${config.baseUrl}/store/inventory\`;
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const requestParams = {
+    method: 'GET',
+    headers: requestHeaders,
+  };
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching getInventory',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  const responseSchema = {
+    type: 'object',
+    additionalProperties: { type: 'integer', format: 'int32' },
+  };
+
+  function isResponse(obj) {
+    const isValid = ajv.validate(responseSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isResponse(response)) {
+    throw new ResponseValidationError({
+      message: 'Response schema validation error',
+      method: 'getInventory',
+      errors: ajv.errors || [],
+    });
+  }
+
+  return response;
+};
+export const getOrderById = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  let requestUrl = \`\${config.baseUrl}/store/order/{orderId}\`;
+
+  const paramsSchema = {
+    type: 'object',
+    required: ['orderId'],
+    properties: { orderId: { maximum: 10, minimum: 1, type: 'integer', format: 'int64' } },
+  };
+
+  function isParams(obj) {
+    const isValid = ajv.validate(paramsSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isParams(params)) {
+    throw new RequestValidationError({
+      message: 'Request params schema validation error',
+      method: 'getOrderById',
+      element: 'params',
+      errors: ajv.errors || [],
+    });
+  }
+
+  const paramsKeys = Object.keys(params);
+
+  if (paramsKeys.length) {
+    paramsKeys.forEach((param) => {
+      requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
+    });
+  }
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const requestParams = {
+    method: 'GET',
+    headers: requestHeaders,
+  };
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching getOrderById',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  const responseSchema = {
+    type: 'object',
+    properties: {
+      id: { type: 'integer', format: 'int64' },
+      petId: { type: 'integer', format: 'int64' },
+      quantity: { type: 'integer', format: 'int32' },
+      shipDate: { type: 'string', format: 'date-time' },
+      status: {
+        type: 'string',
+        description: 'Order Status',
+        enum: ['placed', 'approved', 'delivered'],
+      },
+      complete: { type: 'boolean' },
+    },
+    xml: { name: 'Order' },
+  };
+
+  function isResponse(obj) {
+    const isValid = ajv.validate(responseSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isResponse(response)) {
+    throw new ResponseValidationError({
+      message: 'Response schema validation error',
+      method: 'getOrderById',
+      errors: ajv.errors || [],
+    });
+  }
+
+  return response;
+};
+export const deleteOrder = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  let requestUrl = \`\${config.baseUrl}/store/order/{orderId}\`;
+
+  const paramsSchema = {
+    type: 'object',
+    required: ['orderId'],
+    properties: { orderId: { minimum: 1, type: 'integer', format: 'int64' } },
+  };
+
+  function isParams(obj) {
+    const isValid = ajv.validate(paramsSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isParams(params)) {
+    throw new RequestValidationError({
+      message: 'Request params schema validation error',
+      method: 'deleteOrder',
+      element: 'params',
+      errors: ajv.errors || [],
+    });
+  }
+
+  const paramsKeys = Object.keys(params);
+
+  if (paramsKeys.length) {
+    paramsKeys.forEach((param) => {
+      requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
+    });
+  }
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const requestParams = {
+    method: 'DELETE',
+    headers: requestHeaders,
+  };
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching deleteOrder',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  return response;
+};
+export const placeOrder = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  const requestUrl = \`\${config.baseUrl}/store/order\`;
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  if (!(data instanceof FormData)) {
+    const bodySchema = {
+      type: 'object',
+      properties: {
+        id: { type: 'integer', format: 'int64' },
+        petId: { type: 'integer', format: 'int64' },
+        quantity: { type: 'integer', format: 'int32' },
+        shipDate: { type: 'string', format: 'date-time' },
+        status: {
+          type: 'string',
+          description: 'Order Status',
+          enum: ['placed', 'approved', 'delivered'],
+        },
+        complete: { type: 'boolean' },
+      },
+      xml: { name: 'Order' },
+    };
+    const isBodyValid = ajv.validate(bodySchema, data);
+
+    if (!isBodyValid) {
+      throw new RequestValidationError({
+        message: 'Request body schema validation error',
+        method: 'placeOrder',
+        element: 'body',
+        errors: ajv.errors || [],
+      });
+    }
+  }
+
+  let requestParams;
+
+  if (data) {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    };
+  } else {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+    };
+  }
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching placeOrder',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  const responseSchema = {
+    type: 'object',
+    properties: {
+      id: { type: 'integer', format: 'int64' },
+      petId: { type: 'integer', format: 'int64' },
+      quantity: { type: 'integer', format: 'int32' },
+      shipDate: { type: 'string', format: 'date-time' },
+      status: {
+        type: 'string',
+        description: 'Order Status',
+        enum: ['placed', 'approved', 'delivered'],
+      },
+      complete: { type: 'boolean' },
+    },
+    xml: { name: 'Order' },
+  };
+
+  function isResponse(obj) {
+    const isValid = ajv.validate(responseSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isResponse(response)) {
+    throw new ResponseValidationError({
+      message: 'Response schema validation error',
+      method: 'placeOrder',
+      errors: ajv.errors || [],
+    });
+  }
+
+  return response;
+};
+export const getUserByName = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  let requestUrl = \`\${config.baseUrl}/user/{username}\`;
+
+  const paramsSchema = {
+    type: 'object',
+    required: ['username'],
+    properties: { username: { type: 'string' } },
+  };
+
+  function isParams(obj) {
+    const isValid = ajv.validate(paramsSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isParams(params)) {
+    throw new RequestValidationError({
+      message: 'Request params schema validation error',
+      method: 'getUserByName',
+      element: 'params',
+      errors: ajv.errors || [],
+    });
+  }
+
+  const paramsKeys = Object.keys(params);
+
+  if (paramsKeys.length) {
+    paramsKeys.forEach((param) => {
+      requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
+    });
+  }
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const requestParams = {
+    method: 'GET',
+    headers: requestHeaders,
+  };
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching getUserByName',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  const responseSchema = {
+    type: 'object',
+    properties: {
+      id: { type: 'integer', format: 'int64' },
+      username: { type: 'string' },
+      firstName: { type: 'string' },
+      lastName: { type: 'string' },
+      email: { type: 'string' },
+      password: { type: 'string' },
+      phone: { type: 'string' },
+      userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
+    },
+    xml: { name: 'User' },
+  };
+
+  function isResponse(obj) {
+    const isValid = ajv.validate(responseSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isResponse(response)) {
+    throw new ResponseValidationError({
+      message: 'Response schema validation error',
+      method: 'getUserByName',
+      errors: ajv.errors || [],
+    });
+  }
+
+  return response;
+};
+export const updateUser = async (
+  { params = {}, data = {} } = {},
+  currentConfig = defaultConfig
+) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  let requestUrl = \`\${config.baseUrl}/user/{username}\`;
+
+  const paramsSchema = {
+    type: 'object',
+    required: ['username'],
+    properties: { username: { type: 'string' } },
+  };
+
+  function isParams(obj) {
+    const isValid = ajv.validate(paramsSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isParams(params)) {
+    throw new RequestValidationError({
+      message: 'Request params schema validation error',
+      method: 'updateUser',
+      element: 'params',
+      errors: ajv.errors || [],
+    });
+  }
+
+  const paramsKeys = Object.keys(params);
+
+  if (paramsKeys.length) {
+    paramsKeys.forEach((param) => {
+      requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
+    });
+  }
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  if (!(data instanceof FormData)) {
+    const bodySchema = {
+      type: 'object',
+      properties: {
+        id: { type: 'integer', format: 'int64' },
+        username: { type: 'string' },
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+        email: { type: 'string' },
+        password: { type: 'string' },
+        phone: { type: 'string' },
+        userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
+      },
+      xml: { name: 'User' },
+    };
+    const isBodyValid = ajv.validate(bodySchema, data);
+
+    if (!isBodyValid) {
+      throw new RequestValidationError({
+        message: 'Request body schema validation error',
+        method: 'updateUser',
+        element: 'body',
+        errors: ajv.errors || [],
+      });
+    }
+  }
+
+  let requestParams;
+
+  if (data) {
+    requestParams = {
+      method: 'PUT',
+      headers: requestHeaders,
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    };
+  } else {
+    requestParams = {
+      method: 'PUT',
+      headers: requestHeaders,
+    };
+  }
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching updateUser',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  return response;
+};
+export const deleteUser = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  let requestUrl = \`\${config.baseUrl}/user/{username}\`;
+
+  const paramsSchema = {
+    type: 'object',
+    required: ['username'],
+    properties: { username: { type: 'string' } },
+  };
+
+  function isParams(obj) {
+    const isValid = ajv.validate(paramsSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isParams(params)) {
+    throw new RequestValidationError({
+      message: 'Request params schema validation error',
+      method: 'deleteUser',
+      element: 'params',
+      errors: ajv.errors || [],
+    });
+  }
+
+  const paramsKeys = Object.keys(params);
+
+  if (paramsKeys.length) {
+    paramsKeys.forEach((param) => {
+      requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
+    });
+  }
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const requestParams = {
+    method: 'DELETE',
+    headers: requestHeaders,
+  };
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching deleteUser',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  return response;
+};
+export const loginUser = async ({ query = {} } = {}, currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  let requestUrl = \`\${config.baseUrl}/user/login\`;
+
+  const querySchema = {
+    type: 'object',
+    required: ['username', 'password'],
+    properties: { username: { type: 'string' }, password: { type: 'string' } },
+  };
+
+  function isQuery(obj) {
+    const isValid = ajv.validate(querySchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isQuery(query)) {
+    throw new RequestValidationError({
+      message: 'Request query string schema validation error',
+      method: 'loginUser',
+      element: 'query',
+      errors: ajv.errors || [],
+    });
+  }
+
+  if (Object.keys(query)) {
+    requestUrl = \`\${requestUrl}?\${stringify(query, { arrayFormat: 'bracket' })}\`;
+  }
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const requestParams = {
+    method: 'GET',
+    headers: requestHeaders,
+  };
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching loginUser',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  const responseSchema = { type: 'string' };
+
+  function isResponse(obj) {
+    const isValid = ajv.validate(responseSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isResponse(response)) {
+    throw new ResponseValidationError({
+      message: 'Response schema validation error',
+      method: 'loginUser',
+      errors: ajv.errors || [],
+    });
+  }
+
+  return response;
+};
+export const logoutUser = async (currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  const requestUrl = \`\${config.baseUrl}/user/logout\`;
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const requestParams = {
+    method: 'GET',
+    headers: requestHeaders,
+  };
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching logoutUser',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  return response;
+};
+export const createUser = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  const requestUrl = \`\${config.baseUrl}/user\`;
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  if (!(data instanceof FormData)) {
+    const bodySchema = {
+      type: 'object',
+      properties: {
+        id: { type: 'integer', format: 'int64' },
+        username: { type: 'string' },
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+        email: { type: 'string' },
+        password: { type: 'string' },
+        phone: { type: 'string' },
+        userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
+      },
+      xml: { name: 'User' },
+    };
+    const isBodyValid = ajv.validate(bodySchema, data);
+
+    if (!isBodyValid) {
+      throw new RequestValidationError({
+        message: 'Request body schema validation error',
+        method: 'createUser',
+        element: 'body',
+        errors: ajv.errors || [],
+      });
+    }
+  }
+
+  let requestParams;
+
+  if (data) {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    };
+  } else {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+    };
+  }
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching createUser',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  return response;
+};
+export const createUsersWithArrayInput = async (
+  { data = {} } = {},
+  currentConfig = defaultConfig
+) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  const requestUrl = \`\${config.baseUrl}/user/createWithArray\`;
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  if (!(data instanceof FormData)) {
+    const bodySchema = {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer', format: 'int64' },
+          username: { type: 'string' },
+          firstName: { type: 'string' },
+          lastName: { type: 'string' },
+          email: { type: 'string' },
+          password: { type: 'string' },
+          phone: { type: 'string' },
+          userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
+        },
+        xml: { name: 'User' },
+      },
+    };
+    const isBodyValid = ajv.validate(bodySchema, data);
+
+    if (!isBodyValid) {
+      throw new RequestValidationError({
+        message: 'Request body schema validation error',
+        method: 'createUsersWithArrayInput',
+        element: 'body',
+        errors: ajv.errors || [],
+      });
+    }
+  }
+
+  let requestParams;
+
+  if (data) {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    };
+  } else {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+    };
+  }
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching createUsersWithArrayInput',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  return response;
+};
+export const createUsersWithListInput = async (
+  { data = {} } = {},
+  currentConfig = defaultConfig
+) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  const requestUrl = \`\${config.baseUrl}/user/createWithList\`;
+
+  const requestHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  if (!(data instanceof FormData)) {
+    const bodySchema = {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer', format: 'int64' },
+          username: { type: 'string' },
+          firstName: { type: 'string' },
+          lastName: { type: 'string' },
+          email: { type: 'string' },
+          password: { type: 'string' },
+          phone: { type: 'string' },
+          userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
+        },
+        xml: { name: 'User' },
+      },
+    };
+    const isBodyValid = ajv.validate(bodySchema, data);
+
+    if (!isBodyValid) {
+      throw new RequestValidationError({
+        message: 'Request body schema validation error',
+        method: 'createUsersWithListInput',
+        element: 'body',
+        errors: ajv.errors || [],
+      });
+    }
+  }
+
+  let requestParams;
+
+  if (data) {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    };
+  } else {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+    };
+  }
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching createUsersWithListInput',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
+  }
+
+  return response;
+};
+"
+`;
+
+exports[`loader should work with ts compiler: runner_result 1`] = `
 "import Ajv from 'ajv';
 import { stringify } from 'query-string';
 
@@ -2415,3 +4101,9 @@ export const createUsersWithListInput: (
 };
 "
 `;
+
+exports[`loader should work with ts-loader: errors 1`] = `Array []`;
+
+exports[`loader should work with ts-loader: result 1`] = `undefined`;
+
+exports[`loader should work with ts-loader: warnings 1`] = `Array []`;

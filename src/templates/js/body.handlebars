@@ -1,0 +1,38 @@
+{{#if operation.data}}
+  {{#if options.validateRequest}}
+    if (!(data instanceof FormData)) {
+      const bodySchema = {{json operation.data}};
+      const isBodyValid = ajv.validate(bodySchema, data);
+
+      if (!isBodyValid) {
+        throw new RequestValidationError({
+          message: 'Request body schema validation error',
+          method: '{{operation.name}}',
+          element: 'body',
+          errors: ajv.errors || [],
+        });
+      }
+    }
+  {{/if}}
+
+  let requestParams;
+
+  if (data) {
+    requestParams = {
+      method: '{{operation.method}}',
+      headers: requestHeaders,
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    };
+  } else {
+    requestParams = {
+      method: '{{operation.method}}',
+      headers: requestHeaders,
+    };
+  }
+
+{{else}}
+  const requestParams = {
+    method: '{{operation.method}}',
+    headers: requestHeaders,
+  };
+{{/if}}

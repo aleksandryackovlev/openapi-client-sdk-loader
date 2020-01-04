@@ -12,12 +12,28 @@ import {
 } from './helpers';
 
 describe('loader', () => {
-  it('should work', async () => {
+  it('should work with ts compiler', async () => {
     const runner = getRunner('petstore.yaml');
     const stats = await runner();
 
     // fs.writeFileSync(`${__dirname}/api.ts`, getRunnerResult(stats));
     expect(getRunnerResult(stats)).toMatchSnapshot('runner_result');
+  });
+
+  it('should work with js compiler', async () => {
+    const runner = getRunner('petstore.yaml', {
+      compiler: 'js',
+      style: {
+        singleQuote: true,
+        trailingComma: 'es5',
+        printWidth: 100,
+        arrowParens: 'always',
+      },
+    });
+    const stats = await runner();
+
+    // fs.writeFileSync(`${__dirname}/api.js`, getRunnerResult(stats));
+    expect(getRunnerResult(stats)).toMatchSnapshot('runner_result_js');
   });
 
   it('should work with ts-loader', async () => {

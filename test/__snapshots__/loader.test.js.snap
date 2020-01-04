@@ -1,39 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`loader should work with ts-loader: errors 1`] = `Array []`;
-
-exports[`loader should work with ts-loader: result 1`] = `undefined`;
-
-exports[`loader should work with ts-loader: warnings 1`] = `Array []`;
-
-exports[`loader should work: runner_result 1`] = `
+exports[`loader should work with js compiler: runner_result_js 1`] = `
 "import Ajv from 'ajv';
 import { stringify } from 'query-string';
 
 const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary'] });
 
-export class ApiError<T> extends Error {
-  status: number;
-
-  statusText: string;
-
-  headers: Headers;
-
-  response: T;
-
-  constructor({
-    status,
-    statusText,
-    response,
-    message,
-    headers,
-  }: {
-    status: number;
-    statusText: string;
-    response: T;
-    message: string;
-    headers: Headers;
-  }) {
+export class ApiError extends Error {
+  constructor({ status, statusText, response, message, headers }) {
     super(message);
     this.status = status;
     this.response = response;
@@ -45,23 +19,7 @@ export class ApiError<T> extends Error {
 export class ClientCodeError extends Error {}
 
 export class RequestValidationError extends Error {
-  element: 'query' | 'params' | 'body' | 'headers';
-
-  method: string;
-
-  errors: Ajv.ErrorObject[];
-
-  constructor({
-    message,
-    element,
-    method,
-    errors = [],
-  }: {
-    message: string;
-    element: 'query' | 'params' | 'body' | 'headers';
-    method: string;
-    errors?: Ajv.ErrorObject[];
-  }) {
+  constructor({ message, element, method, errors = [] }) {
     super(message);
 
     this.element = element;
@@ -71,19 +29,7 @@ export class RequestValidationError extends Error {
 }
 
 export class ResponseValidationError extends Error {
-  method: string;
-
-  errors: Ajv.ErrorObject[];
-
-  constructor({
-    message,
-    method,
-    errors = [],
-  }: {
-    message: string;
-    method: string;
-    errors?: Ajv.ErrorObject[];
-  }) {
+  constructor({ message, method, errors = [] }) {
     super(message);
 
     this.method = method;
@@ -91,345 +37,12 @@ export class ResponseValidationError extends Error {
   }
 }
 
-export interface Config {
-  baseUrl: string;
-  preMiddleware: (url: string, params: RequestInit) => Promise<[string, RequestInit]>;
-}
-
-const defaultConfig: Config = {
+const defaultConfig = {
   baseUrl: process.env.API_BASE_URL || 'https://petstore.swagger.io/v2',
-  preMiddleware: (url: string, params: RequestInit) => Promise.resolve([url, params]),
+  preMiddleware: (url, params) => Promise.resolve([url, params]),
 };
 
-export interface Category {
-  id?: number;
-  name?: string;
-}
-
-export interface Pet {
-  id?: number;
-  category?: Category;
-  name: string;
-  photoUrls: string[];
-  tags?: Tag[];
-  /**
-   * pet status in the store
-   */
-  status?: 'available' | 'pending' | 'sold';
-}
-
-export interface Tag {
-  id?: number;
-  name?: string;
-}
-
-export interface ApiResponse {
-  code?: number;
-  type?: string;
-  message?: string;
-}
-
-export interface Order {
-  id?: number;
-  petId?: number;
-  quantity?: number;
-  shipDate?: string;
-  /**
-   * Order Status
-   */
-  status?: 'placed' | 'approved' | 'delivered';
-  complete?: boolean;
-}
-
-export interface User {
-  id?: number;
-  username?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  password?: string;
-  phone?: string;
-  /**
-   * User Status
-   */
-  userStatus?: number;
-}
-
-export type OffsetParamParam = number;
-
-export interface AnotherParamParam {
-  dateFrom?: string;
-  dateTo?: string;
-}
-
-export type ErrorRequestBodyJson = User;
-
-export interface ErrorRequestBodyXml {
-  id?: string;
-  title?: string;
-}
-
-export interface GetPetByIdParams {
-  petId: number;
-}
-
-export type GetPetByIdResponse = Pet;
-
-export interface UpdatePetWithFormParams {
-  petId: number;
-}
-
-export interface UpdatePetWithFormRequestBodyJson {
-  id?: number;
-  username?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  password?: string;
-  phone?: string;
-  /**
-   * User Status
-   */
-  userStatus?: number;
-}
-
-export interface UpdatePetWithFormRequestBodyXml {
-  id?: string;
-  title?: string;
-}
-
-export type UpdatePetWithFormResponse = unknown;
-export interface DeletePetHeaders {
-  api_key?: string;
-}
-
-export interface DeletePetParams {
-  petId: number;
-}
-
-export type DeletePetResponse = unknown;
-export interface UploadFileParams {
-  petId: number;
-}
-
-export interface UploadFileRequestBodyFormData {
-  /**
-   * Additional data to pass to server
-   */
-  additionalMetadata?: string;
-  /**
-   * file to upload
-   */
-  file?: string;
-}
-
-export type UploadFileResponse = ApiResponse;
-
-export interface UpdatePetRequestBodyJson {
-  id?: number;
-  category?: {
-    id?: number;
-    name?: string;
-  };
-  name: string;
-  photoUrls: string[];
-  tags?: {
-    id?: number;
-    name?: string;
-  }[];
-  /**
-   * pet status in the store
-   */
-  status?: 'available' | 'pending' | 'sold';
-}
-
-export interface UpdatePetRequestBodyXml {
-  id?: number;
-  category?: {
-    id?: number;
-    name?: string;
-  };
-  name: string;
-  photoUrls: string[];
-  tags?: {
-    id?: number;
-    name?: string;
-  }[];
-  /**
-   * pet status in the store
-   */
-  status?: 'available' | 'pending' | 'sold';
-}
-
-export type UpdatePetResponse = unknown;
-export interface AddPetRequestBodyJson {
-  id?: number;
-  category?: {
-    id?: number;
-    name?: string;
-  };
-  name: string;
-  photoUrls: string[];
-  tags?: {
-    id?: number;
-    name?: string;
-  }[];
-  /**
-   * pet status in the store
-   */
-  status?: 'available' | 'pending' | 'sold';
-}
-
-export interface AddPetRequestBodyXml {
-  id?: number;
-  category?: {
-    id?: number;
-    name?: string;
-  };
-  name: string;
-  photoUrls: string[];
-  tags?: {
-    id?: number;
-    name?: string;
-  }[];
-  /**
-   * pet status in the store
-   */
-  status?: 'available' | 'pending' | 'sold';
-}
-
-export type AddPetResponse = unknown;
-export interface FindPetsByStatusQuery {
-  status: ('available' | 'pending' | 'sold')[];
-}
-
-export type FindPetsByStatusResponse = Pet[];
-
-export interface FindPetsByTagsQuery {
-  tags: string[];
-}
-
-export type FindPetsByTagsResponse = Pet[];
-
-export interface GetInventoryResponse {
-  [k: string]: number;
-}
-
-export interface GetOrderByIdParams {
-  orderId: number;
-}
-
-export type GetOrderByIdResponse = Order;
-
-export interface DeleteOrderParams {
-  orderId: number;
-}
-
-export type DeleteOrderResponse = unknown;
-export interface PlaceOrderRequestBodyJson {
-  id?: number;
-  petId?: number;
-  quantity?: number;
-  shipDate?: string;
-  /**
-   * Order Status
-   */
-  status?: 'placed' | 'approved' | 'delivered';
-  complete?: boolean;
-}
-
-export type PlaceOrderResponse = Order;
-
-export interface GetUserByNameParams {
-  username: string;
-}
-
-export type GetUserByNameResponse = User;
-
-export interface UpdateUserParams {
-  username: string;
-}
-
-export interface UpdateUserRequestBodyJson {
-  id?: number;
-  username?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  password?: string;
-  phone?: string;
-  /**
-   * User Status
-   */
-  userStatus?: number;
-}
-
-export type UpdateUserResponse = unknown;
-export interface DeleteUserParams {
-  username: string;
-}
-
-export type DeleteUserResponse = unknown;
-export interface LoginUserQuery {
-  username: string;
-  password: string;
-}
-
-export type LoginUserResponse = string;
-
-export type LogoutUserResponse = unknown;
-export interface CreateUserRequestBodyJson {
-  id?: number;
-  username?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  password?: string;
-  phone?: string;
-  /**
-   * User Status
-   */
-  userStatus?: number;
-}
-
-export type CreateUserResponse = unknown;
-export type CreateUsersWithArrayInputRequestBodyJson = {
-  id?: number;
-  username?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  password?: string;
-  phone?: string;
-  /**
-   * User Status
-   */
-  userStatus?: number;
-}[];
-
-export type CreateUsersWithArrayInputResponse = unknown;
-export type CreateUsersWithListInputRequestBodyJson = {
-  id?: number;
-  username?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  password?: string;
-  phone?: string;
-  /**
-   * User Status
-   */
-  userStatus?: number;
-}[];
-
-export type CreateUsersWithListInputResponse = unknown;
-export interface GetPetByIdRequest {
-  params?: GetPetByIdParams;
-}
-export const getPetById: (
-  request: GetPetByIdRequest,
-  config?: Partial<Config>
-) => Promise<GetPetByIdResponse> = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
+export const getPetById = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   let requestUrl = \`\${config.baseUrl}/pet/{petId}\`;
@@ -440,7 +53,7 @@ export const getPetById: (
     properties: { petId: { type: 'integer', format: 'int64' } },
   };
 
-  function isParams(obj: unknown): obj is GetPetByIdParams {
+  function isParams(obj) {
     const isValid = ajv.validate(paramsSchema, obj);
 
     return !!isValid;
@@ -455,12 +68,10 @@ export const getPetById: (
     });
   }
 
-  type GetPetByIdParamsKeys = keyof GetPetByIdParams;
-
-  const paramsKeys = Object.keys(params) as GetPetByIdParamsKeys[];
+  const paramsKeys = Object.keys(params);
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -474,28 +85,18 @@ export const getPetById: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching getPetById',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching getPetById',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
   const responseSchema = {
@@ -532,7 +133,7 @@ export const getPetById: (
     xml: { name: 'Pet' },
   };
 
-  function isResponse(obj: unknown): obj is GetPetByIdResponse {
+  function isResponse(obj) {
     const isValid = ajv.validate(responseSchema, obj);
 
     return !!isValid;
@@ -548,14 +149,7 @@ export const getPetById: (
 
   return response;
 };
-export interface UpdatePetWithFormRequest {
-  params?: UpdatePetWithFormParams;
-  data?: FormData | UpdatePetWithFormRequestBodyXml;
-}
-export const updatePetWithForm: (
-  request: UpdatePetWithFormRequest,
-  config?: Partial<Config>
-) => Promise<UpdatePetWithFormResponse> = async (
+export const updatePetWithForm = async (
   { params = {}, data = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -569,7 +163,7 @@ export const updatePetWithForm: (
     properties: { petId: { type: 'integer', format: 'int64' } },
   };
 
-  function isParams(obj: unknown): obj is UpdatePetWithFormParams {
+  function isParams(obj) {
     const isValid = ajv.validate(paramsSchema, obj);
 
     return !!isValid;
@@ -584,12 +178,10 @@ export const updatePetWithForm: (
     });
   }
 
-  type UpdatePetWithFormParamsKeys = keyof UpdatePetWithFormParams;
-
-  const paramsKeys = Object.keys(params) as UpdatePetWithFormParamsKeys[];
+  const paramsKeys = Object.keys(params);
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -630,40 +222,23 @@ export const updatePetWithForm: (
     };
   }
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching updatePetWithForm',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching updatePetWithForm',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
-  return response as UpdatePetWithFormResponse;
+  return response;
 };
-export interface DeletePetRequest {
-  params?: DeletePetParams;
-  headers?: DeletePetHeaders;
-}
-export const deletePet: (
-  request: DeletePetRequest,
-  config?: Partial<Config>
-) => Promise<DeletePetResponse> = async (
+export const deletePet = async (
   { params = {}, headers = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -677,7 +252,7 @@ export const deletePet: (
     properties: { petId: { type: 'integer', format: 'int64' } },
   };
 
-  function isParams(obj: unknown): obj is DeletePetParams {
+  function isParams(obj) {
     const isValid = ajv.validate(paramsSchema, obj);
 
     return !!isValid;
@@ -692,12 +267,10 @@ export const deletePet: (
     });
   }
 
-  type DeletePetParamsKeys = keyof DeletePetParams;
-
-  const paramsKeys = Object.keys(params) as DeletePetParamsKeys[];
+  const paramsKeys = Object.keys(params);
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -708,7 +281,7 @@ export const deletePet: (
     properties: { api_key: { type: 'string' } },
   };
 
-  function isHeaders(obj: unknown): obj is DeletePetHeaders {
+  function isHeaders(obj) {
     const isValid = ajv.validate(headersSchema, obj);
 
     return !!isValid;
@@ -733,43 +306,23 @@ export const deletePet: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(
-      requestUrl,
-      requestParams as RequestInit
-    );
-    const responseObject = await fetch(processedUrl, processedParams as RequestInit);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching deletePet',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching deletePet',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
-  return response as DeletePetResponse;
+  return response;
 };
-export interface UploadFileRequest {
-  params?: UploadFileParams;
-  data?: FormData | UploadFileRequestBodyFormData;
-}
-export const uploadFile: (
-  request: UploadFileRequest,
-  config?: Partial<Config>
-) => Promise<UploadFileResponse> = async (
+export const uploadFile = async (
   { params = {}, data = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -783,7 +336,7 @@ export const uploadFile: (
     properties: { petId: { type: 'integer', format: 'int64' } },
   };
 
-  function isParams(obj: unknown): obj is UploadFileParams {
+  function isParams(obj) {
     const isValid = ajv.validate(paramsSchema, obj);
 
     return !!isValid;
@@ -798,12 +351,10 @@ export const uploadFile: (
     });
   }
 
-  type UploadFileParamsKeys = keyof UploadFileParams;
-
-  const paramsKeys = Object.keys(params) as UploadFileParamsKeys[];
+  const paramsKeys = Object.keys(params);
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -846,28 +397,18 @@ export const uploadFile: (
     };
   }
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching uploadFile',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching uploadFile',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
   const responseSchema = {
@@ -879,7 +420,7 @@ export const uploadFile: (
     },
   };
 
-  function isResponse(obj: unknown): obj is UploadFileResponse {
+  function isResponse(obj) {
     const isValid = ajv.validate(responseSchema, obj);
 
     return !!isValid;
@@ -895,13 +436,7 @@ export const uploadFile: (
 
   return response;
 };
-export interface UpdatePetRequest {
-  data?: FormData | UpdatePetRequestBodyXml;
-}
-export const updatePet: (
-  request: UpdatePetRequest,
-  config?: Partial<Config>
-) => Promise<UpdatePetResponse> = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
+export const updatePet = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   const requestUrl = \`\${config.baseUrl}/pet\`;
@@ -971,39 +506,23 @@ export const updatePet: (
     };
   }
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching updatePet',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching updatePet',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
-  return response as UpdatePetResponse;
+  return response;
 };
-export interface AddPetRequest {
-  data?: FormData | AddPetRequestBodyXml;
-}
-export const addPet: (
-  request: AddPetRequest,
-  config?: Partial<Config>
-) => Promise<AddPetResponse> = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
+export const addPet = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   const requestUrl = \`\${config.baseUrl}/pet\`;
@@ -1073,42 +592,23 @@ export const addPet: (
     };
   }
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching addPet',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching addPet',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
-  return response as AddPetResponse;
+  return response;
 };
-export interface FindPetsByStatusRequest {
-  query?: FindPetsByStatusQuery;
-}
-export const findPetsByStatus: (
-  request: FindPetsByStatusRequest,
-  config?: Partial<Config>
-) => Promise<FindPetsByStatusResponse> = async (
-  { query = {} } = {},
-  currentConfig = defaultConfig
-) => {
+export const findPetsByStatus = async ({ query = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   let requestUrl = \`\${config.baseUrl}/pet/findByStatus\`;
@@ -1124,7 +624,7 @@ export const findPetsByStatus: (
     },
   };
 
-  function isQuery(obj: unknown): obj is FindPetsByStatusQuery {
+  function isQuery(obj) {
     const isValid = ajv.validate(querySchema, obj);
 
     return !!isValid;
@@ -1152,28 +652,18 @@ export const findPetsByStatus: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching findPetsByStatus',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching findPetsByStatus',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
   const responseSchema = {
@@ -1213,7 +703,7 @@ export const findPetsByStatus: (
     },
   };
 
-  function isResponse(obj: unknown): obj is FindPetsByStatusResponse {
+  function isResponse(obj) {
     const isValid = ajv.validate(responseSchema, obj);
 
     return !!isValid;
@@ -1229,16 +719,7 @@ export const findPetsByStatus: (
 
   return response;
 };
-export interface FindPetsByTagsRequest {
-  query?: FindPetsByTagsQuery;
-}
-export const findPetsByTags: (
-  request: FindPetsByTagsRequest,
-  config?: Partial<Config>
-) => Promise<FindPetsByTagsResponse> = async (
-  { query = {} } = {},
-  currentConfig = defaultConfig
-) => {
+export const findPetsByTags = async ({ query = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   let requestUrl = \`\${config.baseUrl}/pet/findByTags\`;
@@ -1249,7 +730,7 @@ export const findPetsByTags: (
     properties: { tags: { type: 'array', items: { type: 'string' } } },
   };
 
-  function isQuery(obj: unknown): obj is FindPetsByTagsQuery {
+  function isQuery(obj) {
     const isValid = ajv.validate(querySchema, obj);
 
     return !!isValid;
@@ -1277,28 +758,18 @@ export const findPetsByTags: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching findPetsByTags',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching findPetsByTags',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
   const responseSchema = {
@@ -1338,7 +809,7 @@ export const findPetsByTags: (
     },
   };
 
-  function isResponse(obj: unknown): obj is FindPetsByTagsResponse {
+  function isResponse(obj) {
     const isValid = ajv.validate(responseSchema, obj);
 
     return !!isValid;
@@ -1354,9 +825,7 @@ export const findPetsByTags: (
 
   return response;
 };
-export const getInventory: (config?: Partial<Config>) => Promise<GetInventoryResponse> = async (
-  currentConfig = defaultConfig
-) => {
+export const getInventory = async (currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   const requestUrl = \`\${config.baseUrl}/store/inventory\`;
@@ -1370,28 +839,18 @@ export const getInventory: (config?: Partial<Config>) => Promise<GetInventoryRes
     headers: requestHeaders,
   };
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching getInventory',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching getInventory',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
   const responseSchema = {
@@ -1399,7 +858,7 @@ export const getInventory: (config?: Partial<Config>) => Promise<GetInventoryRes
     additionalProperties: { type: 'integer', format: 'int32' },
   };
 
-  function isResponse(obj: unknown): obj is GetInventoryResponse {
+  function isResponse(obj) {
     const isValid = ajv.validate(responseSchema, obj);
 
     return !!isValid;
@@ -1415,16 +874,7 @@ export const getInventory: (config?: Partial<Config>) => Promise<GetInventoryRes
 
   return response;
 };
-export interface GetOrderByIdRequest {
-  params?: GetOrderByIdParams;
-}
-export const getOrderById: (
-  request: GetOrderByIdRequest,
-  config?: Partial<Config>
-) => Promise<GetOrderByIdResponse> = async (
-  { params = {} } = {},
-  currentConfig = defaultConfig
-) => {
+export const getOrderById = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   let requestUrl = \`\${config.baseUrl}/store/order/{orderId}\`;
@@ -1435,7 +885,7 @@ export const getOrderById: (
     properties: { orderId: { maximum: 10, minimum: 1, type: 'integer', format: 'int64' } },
   };
 
-  function isParams(obj: unknown): obj is GetOrderByIdParams {
+  function isParams(obj) {
     const isValid = ajv.validate(paramsSchema, obj);
 
     return !!isValid;
@@ -1450,12 +900,10 @@ export const getOrderById: (
     });
   }
 
-  type GetOrderByIdParamsKeys = keyof GetOrderByIdParams;
-
-  const paramsKeys = Object.keys(params) as GetOrderByIdParamsKeys[];
+  const paramsKeys = Object.keys(params);
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -1469,28 +917,18 @@ export const getOrderById: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching getOrderById',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching getOrderById',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
   const responseSchema = {
@@ -1510,7 +948,7 @@ export const getOrderById: (
     xml: { name: 'Order' },
   };
 
-  function isResponse(obj: unknown): obj is GetOrderByIdResponse {
+  function isResponse(obj) {
     const isValid = ajv.validate(responseSchema, obj);
 
     return !!isValid;
@@ -1526,13 +964,7 @@ export const getOrderById: (
 
   return response;
 };
-export interface DeleteOrderRequest {
-  params?: DeleteOrderParams;
-}
-export const deleteOrder: (
-  request: DeleteOrderRequest,
-  config?: Partial<Config>
-) => Promise<DeleteOrderResponse> = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
+export const deleteOrder = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   let requestUrl = \`\${config.baseUrl}/store/order/{orderId}\`;
@@ -1543,7 +975,7 @@ export const deleteOrder: (
     properties: { orderId: { minimum: 1, type: 'integer', format: 'int64' } },
   };
 
-  function isParams(obj: unknown): obj is DeleteOrderParams {
+  function isParams(obj) {
     const isValid = ajv.validate(paramsSchema, obj);
 
     return !!isValid;
@@ -1558,12 +990,10 @@ export const deleteOrder: (
     });
   }
 
-  type DeleteOrderParamsKeys = keyof DeleteOrderParams;
-
-  const paramsKeys = Object.keys(params) as DeleteOrderParamsKeys[];
+  const paramsKeys = Object.keys(params);
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -1577,39 +1007,23 @@ export const deleteOrder: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching deleteOrder',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching deleteOrder',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
-  return response as DeleteOrderResponse;
+  return response;
 };
-export interface PlaceOrderRequest {
-  data?: FormData | PlaceOrderRequestBodyJson;
-}
-export const placeOrder: (
-  request: PlaceOrderRequest,
-  config?: Partial<Config>
-) => Promise<PlaceOrderResponse> = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
+export const placeOrder = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   const requestUrl = \`\${config.baseUrl}/store/order\`;
@@ -1662,28 +1076,18 @@ export const placeOrder: (
     };
   }
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching placeOrder',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching placeOrder',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
   const responseSchema = {
@@ -1703,7 +1107,7 @@ export const placeOrder: (
     xml: { name: 'Order' },
   };
 
-  function isResponse(obj: unknown): obj is PlaceOrderResponse {
+  function isResponse(obj) {
     const isValid = ajv.validate(responseSchema, obj);
 
     return !!isValid;
@@ -1719,16 +1123,7 @@ export const placeOrder: (
 
   return response;
 };
-export interface GetUserByNameRequest {
-  params?: GetUserByNameParams;
-}
-export const getUserByName: (
-  request: GetUserByNameRequest,
-  config?: Partial<Config>
-) => Promise<GetUserByNameResponse> = async (
-  { params = {} } = {},
-  currentConfig = defaultConfig
-) => {
+export const getUserByName = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   let requestUrl = \`\${config.baseUrl}/user/{username}\`;
@@ -1739,7 +1134,7 @@ export const getUserByName: (
     properties: { username: { type: 'string' } },
   };
 
-  function isParams(obj: unknown): obj is GetUserByNameParams {
+  function isParams(obj) {
     const isValid = ajv.validate(paramsSchema, obj);
 
     return !!isValid;
@@ -1754,12 +1149,10 @@ export const getUserByName: (
     });
   }
 
-  type GetUserByNameParamsKeys = keyof GetUserByNameParams;
-
-  const paramsKeys = Object.keys(params) as GetUserByNameParamsKeys[];
+  const paramsKeys = Object.keys(params);
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -1773,28 +1166,18 @@ export const getUserByName: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching getUserByName',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching getUserByName',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
   const responseSchema = {
@@ -1812,7 +1195,7 @@ export const getUserByName: (
     xml: { name: 'User' },
   };
 
-  function isResponse(obj: unknown): obj is GetUserByNameResponse {
+  function isResponse(obj) {
     const isValid = ajv.validate(responseSchema, obj);
 
     return !!isValid;
@@ -1828,14 +1211,7 @@ export const getUserByName: (
 
   return response;
 };
-export interface UpdateUserRequest {
-  params?: UpdateUserParams;
-  data?: FormData | UpdateUserRequestBodyJson;
-}
-export const updateUser: (
-  request: UpdateUserRequest,
-  config?: Partial<Config>
-) => Promise<UpdateUserResponse> = async (
+export const updateUser = async (
   { params = {}, data = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -1849,7 +1225,7 @@ export const updateUser: (
     properties: { username: { type: 'string' } },
   };
 
-  function isParams(obj: unknown): obj is UpdateUserParams {
+  function isParams(obj) {
     const isValid = ajv.validate(paramsSchema, obj);
 
     return !!isValid;
@@ -1864,12 +1240,10 @@ export const updateUser: (
     });
   }
 
-  type UpdateUserParamsKeys = keyof UpdateUserParams;
-
-  const paramsKeys = Object.keys(params) as UpdateUserParamsKeys[];
+  const paramsKeys = Object.keys(params);
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -1920,39 +1294,23 @@ export const updateUser: (
     };
   }
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching updateUser',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching updateUser',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
-  return response as UpdateUserResponse;
+  return response;
 };
-export interface DeleteUserRequest {
-  params?: DeleteUserParams;
-}
-export const deleteUser: (
-  request: DeleteUserRequest,
-  config?: Partial<Config>
-) => Promise<DeleteUserResponse> = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
+export const deleteUser = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   let requestUrl = \`\${config.baseUrl}/user/{username}\`;
@@ -1963,7 +1321,7 @@ export const deleteUser: (
     properties: { username: { type: 'string' } },
   };
 
-  function isParams(obj: unknown): obj is DeleteUserParams {
+  function isParams(obj) {
     const isValid = ajv.validate(paramsSchema, obj);
 
     return !!isValid;
@@ -1978,12 +1336,10 @@ export const deleteUser: (
     });
   }
 
-  type DeleteUserParamsKeys = keyof DeleteUserParams;
-
-  const paramsKeys = Object.keys(params) as DeleteUserParamsKeys[];
+  const paramsKeys = Object.keys(params);
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -1997,39 +1353,23 @@ export const deleteUser: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching deleteUser',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching deleteUser',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
-  return response as DeleteUserResponse;
+  return response;
 };
-export interface LoginUserRequest {
-  query?: LoginUserQuery;
-}
-export const loginUser: (
-  request: LoginUserRequest,
-  config?: Partial<Config>
-) => Promise<LoginUserResponse> = async ({ query = {} } = {}, currentConfig = defaultConfig) => {
+export const loginUser = async ({ query = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   let requestUrl = \`\${config.baseUrl}/user/login\`;
@@ -2040,7 +1380,7 @@ export const loginUser: (
     properties: { username: { type: 'string' }, password: { type: 'string' } },
   };
 
-  function isQuery(obj: unknown): obj is LoginUserQuery {
+  function isQuery(obj) {
     const isValid = ajv.validate(querySchema, obj);
 
     return !!isValid;
@@ -2068,33 +1408,23 @@ export const loginUser: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching loginUser',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching loginUser',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
   const responseSchema = { type: 'string' };
 
-  function isResponse(obj: unknown): obj is LoginUserResponse {
+  function isResponse(obj) {
     const isValid = ajv.validate(responseSchema, obj);
 
     return !!isValid;
@@ -2110,9 +1440,7 @@ export const loginUser: (
 
   return response;
 };
-export const logoutUser: (config?: Partial<Config>) => Promise<LogoutUserResponse> = async (
-  currentConfig = defaultConfig
-) => {
+export const logoutUser = async (currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   const requestUrl = \`\${config.baseUrl}/user/logout\`;
@@ -2126,39 +1454,23 @@ export const logoutUser: (config?: Partial<Config>) => Promise<LogoutUserRespons
     headers: requestHeaders,
   };
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching logoutUser',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching logoutUser',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
-  return response as LogoutUserResponse;
+  return response;
 };
-export interface CreateUserRequest {
-  data?: FormData | CreateUserRequestBodyJson;
-}
-export const createUser: (
-  request: CreateUserRequest,
-  config?: Partial<Config>
-) => Promise<CreateUserResponse> = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
+export const createUser = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   const requestUrl = \`\${config.baseUrl}/user\`;
@@ -2209,39 +1521,23 @@ export const createUser: (
     };
   }
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching createUser',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching createUser',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
-  return response as CreateUserResponse;
+  return response;
 };
-export interface CreateUsersWithArrayInputRequest {
-  data?: FormData | CreateUsersWithArrayInputRequestBodyJson;
-}
-export const createUsersWithArrayInput: (
-  request: CreateUsersWithArrayInputRequest,
-  config?: Partial<Config>
-) => Promise<CreateUsersWithArrayInputResponse> = async (
+export const createUsersWithArrayInput = async (
   { data = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -2298,39 +1594,23 @@ export const createUsersWithArrayInput: (
     };
   }
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching createUsersWithArrayInput',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching createUsersWithArrayInput',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
-  return response as CreateUsersWithArrayInputResponse;
+  return response;
 };
-export interface CreateUsersWithListInputRequest {
-  data?: FormData | CreateUsersWithListInputRequestBodyJson;
-}
-export const createUsersWithListInput: (
-  request: CreateUsersWithListInputRequest,
-  config?: Partial<Config>
-) => Promise<CreateUsersWithListInputResponse> = async (
+export const createUsersWithListInput = async (
   { data = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -2387,31 +1667,21 @@ export const createUsersWithListInput: (
     };
   }
 
-  let response: unknown;
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+  const response = await responseObject.json();
 
-  try {
-    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
-    response = await responseObject.json();
-
-    if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
-        message: 'Api error while fetching createUsersWithListInput',
-        status: responseObject.status,
-        statusText: responseObject.statusText,
-        response,
-        headers: responseObject.headers,
-      });
-    }
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    } else {
-      throw error as ClientCodeError;
-    }
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching createUsersWithListInput',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response,
+      headers: responseObject.headers,
+    });
   }
 
-  return response as CreateUsersWithListInputResponse;
+  return response;
 };
 "
 `;

@@ -1,0 +1,25 @@
+{{#if operation.query}}
+  {{#if options.validateRequest}}
+    const querySchema = {{json operation.query}};
+
+    function isQuery(obj) {
+      const isValid = ajv.validate(querySchema, obj);
+
+      return !!isValid;
+    }
+
+    if (!isQuery(query)) {
+      throw new RequestValidationError({
+        message: 'Request query string schema validation error',
+        method: '{{operation.name}}',
+        element: 'query',
+        errors: ajv.errors || [],
+      });
+    }
+  {{/if}}
+
+
+  if (Object.keys(query)) {
+    requestUrl = `${requestUrl}?${stringify(query, { arrayFormat: 'bracket' })}`;
+  }
+{{/if}}

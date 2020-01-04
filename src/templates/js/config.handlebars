@@ -1,0 +1,4 @@
+const defaultConfig = {
+  baseUrl: process.env.API_BASE_URL || '{{info.server}}',
+  preMiddleware: (url, params) => Promise.resolve([url, params]),
+};

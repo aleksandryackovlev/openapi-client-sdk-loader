@@ -1,0 +1,33 @@
+const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams)
+const responseObject = await fetch(processedUrl, processedParams);
+const response = await responseObject.json();
+
+if (!responseObject.ok) {
+  throw new ApiError({
+    message: 'Api error while fetching {{operation.name}}',
+    status: responseObject.status,
+    statusText: responseObject.statusText,
+    response,
+    headers: responseObject.headers,
+  });
+}
+
+{{#if (and operation.response options.validateResponse)}}
+  const responseSchema = {{json operation.response}};
+
+  function isResponse(obj) {
+    const isValid = ajv.validate(responseSchema, obj);
+
+    return !!isValid;
+  }
+
+  if (!isResponse(response)) {
+    throw new ResponseValidationError({
+      message: 'Response schema validation error',
+      method: '{{operation.name}}',
+      errors: ajv.errors || [],
+    });
+  }
+{{/if}}
+
+return response;

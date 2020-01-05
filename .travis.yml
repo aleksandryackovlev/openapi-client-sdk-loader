@@ -1,3 +1,18 @@
 language: node_js
 node_js:
-  - 10
+- 10
+install:
+- npm install -g codecov
+script:
+- yarn test
+after_success:
+- codecov
+before_deploy:
+- yarn build
+deploy:
+  provider: npm
+  email: aleksandryackovlev@yandex.ru
+  api_key:
+    secure: sOsN4uzaHNDoEpKeqN3mwveLhAPuXYemktoM1ghgo2CSF9wqOx6OFB2WYkHUA8lVzl8YpNz23AnvogJgsd+4GmJn+nt9y/mVwd3J1Tin4dIjhsbt4tznZCpH2zM1kEO8U9LpkFrF9QDPjIozLjefSDZuVcPaGsh2BdOLGxVUR7Txvkbj5mfxE81v+JLdOjrnEHJzTmGygId4xsuQyIqllC8QlYPXKguFcsdGDjSHfE6fY1ryO4A08G5/k1VELo7U/Hbwd5tO/xwxbFFqNAosWgEMmWnIzSqShorknQ3AiaMeWvxP/nKsA+X4x+quokrzovj5GnIe+LMtTSX9TZcoQhifXYGN0x1Z57QOsWJXpYjE0JvOe8q8e/UW/LjCES8NatHpGC+Lkx4/wRB3GALZ/0Fd5ST6bAZKl3k7ghCOw3jXG3T/A09cmHXn26SxtnSGM+D4IM7vbllPyn2AsdNeMQ6NTokUsK0hTJuZjausgHsezd89XaTBrdBUmTy1ISU1pmLGtXuZznAlVRPAp1n5hiLq/bMfzqQz/OowLsRq9qHWtR/1Ojf//y4a8hk8sUTCYqKKYJD86+bbLXIcfO/Efy8VE6xfG/LQwJljDyTzRShRu6qYYShzdPlKHuk67AKjTUzGh3lLjY6aeE8DtIKgzDWZvd6gTQFDm7sEJp87e4k=
+  on:
+    tags: true

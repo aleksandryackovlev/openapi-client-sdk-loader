@@ -1,7 +1,7 @@
 {
   "name": "openapi-client-sdk-loader",
   "version": "0.2.0",
-  "description": "Load client sdk from Open API documentation",
+  "description": "An Open API loader for webpack. Compiles yaml to client sdk.",
   "license": "MIT",
   "repository": "git@github.com:aleksandryackovlev/openapi-client-sdk-loader.git",
   "author": "Aleksandr Yackovlev <aleksandryackovlev@yandex.ru>",
@@ -66,7 +66,15 @@
     "webpack": "^4.41.2"
   },
   "keywords": [
-    "webpack"
+    "webpack",
+    "loader",
+    "codegen",
+    "openapi",
+    "swagger",
+    "typescript",
+    "fetch",
+    "client",
+    "sdk"
   ],
   "jest": {
     "testMatch": [

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v0.2.0...v0.2.1) (2020-01-05)
+
+
+### Bug Fixes
+
+* **dependencies:** move prettier from dev dependencies to production ones ([ecfae8e](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/ecfae8e26a5498357a6cfc0d9ebe4a3b365276eb))
+
 ## [0.2.0](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v0.1.1...v0.2.0) (2020-01-04)
 
 

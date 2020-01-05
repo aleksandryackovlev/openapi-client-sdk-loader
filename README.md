@@ -7,8 +7,10 @@
   </a>
 </div>
 
-[![Build Status](https://travis-ci.org/aleksandryackovlev/openapi-client-sdk-loader.svg?branch=master)](https://travis-ci.org/aleksandryackovlev/openapi-client-sdk-loader)
 [![npm][npm]][npm-url]
+[![deps][deps]][deps-url]
+[![Build Status](https://travis-ci.org/aleksandryackovlev/openapi-client-sdk-loader.svg?branch=master)](https://travis-ci.org/aleksandryackovlev/openapi-client-sdk-loader)
+[![codecov](https://codecov.io/gh/aleksandryackovlev/openapi-client-sdk-loader/branch/master/graph/badge.svg)](https://codecov.io/gh/aleksandryackovlev/openapi-client-sdk-loader)
 [![size](https://packagephobia.now.sh/badge?p=openapi-client-sdk-loader)](https://packagephobia.now.sh/result?p=openapi-client-sdk-loader)
 
 # openapi-client-sdk-loader
@@ -840,4 +842,7 @@ Please take a moment to read our contributing guidelines if you haven't yet done
 
 
 [npm]: https://img.shields.io/npm/v/openapi-client-sdk-loader.svg
-[npm-url]: https://npmjs.com/package/openapi-client-sdk-loader
+[npm-url]: https://npmjs.com/package/openapi-client-sdk-loader\
+[deps]: https://david-dm.org/aleksandryackovlev/openapi-client-sdk-loader.svg
+[deps-url]: https://david-dm.org/aleksandryackovlev/openapi-client-sdk-loader
+

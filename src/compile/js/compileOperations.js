@@ -14,6 +14,7 @@ const getParams = (schemas) =>
         type: 'object',
         required: [],
         properties: {},
+        additionalProperties: false,
       };
     }
 

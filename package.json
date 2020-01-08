@@ -19,6 +19,7 @@
     "test:only": "NODE_ENV=test jest",
     "test:watch": "npm run test:only -- --watch",
     "test:coverage": "npm run test:only -- --collectCoverageFrom=\"src/**/*.js\" --coverage",
+    "test:generated": "npm run test:only -- --config=\"jest.js-template.config.js\"",
     "test": "npm run test:coverage",
     "release": "standard-version",
     "commit": "git-cz"
@@ -48,8 +49,10 @@
     "@babel/preset-env": "^7.7.6",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
+    "babel-preset-jest": "^24.9.0",
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "3.0.2",
+    "deasync": "^0.1.19",
     "eslint": "^6.7.2",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.7.0",
@@ -76,11 +79,6 @@
     "client",
     "sdk"
   ],
-  "jest": {
-    "testMatch": [
-      "**/(src|test)/**/*.(spec|test).js"
-    ]
-  },
   "husky": {
     "hooks": {
       "pre-commit": "./scripts/process-staged-files"

@@ -4,6 +4,7 @@ const { transform } = require('@babel/core');
 const jestPreset = require('babel-preset-jest');
 
 const deasync = require('deasync');
+const crypto = require('crypto');
 const SwaggerParser = require('swagger-parser');
 
 const format = require('../../dist/format').default;
@@ -26,7 +27,7 @@ const deasyncPromise = (promise) => {
     });
 
   while (!done) {
-    deasync.runLoopOnce();
+    deasync.sleep(100);
   }
 
   if (error) {
@@ -72,6 +73,12 @@ const compileJsSdk = async (filename, source) => {
 };
 
 module.exports = {
+  getCacheKey(src) {
+    return crypto
+      .createHash('md5')
+      .update(src)
+      .digest('hex');
+  },
   process(src, filename) {
     const nextSrc = deasyncPromise(compileJsSdk(filename, src));
 

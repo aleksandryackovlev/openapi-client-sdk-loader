@@ -4,4 +4,6 @@ module.exports = {
     '\\.(yaml)$': '<rootDir>/test/helpers/openapiJestTransform.js',
     '\\.(js)$': 'babel-jest',
   },
+  automock: false,
+  setupFiles: ['<rootDir>/setupJest.js'],
 };

@@ -4,11 +4,10 @@ node_js:
 install:
 - npm install -g codecov
 script:
+- yarn build
 - yarn test
 after_success:
 - codecov
-before_deploy:
-- yarn build
 deploy:
   provider: npm
   cleanup: false

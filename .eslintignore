@@ -2,4 +2,4 @@
 /dist
 /node_modules
 /test/fixtures
-setupJest.js
+/test/config/setup.js

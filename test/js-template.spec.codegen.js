@@ -1,10 +1,15 @@
-import { getPetById, RequestValidationError } from './fixtures/petstore.yaml';
+import {
+  getPetById,
+  findPetsByTags,
+  RequestValidationError,
+  loginUser,
+} from './fixtures/petstore.yaml';
 
-const mockPet = JSON.stringify({
+const mockPet = {
   id: 3,
   name: 'doggie',
   photoUrls: ['http://localhost/photo.png'],
-});
+};
 
 describe('js-template', () => {
   beforeEach(() => {
@@ -12,7 +17,7 @@ describe('js-template', () => {
   });
 
   it('should send a request with correct params', async () => {
-    fetch.mockResponseOnce(mockPet);
+    fetch.mockResponseOnce(JSON.stringify(mockPet));
 
     await getPetById({ params: { petId: 3 } });
 
@@ -23,10 +28,19 @@ describe('js-template', () => {
   });
 
   it('should throw on incorrect params if it was compiled with validateRequest flag', async () => {
-    fetch.mockResponseOnce(mockPet);
+    fetch.mockResponseOnce(JSON.stringify(mockPet));
 
     try {
       await getPetById({ params: { petId: 3, id: 'test' } });
+    } catch (error) {
+      expect(error).toBeInstanceOf(RequestValidationError);
+      expect(error).toHaveProperty('message', 'Request params schema validation error');
+      expect(error).toHaveProperty('element', 'params');
+      expect(error).toHaveProperty('method', 'getPetById');
+    }
+
+    try {
+      await getPetById({ params: { petId: 'test' } });
     } catch (error) {
       expect(error).toBeInstanceOf(RequestValidationError);
       expect(error).toHaveProperty('message', 'Request params schema validation error');
@@ -46,9 +60,58 @@ describe('js-template', () => {
     expect(fetch).not.toBeCalled();
   });
 
-  it('should send a request with correct query string', async () => {});
+  it('should send a request with correct query string', async () => {
+    fetch.mockResponseOnce(JSON.stringify([mockPet]));
 
-  it('should throw on incorrect query string if it was compiled with validateRequest flag', async () => {});
+    await findPetsByTags({ query: { tags: ['tag1', 'tag2'] } });
+
+    expect(fetch).toBeCalledWith(
+      'https://petstore.swagger.io/v2/pet/findByTags?tags[]=tag1&tags[]=tag2',
+      {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'GET',
+      }
+    );
+  });
+
+  it('should throw on incorrect query string if it was compiled with validateRequest flag', async () => {
+    fetch.mockResponseOnce(JSON.stringify('loggedin'));
+
+    try {
+      await loginUser({
+        query: { password: 'password', username: 'username', prop: 'some value' },
+      });
+    } catch (error) {
+      expect(error).toBeInstanceOf(RequestValidationError);
+      expect(error).toHaveProperty('message', 'Request query string schema validation error');
+      expect(error).toHaveProperty('element', 'query');
+      expect(error).toHaveProperty('method', 'loginUser');
+    }
+
+    try {
+      await loginUser({
+        query: { password: 'password' },
+      });
+    } catch (error) {
+      expect(error).toBeInstanceOf(RequestValidationError);
+      expect(error).toHaveProperty('message', 'Request query string schema validation error');
+      expect(error).toHaveProperty('element', 'query');
+      expect(error).toHaveProperty('method', 'loginUser');
+    }
+
+    try {
+      await loginUser({
+        query: { password: true, username: 'username' },
+      });
+    } catch (error) {
+      expect(error).toBeInstanceOf(RequestValidationError);
+      expect(error).toHaveProperty('message', 'Request query string schema validation error');
+      expect(error).toHaveProperty('element', 'query');
+      expect(error).toHaveProperty('method', 'loginUser');
+    }
+
+    expect(fetch).not.toBeCalled();
+  });
 
   it('should send a request with correct body', async () => {});
 

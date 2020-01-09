@@ -4,6 +4,7 @@ import {
   RequestValidationError,
   loginUser,
   updatePet,
+  uploadFile,
 } from './fixtures/petstore.yaml';
 
 const mockPet = {
@@ -162,7 +163,31 @@ describe('js-template', () => {
     expect(fetch).not.toBeCalled();
   });
 
-  it('should send files without errors', async () => {});
+  it('should send files without errors', async () => {
+    fetch.mockResponseOnce(
+      JSON.stringify({
+        code: 200,
+        type: 'success',
+        message: 'ok',
+      })
+    );
+
+    const formData = new FormData();
+    formData.append(
+      'file',
+      new File(['foo'], 'foo.txt', {
+        type: 'text/plain',
+      })
+    );
+
+    await uploadFile({ data: formData, params: { petId: 3 } });
+
+    expect(fetch).toBeCalledWith('https://petstore.swagger.io/v2/pet/3/uploadImage', {
+      body: formData,
+      headers: { 'Content-Type': 'multipart/form-data' },
+      method: 'POST',
+    });
+  });
 
   // TODO: validate form data bodies
   // it('should throw on incorrect FormData body', async () => {});

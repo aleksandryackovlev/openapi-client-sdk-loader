@@ -164,25 +164,18 @@ describe('js-template', () => {
 
   it('should send files without errors', async () => {});
 
-  it('should throw on incorrect FormData body', async () => {});
+  // TODO: validate form data bodies
+  // it('should throw on incorrect FormData body', async () => {});
 
   it('should send a request with correct headers', async () => {});
 
   it('should throw on incorrect headers if it was compiled with validateRequest flag', async () => {});
-
-  it('should send a request with correct http method', async () => {});
-
-  it('should send a request with to the url specified in docs', async () => {});
-
-  it('should send a request with to the url specified the environment', async () => {});
 
   it('should execute pre middleware before the request if it is set', async () => {});
 
   it('should return the result specified in the docs', async () => {});
 
   it('should throw on incorrect result if it was compiled with validateResponse flag', async () => {});
-
-  it('should choose application/json request content type, if there are more than one given', async () => {});
 
   it('should throw on unsupported request content-types', async () => {});
 

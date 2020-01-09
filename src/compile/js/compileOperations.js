@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash';
 
-import { schema2typescript, basepath, dashes2capitals, capitalize } from '../../utils';
+import { basepath, dashes2capitals } from '../../utils';
 
 const prepareMimeType = (mimeType) => dashes2capitals(basepath(mimeType));
 
@@ -34,7 +34,6 @@ const createOperations = (api, deref) =>
         ...result,
         ...Object.keys(deref.paths[path]).map(async (method) => {
           const operation = deref.paths[path][method];
-          const unrefedOperation = api.paths[path][method];
 
           const globalSecurity = api.security;
           const localSecurity = operation.security;
@@ -84,14 +83,21 @@ const createOperations = (api, deref) =>
           if (operation.requestBody) {
             const requestBody = operation.requestBody.content;
 
-            Object.keys(requestBody).forEach((mimeType) => {
+            // TODO: Support multiple Content-Types
+            if (Object.keys(requestBody).some((mimeType) => mimeType === 'application/json')) {
+              const mimeType = 'application/json';
+
               schema.mimeType = mimeType;
               schema.mimeTypeSuffix = prepareMimeType(mimeType);
               schema.data = requestBody[mimeType].schema;
-            });
-          }
+            } else if (Object.keys(requestBody).length) {
+              const mimeType = Object.keys(requestBody)[0];
 
-          let responseModel = `export type ${capitalize(schema.name)}Response = unknown;`;
+              schema.mimeType = mimeType;
+              schema.mimeTypeSuffix = prepareMimeType(mimeType);
+              schema.data = requestBody[mimeType].schema;
+            }
+          }
 
           // Support only 200 responses with the Content-Type application/json
           if (operation.responses && (operation.responses['200'] || operation.responses['201'])) {
@@ -100,27 +106,15 @@ const createOperations = (api, deref) =>
               operation.responses['200'].content &&
               operation.responses['200'].content['application/json']
             ) {
-              responseModel = await schema2typescript(
-                unrefedOperation.responses['200'].content['application/json'].schema,
-                `${schema.name}Response`
-              );
-
               schema.response = operation.responses['200'].content['application/json'].schema;
             } else if (
               operation.responses['201'] &&
               operation.responses['201'].content &&
               operation.responses['201'].content['application/json']
             ) {
-              responseModel = await schema2typescript(
-                unrefedOperation.responses['201'].content['application/json'].schema,
-                `${schema.name}Response`
-              );
-
               schema.response = operation.responses['201'].content['application/json'].schema;
             }
           }
-
-          schema.models = schema.models ? `${schema.models}\n${responseModel}` : responseModel;
 
           return schema;
         }),

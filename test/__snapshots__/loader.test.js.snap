@@ -195,13 +195,23 @@ export const updatePetWithForm = async (
   }
 
   const requestHeaders = {
-    'Content-Type': 'application/xml',
+    'Content-Type': 'application/json',
   };
 
   if (!(data instanceof FormData)) {
     const bodySchema = {
       type: 'object',
-      properties: { id: { type: 'string' }, title: { type: 'string' } },
+      properties: {
+        id: { type: 'integer', format: 'int64' },
+        username: { type: 'string' },
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+        email: { type: 'string' },
+        password: { type: 'string' },
+        phone: { type: 'string' },
+        userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
+      },
+      xml: { name: 'User' },
     };
     const isBodyValid = ajv.validate(bodySchema, data);
 
@@ -453,7 +463,7 @@ export const updatePet = async ({ data = {} } = {}, currentConfig = defaultConfi
   const requestUrl = \`\${config.baseUrl}/pet\`;
 
   const requestHeaders = {
-    'Content-Type': 'application/xml',
+    'Content-Type': 'application/json',
   };
 
   if (!(data instanceof FormData)) {
@@ -539,7 +549,7 @@ export const addPet = async ({ data = {} } = {}, currentConfig = defaultConfig) 
   const requestUrl = \`\${config.baseUrl}/pet\`;
 
   const requestHeaders = {
-    'Content-Type': 'application/xml',
+    'Content-Type': 'application/json',
   };
 
   if (!(data instanceof FormData)) {
@@ -2250,7 +2260,7 @@ export const getPetById: (
 };
 export interface UpdatePetWithFormRequest {
   params?: UpdatePetWithFormParams;
-  data?: FormData | UpdatePetWithFormRequestBodyXml;
+  data?: FormData | UpdatePetWithFormRequestBodyJson;
 }
 export const updatePetWithForm: (
   request: UpdatePetWithFormRequest,
@@ -2296,13 +2306,23 @@ export const updatePetWithForm: (
   }
 
   const requestHeaders = {
-    'Content-Type': 'application/xml',
+    'Content-Type': 'application/json',
   };
 
   if (!(data instanceof FormData)) {
     const bodySchema = {
       type: 'object',
-      properties: { id: { type: 'string' }, title: { type: 'string' } },
+      properties: {
+        id: { type: 'integer', format: 'int64' },
+        username: { type: 'string' },
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+        email: { type: 'string' },
+        password: { type: 'string' },
+        phone: { type: 'string' },
+        userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
+      },
+      xml: { name: 'User' },
     };
     const isBodyValid = ajv.validate(bodySchema, data);
 
@@ -2600,7 +2620,7 @@ export const uploadFile: (
   return response;
 };
 export interface UpdatePetRequest {
-  data?: FormData | UpdatePetRequestBodyXml;
+  data?: FormData | UpdatePetRequestBodyJson;
 }
 export const updatePet: (
   request: UpdatePetRequest,
@@ -2611,7 +2631,7 @@ export const updatePet: (
   const requestUrl = \`\${config.baseUrl}/pet\`;
 
   const requestHeaders = {
-    'Content-Type': 'application/xml',
+    'Content-Type': 'application/json',
   };
 
   if (!(data instanceof FormData)) {
@@ -2702,7 +2722,7 @@ export const updatePet: (
   return response as UpdatePetResponse;
 };
 export interface AddPetRequest {
-  data?: FormData | AddPetRequestBodyXml;
+  data?: FormData | AddPetRequestBodyJson;
 }
 export const addPet: (
   request: AddPetRequest,
@@ -2713,7 +2733,7 @@ export const addPet: (
   const requestUrl = \`\${config.baseUrl}/pet\`;
 
   const requestHeaders = {
-    'Content-Type': 'application/xml',
+    'Content-Type': 'application/json',
   };
 
   if (!(data instanceof FormData)) {

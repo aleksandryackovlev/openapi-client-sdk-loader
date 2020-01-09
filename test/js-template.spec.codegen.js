@@ -3,6 +3,7 @@ import {
   findPetsByTags,
   RequestValidationError,
   loginUser,
+  updatePet,
 } from './fixtures/petstore.yaml';
 
 const mockPet = {
@@ -113,13 +114,23 @@ describe('js-template', () => {
     expect(fetch).not.toBeCalled();
   });
 
-  it('should send a request with correct body', async () => {});
+  it('should send a request with correct body', async () => {
+    fetch.mockResponseOnce(JSON.stringify(mockPet));
+
+    await updatePet({ data: mockPet });
+
+    expect(fetch).toBeCalledWith('https://petstore.swagger.io/v2/pet', {
+      body: JSON.stringify(mockPet),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'PUT',
+    });
+  });
+
+  it('should throw on incorrect body if it was compiled with validateRequest flag', async () => {});
 
   it('should send files without errors', async () => {});
 
   it('should throw on incorrect FormData body', async () => {});
-
-  it('should throw on incorrect body if it was compiled with validateRequest flag', async () => {});
 
   it('should send a request with correct headers', async () => {});
 

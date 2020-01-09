@@ -96,14 +96,22 @@ const createOperations = (api, deref) =>
               `${schema.name}RequestBody${prepareMimeType(name)}`,
             ]);
 
-            Object.keys(requestBody).forEach((mimeType, index, mimeTypes) => {
+            schema.models = schema.models ? `${schema.models}\n${models}` : models;
+
+            // TODO: Support multiple Content-Types
+            if (Object.keys(requestBody).some((mimeType) => mimeType === 'application/json')) {
+              const mimeType = 'application/json';
+
               schema.mimeType = mimeType;
               schema.mimeTypeSuffix = prepareMimeType(mimeType);
               schema.data = requestBody[mimeType].schema;
-              if (index === mimeTypes.length - 1) {
-                schema.models = schema.models ? `${schema.models}\n${models}` : models;
-              }
-            });
+            } else if (Object.keys(requestBody).length) {
+              const mimeType = Object.keys(requestBody)[0];
+
+              schema.mimeType = mimeType;
+              schema.mimeTypeSuffix = prepareMimeType(mimeType);
+              schema.data = requestBody[mimeType].schema;
+            }
           }
 
           let responseModel = `export type ${capitalize(schema.name)}Response = unknown;`;

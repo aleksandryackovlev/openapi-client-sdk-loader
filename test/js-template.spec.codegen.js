@@ -126,7 +126,41 @@ describe('js-template', () => {
     });
   });
 
-  it('should throw on incorrect body if it was compiled with validateRequest flag', async () => {});
+  it('should throw on incorrect body if it was compiled with validateRequest flag', async () => {
+    fetch.mockResponseOnce(JSON.stringify(mockPet));
+
+    try {
+      await updatePet({
+        data: {
+          id: 3,
+          name: 'doggie',
+          photoUrls: [3],
+        },
+      });
+    } catch (error) {
+      expect(error).toBeInstanceOf(RequestValidationError);
+      expect(error).toHaveProperty('message', 'Request body schema validation error');
+      expect(error).toHaveProperty('element', 'body');
+      expect(error).toHaveProperty('method', 'updatePet');
+    }
+
+    try {
+      await updatePet({
+        data: {
+          id: 3,
+          name: { id: 'test' },
+          photoUrls: ['test'],
+        },
+      });
+    } catch (error) {
+      expect(error).toBeInstanceOf(RequestValidationError);
+      expect(error).toHaveProperty('message', 'Request body schema validation error');
+      expect(error).toHaveProperty('element', 'body');
+      expect(error).toHaveProperty('method', 'updatePet');
+    }
+
+    expect(fetch).not.toBeCalled();
+  });
 
   it('should send files without errors', async () => {});
 

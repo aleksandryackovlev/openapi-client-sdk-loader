@@ -3,9 +3,10 @@ import {
   updatePet,
   deletePet,
   findPetsByTags,
-  RequestValidationError,
   loginUser,
   uploadFile,
+  RequestValidationError,
+  ResponseValidationError,
 } from './fixtures/petstore.yaml';
 
 const mockPet = {
@@ -208,7 +209,10 @@ describe('js-template', () => {
     fetch.mockResponseOnce(JSON.stringify(mockPet));
 
     try {
-      await deletePet({ params: { petId: 3 }, headers: { api_key: 'key', someHeader: 'some header' } });
+      await deletePet({
+        params: { petId: 3 },
+        headers: { api_key: 'key', someHeader: 'some header' },
+      });
     } catch (error) {
       expect(error).toBeInstanceOf(RequestValidationError);
       expect(error).toHaveProperty('message', 'Request headers schema validation error');
@@ -228,9 +232,41 @@ describe('js-template', () => {
     expect(fetch).not.toBeCalled();
   });
 
-  it('should execute pre middleware before the request if it is set', async () => {});
+  it('should execute pre middleware before the request if it is set', async () => {
+    fetch.mockResponseOnce(JSON.stringify(mockPet));
+    const preMiddleware = jest.fn(async (url, params) => {
+      const token = await Promise.resolve('token');
 
-  it('should throw on incorrect result if it was compiled with validateResponse flag', async () => {});
+      return [
+        url,
+        {
+          ...params,
+          headers: { ...params.headers, Authorization: token },
+        },
+      ];
+    });
+
+    await getPetById({ params: { petId: 3 } }, { preMiddleware });
+
+    expect(preMiddleware).toBeCalled();
+
+    expect(fetch).toBeCalledWith('https://petstore.swagger.io/v2/pet/3', {
+      headers: { 'Content-Type': 'application/json', Authorization: 'token' },
+      method: 'GET',
+    });
+  });
+
+  it('should throw on incorrect result if it was compiled with validateResponse flag', async () => {
+    fetch.mockResponseOnce(JSON.stringify({ name: 'test' }));
+
+    try {
+      await getPetById({ params: { petId: 3 } });
+    } catch (error) {
+      expect(error).toBeInstanceOf(ResponseValidationError);
+      expect(error).toHaveProperty('message', 'Response schema validation error');
+      expect(error).toHaveProperty('method', 'getPetById');
+    }
+  });
 
   it('should throw on unsupported request content-types', async () => {});
 

@@ -7,6 +7,7 @@ import {
   uploadFile,
   RequestValidationError,
   ResponseValidationError,
+  ApiError,
 } from './fixtures/petstore.yaml';
 
 const mockPet = {
@@ -268,11 +269,33 @@ describe('js-template', () => {
     }
   });
 
-  it('should throw on unsupported request content-types', async () => {});
+  it('should throw with an ApiError if response status is not ok', async () => {
+    fetch.mockResponseOnce(JSON.stringify({ code: '404' }), {
+      status: 404,
+      statusText: 'Not found',
+    });
 
-  it('should throw on unsupported response content-types', async () => {});
+    try {
+      await getPetById({ params: { petId: 3 } });
+    } catch (error) {
+      expect(error).toBeInstanceOf(ApiError);
+      expect(error).toHaveProperty('message', 'Api error while fetching getPetById');
+      expect(error).toHaveProperty('status', 404);
+      expect(error).toHaveProperty('statusText', 'Not found');
+    }
+  });
 
-  it('should throw with an ApiError if response status is not ok', async () => {});
+  it('should throw with an ClientError if something goes wrong during code execution', async () => {
+    fetch.mockResponseOnce(JSON.stringify(mockPet));
+    const preMiddleware = jest.fn(() => Promise.reject(new Error('Some error')));
 
-  it('should throw with an ClientError if something goes wrong during code execution', async () => {});
+    try {
+      await getPetById({ params: { petId: 3 } }, { preMiddleware });
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toHaveProperty('message', 'Some error');
+    }
+
+    expect(fetch).not.toBeCalled();
+  });
 });

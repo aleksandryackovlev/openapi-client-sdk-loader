@@ -1,9 +1,10 @@
 import {
   getPetById,
+  updatePet,
+  deletePet,
   findPetsByTags,
   RequestValidationError,
   loginUser,
-  updatePet,
   uploadFile,
 } from './fixtures/petstore.yaml';
 
@@ -192,13 +193,42 @@ describe('js-template', () => {
   // TODO: validate form data bodies
   // it('should throw on incorrect FormData body', async () => {});
 
-  it('should send a request with correct headers', async () => {});
+  it('should send a request with correct headers', async () => {
+    fetch.mockResponseOnce(JSON.stringify(mockPet));
 
-  it('should throw on incorrect headers if it was compiled with validateRequest flag', async () => {});
+    await deletePet({ params: { petId: 3 }, headers: { api_key: 'key' } });
+
+    expect(fetch).toBeCalledWith('https://petstore.swagger.io/v2/pet/3', {
+      headers: { 'Content-Type': 'application/json', api_key: 'key' },
+      method: 'DELETE',
+    });
+  });
+
+  it('should throw on incorrect headers if it was compiled with validateRequest flag', async () => {
+    fetch.mockResponseOnce(JSON.stringify(mockPet));
+
+    try {
+      await deletePet({ params: { petId: 3 }, headers: { api_key: 'key', someHeader: 'some header' } });
+    } catch (error) {
+      expect(error).toBeInstanceOf(RequestValidationError);
+      expect(error).toHaveProperty('message', 'Request headers schema validation error');
+      expect(error).toHaveProperty('element', 'headers');
+      expect(error).toHaveProperty('method', 'deletePet');
+    }
+
+    try {
+      await deletePet({ params: { petId: 3 }, headers: { api_key: true } });
+    } catch (error) {
+      expect(error).toBeInstanceOf(RequestValidationError);
+      expect(error).toHaveProperty('message', 'Request headers schema validation error');
+      expect(error).toHaveProperty('element', 'headers');
+      expect(error).toHaveProperty('method', 'deletePet');
+    }
+
+    expect(fetch).not.toBeCalled();
+  });
 
   it('should execute pre middleware before the request if it is set', async () => {});
-
-  it('should return the result specified in the docs', async () => {});
 
   it('should throw on incorrect result if it was compiled with validateResponse flag', async () => {});
 

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.6](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v0.2.5...v0.2.6) (2020-01-11)
+
+
+### Features
+
+* **compile:** make application/json content type default for requests ([5e781c6](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/5e781c6886544c03f3361ab8789d8ad01564bf3f))
+
 ### [0.2.5](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v0.2.4...v0.2.5) (2020-01-05)
 
 ### [0.2.4](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v0.2.3...v0.2.4) (2020-01-05)

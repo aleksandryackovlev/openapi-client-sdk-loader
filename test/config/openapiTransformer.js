@@ -2,6 +2,7 @@ const path = require('path');
 
 const { transform } = require('@babel/core');
 const jestPreset = require('babel-preset-jest');
+const typescriptPreset = require('@babel/preset-typescript');
 
 const deasync = require('deasync');
 const crypto = require('crypto');
@@ -9,7 +10,8 @@ const SwaggerParser = require('swagger-parser');
 
 const format = require('../../dist/format').default;
 const compileTemplate = require('../../dist/templates').default;
-const compiler = require('../../dist/compile/js').default;
+const compilerJs = require('../../dist/compile/js').default;
+const compilerTs = require('../../dist/compile/ts').default;
 
 const deasyncPromise = (promise) => {
   let error = null;
@@ -37,23 +39,25 @@ const deasyncPromise = (promise) => {
   return result;
 };
 
-const options = {
-  compiler,
-  template: path.resolve(__dirname, '../../dist/templates/js'),
-  templateOptions: {
-    validateRequest: true,
-    validateResponse: true,
-  },
-  parser: SwaggerParser,
-  skipInvalid: true,
-  style: {
-    singleQuote: true,
-    trailingComma: 'es5',
-    printWidth: 100,
-  },
-};
-
-const compileJsSdk = async (filename, source) => {
+const compileSdk = async (filename, source, { compiler }) => {
+  const options = {
+    compiler: compiler === 'ts' ? compilerTs : compilerJs,
+    template:
+      compiler === 'ts'
+        ? path.resolve(__dirname, '../../dist/templates/ts')
+        : path.resolve(__dirname, '../../dist/templates/js'),
+    templateOptions: {
+      validateRequest: true,
+      validateResponse: true,
+    },
+    parser: SwaggerParser,
+    skipInvalid: true,
+    style: {
+      singleQuote: true,
+      trailingComma: 'es5',
+      printWidth: 100,
+    },
+  };
   let api = '';
 
   try {
@@ -79,11 +83,13 @@ module.exports = {
       .update(src)
       .digest('hex');
   },
-  process(src, filename) {
-    const nextSrc = deasyncPromise(compileJsSdk(filename, src));
+  process(src, filename, options) {
+    const compiler = options.globals && options.globals['ts-jest'] ? 'ts' : 'js';
+    const nextSrc = deasyncPromise(compileSdk(filename, src, { compiler }));
 
     const result = transform(nextSrc, {
-      presets: [jestPreset],
+      filename: 'file.ts',
+      presets: compiler === 'ts' ? [jestPreset, typescriptPreset] : [jestPreset],
     });
 
     return result ? result.code : nextSrc;

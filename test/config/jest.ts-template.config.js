@@ -14,7 +14,23 @@ module.exports = {
   setupFiles: ['<rootDir>/test/config/setup.js'],
   globals: {
     'ts-jest': {
-      tsConfig: '<rootDir>/test/tsconfig.json',
+      tsConfig: {
+        compilerOptions: {
+          target: 'es5',
+          lib: ['dom', 'dom.iterable', 'esnext'],
+          strict: true,
+          skipLibCheck: true,
+          esModuleInterop: true,
+          noImplicitAny: true,
+          allowSyntheticDefaultImports: true,
+          forceConsistentCasingInFileNames: true,
+          module: 'es6',
+          moduleResolution: 'node',
+          resolveJsonModule: true,
+          jsx: 'react',
+          experimentalDecorators: true,
+        },
+      },
       diagnostics: false,
     },
   },

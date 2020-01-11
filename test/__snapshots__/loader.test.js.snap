@@ -57,6 +57,7 @@ export const getPetById = async ({ params = {} } = {}, currentConfig = defaultCo
     type: 'object',
     required: ['petId'],
     properties: { petId: { type: 'integer', format: 'int64' } },
+    additionalProperties: false,
   };
 
   function isParams(obj) {
@@ -167,6 +168,7 @@ export const updatePetWithForm = async (
     type: 'object',
     required: ['petId'],
     properties: { petId: { type: 'integer', format: 'int64' } },
+    additionalProperties: false,
   };
 
   function isParams(obj) {
@@ -193,13 +195,23 @@ export const updatePetWithForm = async (
   }
 
   const requestHeaders = {
-    'Content-Type': 'application/xml',
+    'Content-Type': 'application/json',
   };
 
   if (!(data instanceof FormData)) {
     const bodySchema = {
       type: 'object',
-      properties: { id: { type: 'string' }, title: { type: 'string' } },
+      properties: {
+        id: { type: 'integer', format: 'int64' },
+        username: { type: 'string' },
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+        email: { type: 'string' },
+        password: { type: 'string' },
+        phone: { type: 'string' },
+        userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
+      },
+      xml: { name: 'User' },
     };
     const isBodyValid = ajv.validate(bodySchema, data);
 
@@ -256,6 +268,7 @@ export const deletePet = async (
     type: 'object',
     required: ['petId'],
     properties: { petId: { type: 'integer', format: 'int64' } },
+    additionalProperties: false,
   };
 
   function isParams(obj) {
@@ -285,6 +298,7 @@ export const deletePet = async (
     type: 'object',
     required: [],
     properties: { api_key: { type: 'string' } },
+    additionalProperties: false,
   };
 
   function isHeaders(obj) {
@@ -340,6 +354,7 @@ export const uploadFile = async (
     type: 'object',
     required: ['petId'],
     properties: { petId: { type: 'integer', format: 'int64' } },
+    additionalProperties: false,
   };
 
   function isParams(obj) {
@@ -448,7 +463,7 @@ export const updatePet = async ({ data = {} } = {}, currentConfig = defaultConfi
   const requestUrl = \`\${config.baseUrl}/pet\`;
 
   const requestHeaders = {
-    'Content-Type': 'application/xml',
+    'Content-Type': 'application/json',
   };
 
   if (!(data instanceof FormData)) {
@@ -534,7 +549,7 @@ export const addPet = async ({ data = {} } = {}, currentConfig = defaultConfig) 
   const requestUrl = \`\${config.baseUrl}/pet\`;
 
   const requestHeaders = {
-    'Content-Type': 'application/xml',
+    'Content-Type': 'application/json',
   };
 
   if (!(data instanceof FormData)) {
@@ -628,6 +643,7 @@ export const findPetsByStatus = async ({ query = {} } = {}, currentConfig = defa
         items: { type: 'string', default: 'available', enum: ['available', 'pending', 'sold'] },
       },
     },
+    additionalProperties: false,
   };
 
   function isQuery(obj) {
@@ -734,6 +750,7 @@ export const findPetsByTags = async ({ query = {} } = {}, currentConfig = defaul
     type: 'object',
     required: ['tags'],
     properties: { tags: { type: 'array', items: { type: 'string' } } },
+    additionalProperties: false,
   };
 
   function isQuery(obj) {
@@ -889,6 +906,7 @@ export const getOrderById = async ({ params = {} } = {}, currentConfig = default
     type: 'object',
     required: ['orderId'],
     properties: { orderId: { maximum: 10, minimum: 1, type: 'integer', format: 'int64' } },
+    additionalProperties: false,
   };
 
   function isParams(obj) {
@@ -979,6 +997,7 @@ export const deleteOrder = async ({ params = {} } = {}, currentConfig = defaultC
     type: 'object',
     required: ['orderId'],
     properties: { orderId: { minimum: 1, type: 'integer', format: 'int64' } },
+    additionalProperties: false,
   };
 
   function isParams(obj) {
@@ -1138,6 +1157,7 @@ export const getUserByName = async ({ params = {} } = {}, currentConfig = defaul
     type: 'object',
     required: ['username'],
     properties: { username: { type: 'string' } },
+    additionalProperties: false,
   };
 
   function isParams(obj) {
@@ -1229,6 +1249,7 @@ export const updateUser = async (
     type: 'object',
     required: ['username'],
     properties: { username: { type: 'string' } },
+    additionalProperties: false,
   };
 
   function isParams(obj) {
@@ -1325,6 +1346,7 @@ export const deleteUser = async ({ params = {} } = {}, currentConfig = defaultCo
     type: 'object',
     required: ['username'],
     properties: { username: { type: 'string' } },
+    additionalProperties: false,
   };
 
   function isParams(obj) {
@@ -1384,6 +1406,7 @@ export const loginUser = async ({ query = {} } = {}, currentConfig = defaultConf
     type: 'object',
     required: ['username', 'password'],
     properties: { username: { type: 'string' }, password: { type: 'string' } },
+    additionalProperties: false,
   };
 
   function isQuery(obj) {
@@ -2124,6 +2147,7 @@ export const getPetById: (
     type: 'object',
     required: ['petId'],
     properties: { petId: { type: 'integer', format: 'int64' } },
+    additionalProperties: false,
   };
 
   function isParams(obj: unknown): obj is GetPetByIdParams {
@@ -2236,7 +2260,7 @@ export const getPetById: (
 };
 export interface UpdatePetWithFormRequest {
   params?: UpdatePetWithFormParams;
-  data?: FormData | UpdatePetWithFormRequestBodyXml;
+  data?: FormData | UpdatePetWithFormRequestBodyJson;
 }
 export const updatePetWithForm: (
   request: UpdatePetWithFormRequest,
@@ -2253,6 +2277,7 @@ export const updatePetWithForm: (
     type: 'object',
     required: ['petId'],
     properties: { petId: { type: 'integer', format: 'int64' } },
+    additionalProperties: false,
   };
 
   function isParams(obj: unknown): obj is UpdatePetWithFormParams {
@@ -2281,13 +2306,23 @@ export const updatePetWithForm: (
   }
 
   const requestHeaders = {
-    'Content-Type': 'application/xml',
+    'Content-Type': 'application/json',
   };
 
   if (!(data instanceof FormData)) {
     const bodySchema = {
       type: 'object',
-      properties: { id: { type: 'string' }, title: { type: 'string' } },
+      properties: {
+        id: { type: 'integer', format: 'int64' },
+        username: { type: 'string' },
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+        email: { type: 'string' },
+        password: { type: 'string' },
+        phone: { type: 'string' },
+        userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
+      },
+      xml: { name: 'User' },
     };
     const isBodyValid = ajv.validate(bodySchema, data);
 
@@ -2361,6 +2396,7 @@ export const deletePet: (
     type: 'object',
     required: ['petId'],
     properties: { petId: { type: 'integer', format: 'int64' } },
+    additionalProperties: false,
   };
 
   function isParams(obj: unknown): obj is DeletePetParams {
@@ -2392,6 +2428,7 @@ export const deletePet: (
     type: 'object',
     required: [],
     properties: { api_key: { type: 'string' } },
+    additionalProperties: false,
   };
 
   function isHeaders(obj: unknown): obj is DeletePetHeaders {
@@ -2467,6 +2504,7 @@ export const uploadFile: (
     type: 'object',
     required: ['petId'],
     properties: { petId: { type: 'integer', format: 'int64' } },
+    additionalProperties: false,
   };
 
   function isParams(obj: unknown): obj is UploadFileParams {
@@ -2582,7 +2620,7 @@ export const uploadFile: (
   return response;
 };
 export interface UpdatePetRequest {
-  data?: FormData | UpdatePetRequestBodyXml;
+  data?: FormData | UpdatePetRequestBodyJson;
 }
 export const updatePet: (
   request: UpdatePetRequest,
@@ -2593,7 +2631,7 @@ export const updatePet: (
   const requestUrl = \`\${config.baseUrl}/pet\`;
 
   const requestHeaders = {
-    'Content-Type': 'application/xml',
+    'Content-Type': 'application/json',
   };
 
   if (!(data instanceof FormData)) {
@@ -2684,7 +2722,7 @@ export const updatePet: (
   return response as UpdatePetResponse;
 };
 export interface AddPetRequest {
-  data?: FormData | AddPetRequestBodyXml;
+  data?: FormData | AddPetRequestBodyJson;
 }
 export const addPet: (
   request: AddPetRequest,
@@ -2695,7 +2733,7 @@ export const addPet: (
   const requestUrl = \`\${config.baseUrl}/pet\`;
 
   const requestHeaders = {
-    'Content-Type': 'application/xml',
+    'Content-Type': 'application/json',
   };
 
   if (!(data instanceof FormData)) {
@@ -2808,6 +2846,7 @@ export const findPetsByStatus: (
         items: { type: 'string', default: 'available', enum: ['available', 'pending', 'sold'] },
       },
     },
+    additionalProperties: false,
   };
 
   function isQuery(obj: unknown): obj is FindPetsByStatusQuery {
@@ -2933,6 +2972,7 @@ export const findPetsByTags: (
     type: 'object',
     required: ['tags'],
     properties: { tags: { type: 'array', items: { type: 'string' } } },
+    additionalProperties: false,
   };
 
   function isQuery(obj: unknown): obj is FindPetsByTagsQuery {
@@ -3119,6 +3159,7 @@ export const getOrderById: (
     type: 'object',
     required: ['orderId'],
     properties: { orderId: { maximum: 10, minimum: 1, type: 'integer', format: 'int64' } },
+    additionalProperties: false,
   };
 
   function isParams(obj: unknown): obj is GetOrderByIdParams {
@@ -3227,6 +3268,7 @@ export const deleteOrder: (
     type: 'object',
     required: ['orderId'],
     properties: { orderId: { minimum: 1, type: 'integer', format: 'int64' } },
+    additionalProperties: false,
   };
 
   function isParams(obj: unknown): obj is DeleteOrderParams {
@@ -3423,6 +3465,7 @@ export const getUserByName: (
     type: 'object',
     required: ['username'],
     properties: { username: { type: 'string' } },
+    additionalProperties: false,
   };
 
   function isParams(obj: unknown): obj is GetUserByNameParams {
@@ -3533,6 +3576,7 @@ export const updateUser: (
     type: 'object',
     required: ['username'],
     properties: { username: { type: 'string' } },
+    additionalProperties: false,
   };
 
   function isParams(obj: unknown): obj is UpdateUserParams {
@@ -3647,6 +3691,7 @@ export const deleteUser: (
     type: 'object',
     required: ['username'],
     properties: { username: { type: 'string' } },
+    additionalProperties: false,
   };
 
   function isParams(obj: unknown): obj is DeleteUserParams {
@@ -3724,6 +3769,7 @@ export const loginUser: (
     type: 'object',
     required: ['username', 'password'],
     properties: { username: { type: 'string' }, password: { type: 'string' } },
+    additionalProperties: false,
   };
 
   function isQuery(obj: unknown): obj is LoginUserQuery {

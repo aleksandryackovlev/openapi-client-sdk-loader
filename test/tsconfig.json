@@ -17,5 +17,6 @@
     "resolveJsonModule": true,
     "jsx": "react",
     "experimentalDecorators": true
-  }
+  },
+  "exclude": ["**/*.spec.codegen.ts"]
 }

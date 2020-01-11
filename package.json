@@ -1,6 +1,6 @@
 {
   "name": "openapi-client-sdk-loader",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "An Open API loader for webpack. Compiles yaml to client sdk.",
   "license": "MIT",
   "repository": "git@github.com:aleksandryackovlev/openapi-client-sdk-loader.git",
@@ -12,14 +12,19 @@
     "node": ">= 10.13.0"
   },
   "scripts": {
-    "start": "npm run build -- -w",
+    "start": "yarn build -w",
     "build": "NODE_ENV=production babel src -d dist --copy-files",
-    "security": "npm audit",
+    "security": "yarn audit",
     "lint": "eslint .",
+    "pretest": "yarn lint",
     "test:only": "NODE_ENV=test jest",
-    "test:watch": "npm run test:only -- --watch",
-    "test:coverage": "npm run test:only -- --collectCoverageFrom=\"src/**/*.js\" --coverage",
-    "test": "npm run test:coverage",
+    "test:watch": "yarn test:only --watch --config=\"test/config/jest.config.js\"",
+    "test:coverage": "yarn test:only --config=\"test/config/jest.config.js\" --collectCoverageFrom=\"src/**/*.js\" --coverage",
+    "test:generated:js": "yarn test:only --config=\"test/config/jest.js-template.config.js\"",
+    "test:generated:js:watch": "test:generated:js --watch",
+    "test:generated:ts": "yarn test:only --config=\"test/config/jest.ts-template.config.js\"",
+    "test:generated:ts:watch": "test:generated:ts --watch",
+    "test": "yarn test:coverage && yarn test:generated:js && yarn test:generated:ts",
     "release": "standard-version",
     "commit": "git-cz"
   },
@@ -46,10 +51,15 @@
     "@babel/cli": "^7.7.5",
     "@babel/core": "^7.7.5",
     "@babel/preset-env": "^7.7.6",
+    "@babel/preset-typescript": "^7.7.7",
+    "@types/jest": "^24.0.25",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
+    "babel-preset-jest": "^24.9.0",
     "commitizen": "^4.0.3",
+    "crypto": "^1.0.1",
     "cz-conventional-changelog": "3.0.2",
+    "deasync": "^0.1.19",
     "eslint": "^6.7.2",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.7.0",
@@ -57,10 +67,12 @@
     "eslint-plugin-prettier": "^3.1.1",
     "husky": "^3.1.0",
     "jest": "^24.9.0",
+    "jest-fetch-mock": "^3.0.1",
     "jest-junit": "^10.0.0",
     "loader-runner": "^3.1.0",
     "memfs": "^3.0.1",
     "standard-version": "^7.0.1",
+    "ts-jest": "^24.3.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.3",
     "webpack": "^4.41.2"
@@ -76,11 +88,6 @@
     "client",
     "sdk"
   ],
-  "jest": {
-    "testMatch": [
-      "**/(src|test)/**/*.(spec|test).js"
-    ]
-  },
   "husky": {
     "hooks": {
       "pre-commit": "./scripts/process-staged-files"

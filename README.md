@@ -842,7 +842,7 @@ Please take a moment to read our contributing guidelines if you haven't yet done
 
 
 [npm]: https://img.shields.io/npm/v/openapi-client-sdk-loader.svg
-[npm-url]: https://npmjs.com/package/openapi-client-sdk-loader\
+[npm-url]: https://npmjs.com/package/openapi-client-sdk-loader
 [deps]: https://david-dm.org/aleksandryackovlev/openapi-client-sdk-loader.svg
 [deps-url]: https://david-dm.org/aleksandryackovlev/openapi-client-sdk-loader
 

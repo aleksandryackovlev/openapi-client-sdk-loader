@@ -8,6 +8,7 @@ export default {
   templateOptions: {
     validateRequest: true,
     validateResponse: true,
+    baseUrl: null,
   },
   parser: SwaggerParser,
   skipInvalid: true,

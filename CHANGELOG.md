@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v0.2.6...v0.3.0) (2020-01-12)
+
+
+### Features
+
+* **loader:** add baseUrl option to the loader ([f55bdc4](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/f55bdc4230e7e621eabc8eca7d70eed7c87455c7))
+* **loader:** make multifile docs watchable ([ecfc972](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/ecfc97240232ca485380f245060c60de4c1f2eae))
+
 ### [0.2.6](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v0.2.5...v0.2.6) (2020-01-11)
 
 

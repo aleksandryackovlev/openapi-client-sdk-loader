@@ -143,7 +143,7 @@ A built-in template for the typescript client sdk generation. Creates an sdk met
 | :-----------------------------------------: | :-------------------------: | :------: | :--------------------------------------------------------------------- |
 |        **validateRequest**        |         `{Boolean}`         | `true`  | Enables/Disables json schema validation for parameters, query strings, headers and request bodies                             |
 |        **validateResponse**        |         `{Boolean}`         | `true`  | Enables/Disables json schema validation for responses                             |
-|        **baseUrl**        |         `{String|null}`         | `null`  | The api base url. If this option is set, it overrides `api.servers.url`                             |
+|        **baseUrl**        |         `{String}`         | `null`  | The api base url. If this option is set, it overrides `api.servers.url`                             |
 
 #### Example
 
@@ -536,7 +536,7 @@ A built-in template for the javascript client sdk generation. Creates an sdk met
 | :-----------------------------------------: | :-------------------------: | :------: | :--------------------------------------------------------------------- |
 |        **validateRequest**        |         `{Boolean}`         | `true`  | Enables/Disables json schema validation for parameters, query strings, headers and request bodies                             |
 |        **validateResponse**        |         `{Boolean}`         | `true`  | Enables/Disables json schema validation for responses                             |
-|        **baseUrl**        |         `{String|null}`         | `null`  | The api base url. If this option is set, it overrides `api.servers.url`                             |
+|        **baseUrl**        |         `{String}`         | `null`  | The api base url. If this option is set, it overrides `api.servers.url`                             |
 
 #### Example
 

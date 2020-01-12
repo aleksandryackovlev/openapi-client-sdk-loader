@@ -4,6 +4,6 @@ export interface Config {
 }
 
 const defaultConfig: Config = {
-  baseUrl: process.env.API_BASE_URL || '{{info.server}}',
+  baseUrl: process.env.API_BASE_URL || '{{#if options.baseUrl}}{{options.baseUrl}}{{else}}{{info.server}}{{/if}}',
   preMiddleware: (url: string, params: RequestInit) => Promise.resolve([url, params]),
 };

@@ -143,6 +143,7 @@ A built-in template for the typescript client sdk generation. Creates an sdk met
 | :-----------------------------------------: | :-------------------------: | :------: | :--------------------------------------------------------------------- |
 |        **validateRequest**        |         `{Boolean}`         | `true`  | Enables/Disables json schema validation for parameters, query strings, headers and request bodies                             |
 |        **validateResponse**        |         `{Boolean}`         | `true`  | Enables/Disables json schema validation for responses                             |
+|        **baseUrl**        |         `{String}`         | `null`  | The api base url. If this option is set, it overrides `api.servers.url`                             |
 
 #### Example
 
@@ -234,8 +235,8 @@ someApiMethod({
         order: 'asc',
     },
 }, {
-    // API base url
-   baseUrl: 'https://github.com', // default process.env.API_BASE_URL || '{{api.server.url}}'
+   // API base url
+   baseUrl: 'https://github.com', // default process.env.API_BASE_URL || '{{templateOptions.baseUrl}}' || '{{api.server.url}}'
    
    // Middleware to run before fetching the request
    preMiddleware: async (url: string, params: RequestInit): Promise<[string, RequestInit]> => { // default (url: string, params: RequestInit) => Promise.resolve([url, params])
@@ -535,6 +536,7 @@ A built-in template for the javascript client sdk generation. Creates an sdk met
 | :-----------------------------------------: | :-------------------------: | :------: | :--------------------------------------------------------------------- |
 |        **validateRequest**        |         `{Boolean}`         | `true`  | Enables/Disables json schema validation for parameters, query strings, headers and request bodies                             |
 |        **validateResponse**        |         `{Boolean}`         | `true`  | Enables/Disables json schema validation for responses                             |
+|        **baseUrl**        |         `{String}`         | `null`  | The api base url. If this option is set, it overrides `api.servers.url`                             |
 
 #### Example
 
@@ -627,7 +629,7 @@ someApiMethod({
     },
 }, {
     // API base url
-   baseUrl: 'https://github.com', // default process.env.API_BASE_URL || '{{api.server.url}}'
+   baseUrl: 'https://github.com', // default process.env.API_BASE_URL || '{{templateOptions.baseUrl}}' || '{{api.server.url}}'
    
    // Middleware to run before fetching the request
    preMiddleware: async (url, params) => { // default (url: string, params: RequestInit) => Promise.resolve([url, params])

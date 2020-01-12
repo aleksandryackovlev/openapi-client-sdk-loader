@@ -33,6 +33,12 @@ export default function loader(source) {
       return callback(error);
     }
 
+    options.parser.$refs.paths().forEach((filePath) => {
+      if (filePath !== this.resourcePath) {
+        this.addDependency(filePath);
+      }
+    });
+
     return options
       .compiler(api, options)
       .then((result) => compileTemplate(result, options))

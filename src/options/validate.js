@@ -1,5 +1,7 @@
 import fs from 'fs';
 
+import SwaggerParser from 'swagger-parser';
+
 export default (options) => {
   if (!options.compiler || typeof options.compiler !== 'function') {
     throw new Error('The specified compiler does not exist');
@@ -9,7 +11,7 @@ export default (options) => {
     throw new Error('The specified template directory does not exist');
   }
 
-  if (!options.parser || typeof options.parser !== 'function') {
+  if (!options.parser || !(options.parser instanceof SwaggerParser)) {
     throw new Error('The specified parser does not exist');
   }
 };

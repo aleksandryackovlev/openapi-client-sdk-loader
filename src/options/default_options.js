@@ -10,7 +10,7 @@ export default {
     validateResponse: true,
     baseUrl: null,
   },
-  parser: SwaggerParser,
+  parser: new SwaggerParser(),
   skipInvalid: true,
   style: {
     singleQuote: true,

@@ -463,7 +463,7 @@ export const updatePet = async ({ data = {} } = {}, currentConfig = defaultConfi
   const requestUrl = \`\${config.baseUrl}/pet\`;
 
   const requestHeaders = {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json; charset=utf-8',
   };
 
   if (!(data instanceof FormData)) {
@@ -2631,7 +2631,7 @@ export const updatePet: (
   const requestUrl = \`\${config.baseUrl}/pet\`;
 
   const requestHeaders = {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json; charset=utf-8',
   };
 
   if (!(data instanceof FormData)) {

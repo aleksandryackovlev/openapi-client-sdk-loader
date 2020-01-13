@@ -4,7 +4,7 @@ import { schema2typescript, basepath, dashes2capitals, capitalize } from '../../
 
 import { compile } from './compileModels';
 
-const prepareMimeType = (mimeType) => dashes2capitals(basepath(mimeType));
+const prepareMimeType = (mimeType) => dashes2capitals(basepath(mimeType.split(';')[0]));
 
 const getParams = (schemas) =>
   schemas.reduce((prevParams, { name, in: inPath, required, schema: paramSchema }) => {
@@ -99,8 +99,12 @@ const createOperations = (api, deref) =>
             schema.models = schema.models ? `${schema.models}\n${models}` : models;
 
             // TODO: Support multiple Content-Types
-            if (Object.keys(requestBody).some((mimeType) => mimeType === 'application/json')) {
-              const mimeType = 'application/json';
+            if (
+              Object.keys(requestBody).some((mimeType) => mimeType.startsWith('application/json'))
+            ) {
+              const mimeType = Object.keys(requestBody).find((bodyMimeType) =>
+                bodyMimeType.startsWith('application/json')
+              );
 
               schema.mimeType = mimeType;
               schema.mimeTypeSuffix = prepareMimeType(mimeType);

@@ -125,7 +125,7 @@ describe('js-template', () => {
 
     expect(fetch).toBeCalledWith('https://petstore.swagger.io/v2/pet', {
       body: JSON.stringify(mockPet),
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
       method: 'PUT',
     });
   });

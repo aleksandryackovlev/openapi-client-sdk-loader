@@ -161,7 +161,7 @@ paths:
       requestBody:
         description: Pet object that needs to be added to the store
         content:
-          application/json:
+          application/json; charset=utf-8:
             schema:
               $ref: '#/components/schemas/Pet'
           application/xml:

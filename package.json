@@ -21,9 +21,9 @@
     "test:watch": "yarn test:only --watch --config=\"test/config/jest.config.js\"",
     "test:coverage": "yarn test:only --config=\"test/config/jest.config.js\" --collectCoverageFrom=\"src/**/*.js\" --coverage",
     "test:generated:js": "yarn test:only --config=\"test/config/jest.js-template.config.js\"",
-    "test:generated:js:watch": "test:generated:js --watch",
+    "test:generated:js:watch": "yarn test:generated:js --watch",
     "test:generated:ts": "yarn test:only --config=\"test/config/jest.ts-template.config.js\"",
-    "test:generated:ts:watch": "test:generated:ts --watch",
+    "test:generated:ts:watch": "yarn test:generated:ts --watch",
     "test": "yarn test:coverage && yarn test:generated:js && yarn test:generated:ts",
     "release": "standard-version",
     "commit": "git-cz"

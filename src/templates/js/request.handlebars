@@ -1,6 +1,15 @@
 const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams)
 const responseObject = await fetch(processedUrl, processedParams);
-const response = await responseObject.json();
+
+const responseContentType = responseObject.headers.get('Content-Type');
+
+let response;
+
+if (responseContentType.startsWith('application/json')) {
+  response = await responseObject.json();
+} else {
+  response = await responseObject.text();
+}
 
 if (!responseObject.ok) {
   throw new ApiError({
@@ -12,21 +21,34 @@ if (!responseObject.ok) {
   });
 }
 
-{{#if (and operation.response options.validateResponse)}}
-  const responseSchema = {{json operation.response}};
+{{#if operation.responses}}
+  const responseSchema = {{json operation.responses}};
+  const responseStatus = responseObject.status;
+  const acceptedContentTypes = responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
+  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    throw new Error('Incorrect content type');
+  }
+{{/if}}
+
+
+{{#if (and operation.responses options.validateResponse)}}
   function isResponse(obj) {
-    const isValid = ajv.validate(responseSchema, obj);
+  const isValid = !responseSchema[responseStatus]
+  || !responseSchema[responseStatus].response
+  || ajv.validate(responseSchema[responseStatus].response, obj);
 
     return !!isValid;
   }
 
-  if (!isResponse(response)) {
-    throw new ResponseValidationError({
-      message: 'Response schema validation error',
-      method: '{{operation.name}}',
-      errors: ajv.errors || [],
-    });
+  if (responseContentType.startsWith('application/json')) {
+      if (!isResponse(response)) {
+        throw new ResponseValidationError({
+          message: 'Response schema validation error',
+          method: '{{operation.name}}',
+          errors: ajv.errors || [],
+        });
+      }
   }
 {{/if}}
 

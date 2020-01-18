@@ -16,13 +16,18 @@ const mockPet = {
   photoUrls: ['http://localhost/photo.png'],
 };
 
+const defaultHeaders = new Headers();
+defaultHeaders.append('Content-Type', 'application/json');
+
 describe('ts-template', () => {
   beforeEach(() => {
     fetch.resetMocks();
   });
 
   it('should send a request with correct params', async () => {
-    fetch.mockResponseOnce(JSON.stringify(mockPet));
+    fetch.mockResponseOnce(JSON.stringify(mockPet), {
+      headers: defaultHeaders,
+    });
 
     await getPetById({ params: { petId: 3 } });
 
@@ -33,7 +38,9 @@ describe('ts-template', () => {
   });
 
   it('should throw on incorrect params if it was compiled with validateRequest flag', async () => {
-    fetch.mockResponseOnce(JSON.stringify(mockPet));
+    fetch.mockResponseOnce(JSON.stringify(mockPet), {
+      headers: defaultHeaders,
+    });
 
     try {
       await getPetById({ params: { petId: 3, id: 'test' } });
@@ -69,7 +76,9 @@ describe('ts-template', () => {
   });
 
   it('should send a request with correct query string', async () => {
-    fetch.mockResponseOnce(JSON.stringify([mockPet]));
+    fetch.mockResponseOnce(JSON.stringify([mockPet]), {
+      headers: defaultHeaders,
+    });
 
     await findPetsByTags({ query: { tags: ['tag1', 'tag2'] } });
 
@@ -83,7 +92,9 @@ describe('ts-template', () => {
   });
 
   it('should throw on incorrect query string if it was compiled with validateRequest flag', async () => {
-    fetch.mockResponseOnce(JSON.stringify('loggedin'));
+    fetch.mockResponseOnce(JSON.stringify('loggedin'), {
+      headers: defaultHeaders,
+    });
 
     try {
       await loginUser({
@@ -125,7 +136,9 @@ describe('ts-template', () => {
   });
 
   it('should send a request with correct body', async () => {
-    fetch.mockResponseOnce(JSON.stringify(mockPet));
+    fetch.mockResponseOnce(JSON.stringify(mockPet), {
+      headers: defaultHeaders,
+    });
 
     await updatePet({ data: mockPet });
 
@@ -137,7 +150,9 @@ describe('ts-template', () => {
   });
 
   it('should throw on incorrect body if it was compiled with validateRequest flag', async () => {
-    fetch.mockResponseOnce(JSON.stringify(mockPet));
+    fetch.mockResponseOnce(JSON.stringify(mockPet), {
+      headers: defaultHeaders,
+    });
 
     try {
       await updatePet({
@@ -180,7 +195,10 @@ describe('ts-template', () => {
         code: 200,
         type: 'success',
         message: 'ok',
-      })
+      }),
+      {
+        headers: defaultHeaders,
+      }
     );
 
     const formData = new FormData();
@@ -204,7 +222,9 @@ describe('ts-template', () => {
   // it('should throw on incorrect FormData body', async () => {});
 
   it('should send a request with correct headers', async () => {
-    fetch.mockResponseOnce(JSON.stringify(mockPet));
+    fetch.mockResponseOnce(JSON.stringify(mockPet), {
+      headers: defaultHeaders,
+    });
 
     await deletePet({ params: { petId: 3 }, headers: { api_key: 'key' } });
 
@@ -244,7 +264,9 @@ describe('ts-template', () => {
   });
 
   it('should execute pre middleware before the request if it is set', async () => {
-    fetch.mockResponseOnce(JSON.stringify(mockPet));
+    fetch.mockResponseOnce(JSON.stringify(mockPet), {
+      headers: defaultHeaders,
+    });
     const preMiddleware = jest.fn(async (url, params) => {
       const token = await Promise.resolve('token');
 
@@ -268,7 +290,9 @@ describe('ts-template', () => {
   });
 
   it('should throw on incorrect result if it was compiled with validateResponse flag', async () => {
-    fetch.mockResponseOnce(JSON.stringify({ name: 'test' }));
+    fetch.mockResponseOnce(JSON.stringify({ name: 'test' }), {
+      headers: defaultHeaders,
+    });
 
     try {
       await getPetById({ params: { petId: 3 } });
@@ -294,6 +318,23 @@ describe('ts-template', () => {
       expect(error).toHaveProperty('message', 'Api error while fetching getPetById');
       expect(error).toHaveProperty('status', 404);
       expect(error).toHaveProperty('statusText', 'Not found');
+    }
+  });
+
+  it('should throw with an HeadersValidationError if response content type is incorrect', async () => {
+    const headers = new Headers();
+    headers.append('Content-Type', 'text/plain');
+    fetch.mockResponseOnce(JSON.stringify({ code: '404' }), {
+      status: 200,
+      headers,
+    });
+
+    try {
+      await getPetById({ params: { petId: 3 } });
+      throw new Error('exit');
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toHaveProperty('message', 'Incorrect content type');
     }
   });
 

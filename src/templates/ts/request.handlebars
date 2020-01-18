@@ -4,10 +4,25 @@ let response: unknown;
 let response: any;
 {{/if}}
 
+{{#if operation.responses}}
+  const responseSchema: {
+    [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null; };
+  } = {{json operation.responses}};
+  let responseStatus: number;
+  let acceptedContentTypes: string[] | null;
+{{/if}}
+let responseContentType: string;
+
 try {
   const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams{{#if operation.header}} as RequestInit{{/if}})
   const responseObject = await fetch(processedUrl, processedParams{{#if operation.header}} as RequestInit{{/if}});
-  response = await responseObject.json();
+  responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
+
+  if (responseContentType.startsWith('application/json')) {
+    response = await responseObject.json();
+  } else {
+    response = await responseObject.text();
+  }
 
   if (!responseObject.ok) {
     throw new ApiError<typeof response>({
@@ -18,6 +33,14 @@ try {
       headers: responseObject.headers,
     });
   }
+  {{#if operation.responses}}
+    responseStatus = responseObject.status;
+    acceptedContentTypes = responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
+
+    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+      throw new Error('Incorrect content type');
+    }
+  {{/if}}
 } catch (error) {
   if (error instanceof ApiError) {
     throw error;
@@ -26,24 +49,28 @@ try {
   }
 }
 
-{{#if (and operation.response options.validateResponse)}}
-  const responseSchema = {{json operation.response}};
-
+{{#if (and operation.responses options.validateResponse)}}
   function isResponse(obj: unknown): obj is {{capitalize operation.name}}Response {
-    const isValid = ajv.validate(responseSchema, obj);
+    const isValid = ajv.validate(responseSchema[responseStatus.toString()].response as string | boolean | object, obj);
 
     return !!isValid;
   }
 
-  if (!isResponse(response)) {
-    throw new ResponseValidationError({
-      message: 'Response schema validation error',
-      method: '{{operation.name}}',
-      errors: ajv.errors || [],
-    });
+  if (responseContentType.startsWith('application/json')
+    && responseSchema
+    && responseSchema[responseStatus.toString()]
+    && responseSchema[responseStatus.toString()].response) {
+      if (!isResponse(response)) {
+        throw new ResponseValidationError({
+          message: 'Response schema validation error',
+          method: '{{operation.name}}',
+          errors: ajv.errors || [],
+        });
+      }
+    return response;
   }
 
-  return response;
+  return response as {{capitalize operation.name}}Response;
 {{else}}
   return response as {{capitalize operation.name}}Response;
 {{/if}}

@@ -1,8 +1,8 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep, toPairs } from 'lodash';
 
 import { schema2typescript, capitalize } from '../../utils';
 
-import { parseParams, parseBody, prepareMimeType } from '../utils';
+import { parseParams, parseBody, parseResponses, prepareMimeType } from '../utils';
 
 import { compile } from './compileModels';
 
@@ -13,7 +13,7 @@ const createOperations = (api, deref) =>
         ...result,
         ...Object.keys(deref.paths[path]).map(async (method) => {
           const operation = deref.paths[path][method];
-          const unrefedOperation = api.paths[path][method];
+          // const unrefedOperation = api.paths[path][method];
 
           let schema = {
             method: method.toUpperCase(),
@@ -48,34 +48,44 @@ const createOperations = (api, deref) =>
 
           let responseModel = `export type ${capitalize(schema.name)}Response = unknown;`;
 
-          // Support only 200 responses with the Content-Type application/json
-          if (operation.responses && (operation.responses['200'] || operation.responses['201'])) {
-            if (
-              operation.responses['200'] &&
-              operation.responses['200'].content &&
-              operation.responses['200'].content['application/json']
-            ) {
-              responseModel = await schema2typescript(
-                unrefedOperation.responses['200'].content['application/json'].schema,
-                `${schema.name}Response`
-              );
+          if (operation.responses) {
+            const resultResponses = parseResponses(operation.responses);
 
-              schema.response = operation.responses['200'].content['application/json'].schema;
-            } else if (
-              operation.responses['201'] &&
-              operation.responses['201'].content &&
-              operation.responses['201'].content['application/json']
-            ) {
-              responseModel = await schema2typescript(
-                unrefedOperation.responses['201'].content['application/json'].schema,
-                `${schema.name}Response`
-              );
+            let nextResponseModel = '';
 
-              schema.response = operation.responses['201'].content['application/json'].schema;
+            const models = await Promise.all(
+              toPairs(resultResponses.responses).map(async ([statusCode, { response }]) => {
+                if (response) {
+                  const modelWithStatusCode = await schema2typescript(
+                    response,
+                    `${schema.name}Response${statusCode}`
+                  );
+
+                  nextResponseModel = `${nextResponseModel}${
+                    nextResponseModel ? ' | ' : ''
+                  }${capitalize(schema.name)}Response${statusCode}`;
+
+                  return modelWithStatusCode;
+                }
+
+                return '';
+              })
+            );
+
+            if (nextResponseModel) {
+              responseModel = `export type ${capitalize(
+                schema.name
+              )}Response = ${nextResponseModel};`;
             }
-          }
 
-          schema.models = schema.models ? `${schema.models}\n${responseModel}` : responseModel;
+            schema = {
+              ...schema,
+              ...resultResponses,
+              models: schema.models
+                ? `${schema.models}\n${models.join('\n')}\n${responseModel}`
+                : `${models.join('\n')}\n${responseModel}`,
+            };
+          }
 
           return schema;
         }),

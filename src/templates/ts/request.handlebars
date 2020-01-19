@@ -1,35 +1,32 @@
-{{#if options.validateResponse}}
-let response: unknown;
-{{else}}
-let response: any;
-{{/if}}
-
 {{#if operation.responses}}
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null; };
   } = {{json operation.responses}};
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
 {{/if}}
 let responseContentType: string;
 
 try {
   const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams{{#if operation.header}} as RequestInit{{/if}})
-  const responseObject = await fetch(processedUrl, processedParams{{#if operation.header}} as RequestInit{{/if}});
+  responseObject = await fetch(processedUrl, processedParams{{#if operation.header}} as RequestInit{{/if}});
   responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+  responseText = await responseObject.text();
+
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = await responseObject.json();
   }
 
   if (!responseObject.ok) {
-    throw new ApiError<typeof response>({
+    throw new ApiError<typeof responseJson>({
       message: 'Api error while fetching {{operation.name}}',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -60,18 +57,31 @@ try {
     && responseSchema
     && responseSchema[responseStatus.toString()]
     && responseSchema[responseStatus.toString()].response) {
-      if (!isResponse(response)) {
+      if (!isResponse(responseJson)) {
         throw new ResponseValidationError({
           message: 'Response schema validation error',
           method: '{{operation.name}}',
           errors: ajv.errors || [],
         });
       }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as {{capitalize operation.name}}Response;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 {{else}}
-  return response as {{capitalize operation.name}}Response;
+  return {
+    json: responseJson as {{capitalize operation.name}}Response,
+    text: responseText,
+    raw: responseObject,
+  };
 {{/if}}
 

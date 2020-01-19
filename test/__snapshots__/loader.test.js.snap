@@ -2539,6 +2539,12 @@ export interface ErrorRequestBodyXml {
   title?: string;
 }
 
+export interface OperationResponse<T> {
+  json: T | null;
+  text: string;
+  raw: Response;
+}
+
 export interface GetPetByIdParams {
   petId: number;
 }
@@ -2893,7 +2899,10 @@ export interface GetPetByIdRequest {
 export const getPetById: (
   request: GetPetByIdRequest,
   config?: Partial<Config>
-) => Promise<GetPetByIdResponse> = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
+) => Promise<OperationResponse<GetPetByIdResponse>> = async (
+  { params = {} } = {},
+  currentConfig = defaultConfig
+) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   let requestUrl = \`\${config.baseUrl}/pet/{petId}\`;
@@ -2939,8 +2948,6 @@ export const getPetById: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = {
@@ -2985,25 +2992,28 @@ export const getPetById: (
   };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching getPetById',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -3037,17 +3047,26 @@ export const getPetById: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'getPetById',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as GetPetByIdResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface UpdatePetWithFormRequest {
   params?: UpdatePetWithFormParams;
@@ -3056,7 +3075,7 @@ export interface UpdatePetWithFormRequest {
 export const updatePetWithForm: (
   request: UpdatePetWithFormRequest,
   config?: Partial<Config>
-) => Promise<UpdatePetWithFormResponse> = async (
+) => Promise<OperationResponse<UpdatePetWithFormResponse>> = async (
   { params = {}, data = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -3142,32 +3161,33 @@ export const updatePetWithForm: (
     };
   }
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = { '405': { response: null, contentTypes: null } };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching updatePetWithForm',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -3201,17 +3221,26 @@ export const updatePetWithForm: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'updatePetWithForm',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as UpdatePetWithFormResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface DeletePetRequest {
   params?: DeletePetParams;
@@ -3220,7 +3249,7 @@ export interface DeletePetRequest {
 export const deletePet: (
   request: DeletePetRequest,
   config?: Partial<Config>
-) => Promise<DeletePetResponse> = async (
+) => Promise<OperationResponse<DeletePetResponse>> = async (
   { params = {}, headers = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -3292,8 +3321,6 @@ export const deletePet: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = {
@@ -3302,6 +3329,9 @@ export const deletePet: (
   };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
@@ -3309,21 +3339,21 @@ export const deletePet: (
       requestUrl,
       requestParams as RequestInit
     );
-    const responseObject = await fetch(processedUrl, processedParams as RequestInit);
+    responseObject = await fetch(processedUrl, processedParams as RequestInit);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching deletePet',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -3357,17 +3387,26 @@ export const deletePet: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'deletePet',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as DeletePetResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface UploadFileRequest {
   params?: UploadFileParams;
@@ -3376,7 +3415,7 @@ export interface UploadFileRequest {
 export const uploadFile: (
   request: UploadFileRequest,
   config?: Partial<Config>
-) => Promise<UploadFileResponse> = async (
+) => Promise<OperationResponse<UploadFileResponse>> = async (
   { params = {}, data = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -3454,8 +3493,6 @@ export const uploadFile: (
     };
   }
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = {
@@ -3473,25 +3510,28 @@ export const uploadFile: (
   };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching uploadFile',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -3525,17 +3565,26 @@ export const uploadFile: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'uploadFile',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as UploadFileResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface UpdatePetRequest {
   data?: FormData | UpdatePetRequestBodyJson;
@@ -3543,7 +3592,10 @@ export interface UpdatePetRequest {
 export const updatePet: (
   request: UpdatePetRequest,
   config?: Partial<Config>
-) => Promise<UpdatePetResponse> = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
+) => Promise<OperationResponse<UpdatePetResponse>> = async (
+  { data = {} } = {},
+  currentConfig = defaultConfig
+) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   const requestUrl = \`\${config.baseUrl}/pet\`;
@@ -3613,8 +3665,6 @@ export const updatePet: (
     };
   }
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = {
@@ -3624,25 +3674,28 @@ export const updatePet: (
   };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching updatePet',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -3676,17 +3729,26 @@ export const updatePet: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'updatePet',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as UpdatePetResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface AddPetRequest {
   data?: FormData | AddPetRequestBodyJson;
@@ -3694,7 +3756,10 @@ export interface AddPetRequest {
 export const addPet: (
   request: AddPetRequest,
   config?: Partial<Config>
-) => Promise<AddPetResponse> = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
+) => Promise<OperationResponse<AddPetResponse>> = async (
+  { data = {} } = {},
+  currentConfig = defaultConfig
+) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   const requestUrl = \`\${config.baseUrl}/pet\`;
@@ -3764,32 +3829,33 @@ export const addPet: (
     };
   }
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = { '405': { response: null, contentTypes: null } };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching addPet',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -3823,17 +3889,26 @@ export const addPet: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'addPet',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as AddPetResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface FindPetsByStatusRequest {
   query?: FindPetsByStatusQuery;
@@ -3841,7 +3916,7 @@ export interface FindPetsByStatusRequest {
 export const findPetsByStatus: (
   request: FindPetsByStatusRequest,
   config?: Partial<Config>
-) => Promise<FindPetsByStatusResponse> = async (
+) => Promise<OperationResponse<FindPetsByStatusResponse>> = async (
   { query = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -3889,8 +3964,6 @@ export const findPetsByStatus: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = {
@@ -3937,25 +4010,28 @@ export const findPetsByStatus: (
   };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching findPetsByStatus',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -3989,17 +4065,26 @@ export const findPetsByStatus: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'findPetsByStatus',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as FindPetsByStatusResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface FindPetsByTagsRequest {
   query?: FindPetsByTagsQuery;
@@ -4007,7 +4092,7 @@ export interface FindPetsByTagsRequest {
 export const findPetsByTags: (
   request: FindPetsByTagsRequest,
   config?: Partial<Config>
-) => Promise<FindPetsByTagsResponse> = async (
+) => Promise<OperationResponse<FindPetsByTagsResponse>> = async (
   { query = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -4050,8 +4135,6 @@ export const findPetsByTags: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = {
@@ -4098,25 +4181,28 @@ export const findPetsByTags: (
   };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching findPetsByTags',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -4150,21 +4236,30 @@ export const findPetsByTags: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'findPetsByTags',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as FindPetsByTagsResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
-export const getInventory: (config?: Partial<Config>) => Promise<GetInventoryResponse> = async (
-  currentConfig = defaultConfig
-) => {
+export const getInventory: (
+  config?: Partial<Config>
+) => Promise<OperationResponse<GetInventoryResponse>> = async (currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   const requestUrl = \`\${config.baseUrl}/store/inventory\`;
@@ -4178,8 +4273,6 @@ export const getInventory: (config?: Partial<Config>) => Promise<GetInventoryRes
     headers: requestHeaders,
   };
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = {
@@ -4190,25 +4283,28 @@ export const getInventory: (config?: Partial<Config>) => Promise<GetInventoryRes
   };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching getInventory',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -4242,17 +4338,26 @@ export const getInventory: (config?: Partial<Config>) => Promise<GetInventoryRes
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'getInventory',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as GetInventoryResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface GetOrderByIdRequest {
   params?: GetOrderByIdParams;
@@ -4260,7 +4365,7 @@ export interface GetOrderByIdRequest {
 export const getOrderById: (
   request: GetOrderByIdRequest,
   config?: Partial<Config>
-) => Promise<GetOrderByIdResponse> = async (
+) => Promise<OperationResponse<GetOrderByIdResponse>> = async (
   { params = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -4309,8 +4414,6 @@ export const getOrderById: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = {
@@ -4338,25 +4441,28 @@ export const getOrderById: (
   };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching getOrderById',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -4390,17 +4496,26 @@ export const getOrderById: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'getOrderById',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as GetOrderByIdResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface DeleteOrderRequest {
   params?: DeleteOrderParams;
@@ -4408,7 +4523,10 @@ export interface DeleteOrderRequest {
 export const deleteOrder: (
   request: DeleteOrderRequest,
   config?: Partial<Config>
-) => Promise<DeleteOrderResponse> = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
+) => Promise<OperationResponse<DeleteOrderResponse>> = async (
+  { params = {} } = {},
+  currentConfig = defaultConfig
+) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   let requestUrl = \`\${config.baseUrl}/store/order/{orderId}\`;
@@ -4454,8 +4572,6 @@ export const deleteOrder: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = {
@@ -4464,25 +4580,28 @@ export const deleteOrder: (
   };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching deleteOrder',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -4516,17 +4635,26 @@ export const deleteOrder: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'deleteOrder',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as DeleteOrderResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface PlaceOrderRequest {
   data?: FormData | PlaceOrderRequestBodyJson;
@@ -4534,7 +4662,10 @@ export interface PlaceOrderRequest {
 export const placeOrder: (
   request: PlaceOrderRequest,
   config?: Partial<Config>
-) => Promise<PlaceOrderResponse> = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
+) => Promise<OperationResponse<PlaceOrderResponse>> = async (
+  { data = {} } = {},
+  currentConfig = defaultConfig
+) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   const requestUrl = \`\${config.baseUrl}/store/order\`;
@@ -4587,8 +4718,6 @@ export const placeOrder: (
     };
   }
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = {
@@ -4615,25 +4744,28 @@ export const placeOrder: (
   };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching placeOrder',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -4667,17 +4799,26 @@ export const placeOrder: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'placeOrder',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as PlaceOrderResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface GetUserByNameRequest {
   params?: GetUserByNameParams;
@@ -4685,7 +4826,7 @@ export interface GetUserByNameRequest {
 export const getUserByName: (
   request: GetUserByNameRequest,
   config?: Partial<Config>
-) => Promise<GetUserByNameResponse> = async (
+) => Promise<OperationResponse<GetUserByNameResponse>> = async (
   { params = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -4734,8 +4875,6 @@ export const getUserByName: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = {
@@ -4761,25 +4900,28 @@ export const getUserByName: (
   };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching getUserByName',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -4813,17 +4955,26 @@ export const getUserByName: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'getUserByName',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as GetUserByNameResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface UpdateUserRequest {
   params?: UpdateUserParams;
@@ -4832,7 +4983,7 @@ export interface UpdateUserRequest {
 export const updateUser: (
   request: UpdateUserRequest,
   config?: Partial<Config>
-) => Promise<UpdateUserResponse> = async (
+) => Promise<OperationResponse<UpdateUserResponse>> = async (
   { params = {}, data = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -4918,8 +5069,6 @@ export const updateUser: (
     };
   }
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = {
@@ -4928,25 +5077,28 @@ export const updateUser: (
   };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching updateUser',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -4980,17 +5132,26 @@ export const updateUser: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'updateUser',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as UpdateUserResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface DeleteUserRequest {
   params?: DeleteUserParams;
@@ -4998,7 +5159,10 @@ export interface DeleteUserRequest {
 export const deleteUser: (
   request: DeleteUserRequest,
   config?: Partial<Config>
-) => Promise<DeleteUserResponse> = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
+) => Promise<OperationResponse<DeleteUserResponse>> = async (
+  { params = {} } = {},
+  currentConfig = defaultConfig
+) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   let requestUrl = \`\${config.baseUrl}/user/{username}\`;
@@ -5044,8 +5208,6 @@ export const deleteUser: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = {
@@ -5054,25 +5216,28 @@ export const deleteUser: (
   };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching deleteUser',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -5106,17 +5271,26 @@ export const deleteUser: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'deleteUser',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as DeleteUserResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface LoginUserRequest {
   query?: LoginUserQuery;
@@ -5124,7 +5298,10 @@ export interface LoginUserRequest {
 export const loginUser: (
   request: LoginUserRequest,
   config?: Partial<Config>
-) => Promise<LoginUserResponse> = async ({ query = {} } = {}, currentConfig = defaultConfig) => {
+) => Promise<OperationResponse<LoginUserResponse>> = async (
+  { query = {} } = {},
+  currentConfig = defaultConfig
+) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   let requestUrl = \`\${config.baseUrl}/user/login\`;
@@ -5164,8 +5341,6 @@ export const loginUser: (
     headers: requestHeaders,
   };
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = {
@@ -5174,25 +5349,28 @@ export const loginUser: (
   };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching loginUser',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -5226,21 +5404,30 @@ export const loginUser: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'loginUser',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as LoginUserResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
-export const logoutUser: (config?: Partial<Config>) => Promise<LogoutUserResponse> = async (
-  currentConfig = defaultConfig
-) => {
+export const logoutUser: (
+  config?: Partial<Config>
+) => Promise<OperationResponse<LogoutUserResponse>> = async (currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   const requestUrl = \`\${config.baseUrl}/user/logout\`;
@@ -5254,32 +5441,33 @@ export const logoutUser: (config?: Partial<Config>) => Promise<LogoutUserRespons
     headers: requestHeaders,
   };
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = { default: { response: null, contentTypes: null } };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching logoutUser',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -5313,17 +5501,26 @@ export const logoutUser: (config?: Partial<Config>) => Promise<LogoutUserRespons
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'logoutUser',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as LogoutUserResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface CreateUserRequest {
   data?: FormData | CreateUserRequestBodyJson;
@@ -5331,7 +5528,10 @@ export interface CreateUserRequest {
 export const createUser: (
   request: CreateUserRequest,
   config?: Partial<Config>
-) => Promise<CreateUserResponse> = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
+) => Promise<OperationResponse<CreateUserResponse>> = async (
+  { data = {} } = {},
+  currentConfig = defaultConfig
+) => {
   const config = { ...defaultConfig, ...currentConfig };
 
   const requestUrl = \`\${config.baseUrl}/user\`;
@@ -5382,32 +5582,33 @@ export const createUser: (
     };
   }
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = { default: { response: null, contentTypes: null } };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching createUser',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -5441,17 +5642,26 @@ export const createUser: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'createUser',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as CreateUserResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface CreateUsersWithArrayInputRequest {
   data?: FormData | CreateUsersWithArrayInputRequestBodyJson;
@@ -5459,7 +5669,7 @@ export interface CreateUsersWithArrayInputRequest {
 export const createUsersWithArrayInput: (
   request: CreateUsersWithArrayInputRequest,
   config?: Partial<Config>
-) => Promise<CreateUsersWithArrayInputResponse> = async (
+) => Promise<OperationResponse<CreateUsersWithArrayInputResponse>> = async (
   { data = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -5516,32 +5726,33 @@ export const createUsersWithArrayInput: (
     };
   }
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = { default: { response: null, contentTypes: null } };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching createUsersWithArrayInput',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -5575,17 +5786,26 @@ export const createUsersWithArrayInput: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'createUsersWithArrayInput',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as CreateUsersWithArrayInputResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 export interface CreateUsersWithListInputRequest {
   data?: FormData | CreateUsersWithListInputRequestBodyJson;
@@ -5593,7 +5813,7 @@ export interface CreateUsersWithListInputRequest {
 export const createUsersWithListInput: (
   request: CreateUsersWithListInputRequest,
   config?: Partial<Config>
-) => Promise<CreateUsersWithListInputResponse> = async (
+) => Promise<OperationResponse<CreateUsersWithListInputResponse>> = async (
   { data = {} } = {},
   currentConfig = defaultConfig
 ) => {
@@ -5650,32 +5870,33 @@ export const createUsersWithListInput: (
     };
   }
 
-  let response: unknown;
-
   const responseSchema: {
     [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
   } = { default: { response: null, contentTypes: null } };
   let responseStatus: number;
   let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
   let responseContentType: string;
 
   try {
     const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
-    const responseObject = await fetch(processedUrl, processedParams);
+    responseObject = await fetch(processedUrl, processedParams);
     responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
 
+    responseText = await responseObject.text();
+
     if (responseContentType.startsWith('application/json')) {
-      response = await responseObject.json();
-    } else {
-      response = await responseObject.text();
+      responseJson = await responseObject.json();
     }
 
     if (!responseObject.ok) {
-      throw new ApiError<typeof response>({
+      throw new ApiError<typeof responseJson>({
         message: 'Api error while fetching createUsersWithListInput',
         status: responseObject.status,
         statusText: responseObject.statusText,
-        response,
+        response: responseJson,
         headers: responseObject.headers,
       });
     }
@@ -5709,17 +5930,26 @@ export const createUsersWithListInput: (
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
   ) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'createUsersWithListInput',
         errors: ajv.errors || [],
       });
     }
-    return response;
+
+    return {
+      json: responseJson,
+      text: responseText,
+      raw: responseObject,
+    };
   }
 
-  return response as CreateUsersWithListInputResponse;
+  return {
+    json: null,
+    text: responseText,
+    raw: responseObject,
+  };
 };
 "
 `;

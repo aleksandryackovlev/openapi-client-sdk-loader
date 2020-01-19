@@ -3005,7 +3005,7 @@ export const getPetById: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -3179,7 +3179,7 @@ export const updatePetWithForm: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -3345,7 +3345,7 @@ export const deletePet: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -3523,7 +3523,7 @@ export const uploadFile: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -3687,7 +3687,7 @@ export const updatePet: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -3847,7 +3847,7 @@ export const addPet: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -4023,7 +4023,7 @@ export const findPetsByStatus: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -4194,7 +4194,7 @@ export const findPetsByTags: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -4296,7 +4296,7 @@ export const getInventory: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -4454,7 +4454,7 @@ export const getOrderById: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -4593,7 +4593,7 @@ export const deleteOrder: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -4757,7 +4757,7 @@ export const placeOrder: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -4913,7 +4913,7 @@ export const getUserByName: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -5090,7 +5090,7 @@ export const updateUser: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -5229,7 +5229,7 @@ export const deleteUser: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -5362,7 +5362,7 @@ export const loginUser: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -5459,7 +5459,7 @@ export const logoutUser: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -5600,7 +5600,7 @@ export const createUser: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -5744,7 +5744,7 @@ export const createUsersWithArrayInput: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {
@@ -5888,7 +5888,7 @@ export const createUsersWithListInput: (
     responseText = await responseObject.text();
 
     if (responseContentType.startsWith('application/json')) {
-      responseJson = await responseObject.json();
+      responseJson = JSON.parse(responseText);
     }
 
     if (!responseObject.ok) {

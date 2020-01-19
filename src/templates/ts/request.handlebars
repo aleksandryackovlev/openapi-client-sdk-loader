@@ -18,7 +18,7 @@ try {
   responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    responseJson = await responseObject.json();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {

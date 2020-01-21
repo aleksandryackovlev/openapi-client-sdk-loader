@@ -29,7 +29,7 @@ const deasyncPromise = (promise) => {
     });
 
   while (!done) {
-    deasync.sleep(100);
+    deasync.sleep(200);
   }
 
   if (error) {

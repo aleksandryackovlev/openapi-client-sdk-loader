@@ -356,4 +356,18 @@ describe('js-template', () => {
 
     expect(fetch).not.toBeCalled();
   });
+
+  it('should return a correct result', async () => {
+    fetch.mockResponseOnce(JSON.stringify(mockPet), {
+      headers: defaultHeaders,
+    });
+
+    const actual = await getPetById({ params: { petId: 3 } });
+
+    expect(actual).toStrictEqual({
+      headers: defaultHeaders,
+      json: mockPet,
+      text: JSON.stringify(mockPet),
+    });
+  });
 });

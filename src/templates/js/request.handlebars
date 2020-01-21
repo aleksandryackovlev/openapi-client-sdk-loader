@@ -3,12 +3,11 @@ const responseObject = await fetch(processedUrl, processedParams);
 
 const responseContentType = responseObject.headers.get('Content-Type');
 
-let response;
+let responseJson = null;
+const responseText = await responseObject.text();
 
 if (responseContentType.startsWith('application/json')) {
-  response = await responseObject.json();
-} else {
-  response = await responseObject.text();
+  responseJson = JSON.parse(responseText);
 }
 
 if (!responseObject.ok) {
@@ -16,7 +15,7 @@ if (!responseObject.ok) {
     message: 'Api error while fetching {{operation.name}}',
     status: responseObject.status,
     statusText: responseObject.statusText,
-    response,
+    response: responseJson,
     headers: responseObject.headers,
   });
 }
@@ -42,7 +41,7 @@ if (!responseObject.ok) {
   }
 
   if (responseContentType.startsWith('application/json')) {
-      if (!isResponse(response)) {
+      if (!isResponse(responseJson)) {
         throw new ResponseValidationError({
           message: 'Response schema validation error',
           method: '{{operation.name}}',
@@ -52,4 +51,8 @@ if (!responseObject.ok) {
   }
 {{/if}}
 
-return response;
+return {
+  json: responseJson,
+  text: responseText,
+  headers: responseObject.headers,
+};

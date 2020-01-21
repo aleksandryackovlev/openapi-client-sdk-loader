@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v0.3.0...v1.0.0) (2020-01-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ts-template:** instead of returning of one response of particular type now every operation returns
+json, text and raw responses
+
+### Features
+
+* **js-template:** change the response shape ([5aab85f](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/5aab85f87c445a4d7fb1fc8f1b1e84d6e6ddf8ab))
+* **js-template:** handle multiply types of responses ([7e3871d](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/7e3871d859805216a25c919e36cb93c560586c02))
+* **templates:** handle charsets in requests' content types ([5f4d991](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/5f4d991268639094c48f993ec592de2f7c15e3aa))
+* **ts-template:** add json, text and raw responses to operations ([0844b52](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/0844b5228f503af224d1b11564d07955dca538b2))
+* **ts-template:** handle multiple status codes in responses ([be3995c](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/be3995c56ba816725fe7de641a6c6fa492d45032))
+
+
+### Bug Fixes
+
+* **ts-template:** fix the error with the calling text and json on the body ([a0ed189](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/a0ed1896425441aebfc73743ad95ce07d2ec6fde))
+* **ts-template:** fix the shape of the request ([7450605](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/7450605b8361203894d85d63311720e535520d5b))
+
 ## [0.3.0](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v0.2.6...v0.3.0) (2020-01-12)
 
 

@@ -9,6 +9,12 @@ const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary']});
 
 {{models}}
 
+export interface OperationResponse<T> {
+  json: T | null;
+  text: string;
+  headers: Headers;
+}
+
 {{#each operations}}
   {{models}}
 {{/each}}
@@ -30,7 +36,7 @@ const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary']});
     }
   {{/if}}
   {{#if (or query header params data)}}
-    export const {{name}}: (request: {{capitalize name}}Request, config?: Partial<Config>) => Promise<{{capitalize name}}Response> = async ({
+  export const {{name}}: (request: {{capitalize name}}Request, config?: Partial<Config>) => Promise<OperationResponse<{{capitalize name}}Response>> = async ({
       {{#if query}}
         query = {},
       {{/if}}
@@ -45,7 +51,7 @@ const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary']});
       {{/if}}
     } = {}, currentConfig = defaultConfig) => {
   {{else}}
-    export const {{name}}: (config?: Partial<Config>) => Promise<{{capitalize name}}Response> = async (currentConfig = defaultConfig) => {
+    export const {{name}}: (config?: Partial<Config>) => Promise<OperationResponse<{{capitalize name}}Response>> = async (currentConfig = defaultConfig) => {
   {{/if}}
   const config = { ...defaultConfig, ...currentConfig };
 

@@ -1,23 +1,43 @@
-{{#if options.validateResponse}}
-let response: unknown;
-{{else}}
-let response: any;
+{{#if operation.responses}}
+  const responseSchema: {
+    [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null; };
+  } = {{json operation.responses}};
+  let responseStatus: number;
+  let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
 {{/if}}
+let responseContentType: string;
 
 try {
   const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams{{#if operation.header}} as RequestInit{{/if}})
-  const responseObject = await fetch(processedUrl, processedParams{{#if operation.header}} as RequestInit{{/if}});
-  response = await responseObject.json();
+  responseObject = await fetch(processedUrl, processedParams{{#if operation.header}} as RequestInit{{/if}});
+  responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
+
+  responseText = await responseObject.text();
+
+  if (responseContentType.startsWith('application/json')) {
+    responseJson = JSON.parse(responseText);
+  }
 
   if (!responseObject.ok) {
-    throw new ApiError<typeof response>({
+    throw new ApiError<typeof responseJson>({
       message: 'Api error while fetching {{operation.name}}',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
+  {{#if operation.responses}}
+    responseStatus = responseObject.status;
+    acceptedContentTypes = responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
+
+    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+      throw new Error('Incorrect content type');
+    }
+  {{/if}}
 } catch (error) {
   if (error instanceof ApiError) {
     throw error;
@@ -26,25 +46,42 @@ try {
   }
 }
 
-{{#if (and operation.response options.validateResponse)}}
-  const responseSchema = {{json operation.response}};
-
+{{#if (and operation.responses options.validateResponse)}}
   function isResponse(obj: unknown): obj is {{capitalize operation.name}}Response {
-    const isValid = ajv.validate(responseSchema, obj);
+    const isValid = ajv.validate(responseSchema[responseStatus.toString()].response as string | boolean | object, obj);
 
     return !!isValid;
   }
 
-  if (!isResponse(response)) {
-    throw new ResponseValidationError({
-      message: 'Response schema validation error',
-      method: '{{operation.name}}',
-      errors: ajv.errors || [],
-    });
+  if (responseContentType.startsWith('application/json')
+    && responseSchema
+    && responseSchema[responseStatus.toString()]
+    && responseSchema[responseStatus.toString()].response) {
+      if (!isResponse(responseJson)) {
+        throw new ResponseValidationError({
+          message: 'Response schema validation error',
+          method: '{{operation.name}}',
+          errors: ajv.errors || [],
+        });
+      }
+
+    return {
+      json: responseJson,
+      text: responseText,
+      headers: responseObject.headers,
+    };
   }
 
-  return response;
+  return {
+    json: null,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 {{else}}
-  return response as {{capitalize operation.name}}Response;
+  return {
+    json: responseJson as {{capitalize operation.name}}Response,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 {{/if}}
 

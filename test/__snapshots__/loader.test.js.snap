@@ -97,12 +97,11 @@ export const getPetById = async ({ params = {} } = {}, currentConfig = defaultCo
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -110,7 +109,7 @@ export const getPetById = async ({ params = {} } = {}, currentConfig = defaultCo
       message: 'Api error while fetching getPetById',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -173,7 +172,7 @@ export const getPetById = async ({ params = {} } = {}, currentConfig = defaultCo
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'getPetById',
@@ -182,7 +181,11 @@ export const getPetById = async ({ params = {} } = {}, currentConfig = defaultCo
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const updatePetWithForm = async (
   { params = {}, data = {} } = {},
@@ -273,12 +276,11 @@ export const updatePetWithForm = async (
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -286,7 +288,7 @@ export const updatePetWithForm = async (
       message: 'Api error while fetching updatePetWithForm',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -310,7 +312,7 @@ export const updatePetWithForm = async (
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'updatePetWithForm',
@@ -319,7 +321,11 @@ export const updatePetWithForm = async (
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const deletePet = async (
   { params = {}, headers = {} } = {},
@@ -396,12 +402,11 @@ export const deletePet = async (
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -409,7 +414,7 @@ export const deletePet = async (
       message: 'Api error while fetching deletePet',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -436,7 +441,7 @@ export const deletePet = async (
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'deletePet',
@@ -445,7 +450,11 @@ export const deletePet = async (
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const uploadFile = async (
   { params = {}, data = {} } = {},
@@ -528,12 +537,11 @@ export const uploadFile = async (
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -541,7 +549,7 @@ export const uploadFile = async (
       message: 'Api error while fetching uploadFile',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -577,7 +585,7 @@ export const uploadFile = async (
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'uploadFile',
@@ -586,7 +594,11 @@ export const uploadFile = async (
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const updatePet = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
@@ -663,12 +675,11 @@ export const updatePet = async ({ data = {} } = {}, currentConfig = defaultConfi
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -676,7 +687,7 @@ export const updatePet = async ({ data = {} } = {}, currentConfig = defaultConfi
       message: 'Api error while fetching updatePet',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -704,7 +715,7 @@ export const updatePet = async ({ data = {} } = {}, currentConfig = defaultConfi
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'updatePet',
@@ -713,7 +724,11 @@ export const updatePet = async ({ data = {} } = {}, currentConfig = defaultConfi
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const addPet = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
@@ -790,12 +805,11 @@ export const addPet = async ({ data = {} } = {}, currentConfig = defaultConfig) 
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -803,7 +817,7 @@ export const addPet = async ({ data = {} } = {}, currentConfig = defaultConfig) 
       message: 'Api error while fetching addPet',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -827,7 +841,7 @@ export const addPet = async ({ data = {} } = {}, currentConfig = defaultConfig) 
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'addPet',
@@ -836,7 +850,11 @@ export const addPet = async ({ data = {} } = {}, currentConfig = defaultConfig) 
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const findPetsByStatus = async ({ query = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
@@ -888,12 +906,11 @@ export const findPetsByStatus = async ({ query = {} } = {}, currentConfig = defa
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -901,7 +918,7 @@ export const findPetsByStatus = async ({ query = {} } = {}, currentConfig = defa
       message: 'Api error while fetching findPetsByStatus',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -966,7 +983,7 @@ export const findPetsByStatus = async ({ query = {} } = {}, currentConfig = defa
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'findPetsByStatus',
@@ -975,7 +992,11 @@ export const findPetsByStatus = async ({ query = {} } = {}, currentConfig = defa
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const findPetsByTags = async ({ query = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
@@ -1022,12 +1043,11 @@ export const findPetsByTags = async ({ query = {} } = {}, currentConfig = defaul
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -1035,7 +1055,7 @@ export const findPetsByTags = async ({ query = {} } = {}, currentConfig = defaul
       message: 'Api error while fetching findPetsByTags',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -1100,7 +1120,7 @@ export const findPetsByTags = async ({ query = {} } = {}, currentConfig = defaul
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'findPetsByTags',
@@ -1109,7 +1129,11 @@ export const findPetsByTags = async ({ query = {} } = {}, currentConfig = defaul
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const getInventory = async (currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
@@ -1130,12 +1154,11 @@ export const getInventory = async (currentConfig = defaultConfig) => {
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -1143,7 +1166,7 @@ export const getInventory = async (currentConfig = defaultConfig) => {
       message: 'Api error while fetching getInventory',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -1172,7 +1195,7 @@ export const getInventory = async (currentConfig = defaultConfig) => {
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'getInventory',
@@ -1181,7 +1204,11 @@ export const getInventory = async (currentConfig = defaultConfig) => {
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const getOrderById = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
@@ -1232,12 +1259,11 @@ export const getOrderById = async ({ params = {} } = {}, currentConfig = default
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -1245,7 +1271,7 @@ export const getOrderById = async ({ params = {} } = {}, currentConfig = default
       message: 'Api error while fetching getOrderById',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -1291,7 +1317,7 @@ export const getOrderById = async ({ params = {} } = {}, currentConfig = default
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'getOrderById',
@@ -1300,7 +1326,11 @@ export const getOrderById = async ({ params = {} } = {}, currentConfig = default
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const deleteOrder = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
@@ -1351,12 +1381,11 @@ export const deleteOrder = async ({ params = {} } = {}, currentConfig = defaultC
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -1364,7 +1393,7 @@ export const deleteOrder = async ({ params = {} } = {}, currentConfig = defaultC
       message: 'Api error while fetching deleteOrder',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -1391,7 +1420,7 @@ export const deleteOrder = async ({ params = {} } = {}, currentConfig = defaultC
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'deleteOrder',
@@ -1400,7 +1429,11 @@ export const deleteOrder = async ({ params = {} } = {}, currentConfig = defaultC
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const placeOrder = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
@@ -1460,12 +1493,11 @@ export const placeOrder = async ({ data = {} } = {}, currentConfig = defaultConf
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -1473,7 +1505,7 @@ export const placeOrder = async ({ data = {} } = {}, currentConfig = defaultConf
       message: 'Api error while fetching placeOrder',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -1518,7 +1550,7 @@ export const placeOrder = async ({ data = {} } = {}, currentConfig = defaultConf
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'placeOrder',
@@ -1527,7 +1559,11 @@ export const placeOrder = async ({ data = {} } = {}, currentConfig = defaultConf
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const getUserByName = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
@@ -1578,12 +1614,11 @@ export const getUserByName = async ({ params = {} } = {}, currentConfig = defaul
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -1591,7 +1626,7 @@ export const getUserByName = async ({ params = {} } = {}, currentConfig = defaul
       message: 'Api error while fetching getUserByName',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -1635,7 +1670,7 @@ export const getUserByName = async ({ params = {} } = {}, currentConfig = defaul
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'getUserByName',
@@ -1644,7 +1679,11 @@ export const getUserByName = async ({ params = {} } = {}, currentConfig = defaul
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const updateUser = async (
   { params = {}, data = {} } = {},
@@ -1735,12 +1774,11 @@ export const updateUser = async (
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -1748,7 +1786,7 @@ export const updateUser = async (
       message: 'Api error while fetching updateUser',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -1775,7 +1813,7 @@ export const updateUser = async (
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'updateUser',
@@ -1784,7 +1822,11 @@ export const updateUser = async (
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const deleteUser = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
@@ -1835,12 +1877,11 @@ export const deleteUser = async ({ params = {} } = {}, currentConfig = defaultCo
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -1848,7 +1889,7 @@ export const deleteUser = async ({ params = {} } = {}, currentConfig = defaultCo
       message: 'Api error while fetching deleteUser',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -1875,7 +1916,7 @@ export const deleteUser = async ({ params = {} } = {}, currentConfig = defaultCo
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'deleteUser',
@@ -1884,7 +1925,11 @@ export const deleteUser = async ({ params = {} } = {}, currentConfig = defaultCo
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const loginUser = async ({ query = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
@@ -1931,12 +1976,11 @@ export const loginUser = async ({ query = {} } = {}, currentConfig = defaultConf
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -1944,7 +1988,7 @@ export const loginUser = async ({ query = {} } = {}, currentConfig = defaultConf
       message: 'Api error while fetching loginUser',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -1971,7 +2015,7 @@ export const loginUser = async ({ query = {} } = {}, currentConfig = defaultConf
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'loginUser',
@@ -1980,7 +2024,11 @@ export const loginUser = async ({ query = {} } = {}, currentConfig = defaultConf
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const logoutUser = async (currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
@@ -2001,12 +2049,11 @@ export const logoutUser = async (currentConfig = defaultConfig) => {
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -2014,7 +2061,7 @@ export const logoutUser = async (currentConfig = defaultConfig) => {
       message: 'Api error while fetching logoutUser',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -2038,7 +2085,7 @@ export const logoutUser = async (currentConfig = defaultConfig) => {
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'logoutUser',
@@ -2047,7 +2094,11 @@ export const logoutUser = async (currentConfig = defaultConfig) => {
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const createUser = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
@@ -2105,12 +2156,11 @@ export const createUser = async ({ data = {} } = {}, currentConfig = defaultConf
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -2118,7 +2168,7 @@ export const createUser = async ({ data = {} } = {}, currentConfig = defaultConf
       message: 'Api error while fetching createUser',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -2142,7 +2192,7 @@ export const createUser = async ({ data = {} } = {}, currentConfig = defaultConf
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'createUser',
@@ -2151,7 +2201,11 @@ export const createUser = async ({ data = {} } = {}, currentConfig = defaultConf
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const createUsersWithArrayInput = async (
   { data = {} } = {},
@@ -2215,12 +2269,11 @@ export const createUsersWithArrayInput = async (
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -2228,7 +2281,7 @@ export const createUsersWithArrayInput = async (
       message: 'Api error while fetching createUsersWithArrayInput',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -2252,7 +2305,7 @@ export const createUsersWithArrayInput = async (
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'createUsersWithArrayInput',
@@ -2261,7 +2314,11 @@ export const createUsersWithArrayInput = async (
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 export const createUsersWithListInput = async (
   { data = {} } = {},
@@ -2325,12 +2382,11 @@ export const createUsersWithListInput = async (
 
   const responseContentType = responseObject.headers.get('Content-Type');
 
-  let response;
+  let responseJson = null;
+  const responseText = await responseObject.text();
 
   if (responseContentType.startsWith('application/json')) {
-    response = await responseObject.json();
-  } else {
-    response = await responseObject.text();
+    responseJson = JSON.parse(responseText);
   }
 
   if (!responseObject.ok) {
@@ -2338,7 +2394,7 @@ export const createUsersWithListInput = async (
       message: 'Api error while fetching createUsersWithListInput',
       status: responseObject.status,
       statusText: responseObject.statusText,
-      response,
+      response: responseJson,
       headers: responseObject.headers,
     });
   }
@@ -2362,7 +2418,7 @@ export const createUsersWithListInput = async (
   }
 
   if (responseContentType.startsWith('application/json')) {
-    if (!isResponse(response)) {
+    if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
         method: 'createUsersWithListInput',
@@ -2371,7 +2427,11 @@ export const createUsersWithListInput = async (
     }
   }
 
-  return response;
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
 };
 "
 `;
@@ -2542,7 +2602,7 @@ export interface ErrorRequestBodyXml {
 export interface OperationResponse<T> {
   json: T | null;
   text: string;
-  raw: Response;
+  headers: Headers;
 }
 
 export interface GetPetByIdParams {
@@ -3058,14 +3118,14 @@ export const getPetById: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface UpdatePetWithFormRequest {
@@ -3232,14 +3292,14 @@ export const updatePetWithForm: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface DeletePetRequest {
@@ -3398,14 +3458,14 @@ export const deletePet: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface UploadFileRequest {
@@ -3576,14 +3636,14 @@ export const uploadFile: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface UpdatePetRequest {
@@ -3740,14 +3800,14 @@ export const updatePet: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface AddPetRequest {
@@ -3900,14 +3960,14 @@ export const addPet: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface FindPetsByStatusRequest {
@@ -4076,14 +4136,14 @@ export const findPetsByStatus: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface FindPetsByTagsRequest {
@@ -4247,14 +4307,14 @@ export const findPetsByTags: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export const getInventory: (
@@ -4349,14 +4409,14 @@ export const getInventory: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface GetOrderByIdRequest {
@@ -4507,14 +4567,14 @@ export const getOrderById: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface DeleteOrderRequest {
@@ -4646,14 +4706,14 @@ export const deleteOrder: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface PlaceOrderRequest {
@@ -4810,14 +4870,14 @@ export const placeOrder: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface GetUserByNameRequest {
@@ -4966,14 +5026,14 @@ export const getUserByName: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface UpdateUserRequest {
@@ -5143,14 +5203,14 @@ export const updateUser: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface DeleteUserRequest {
@@ -5282,14 +5342,14 @@ export const deleteUser: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface LoginUserRequest {
@@ -5415,14 +5475,14 @@ export const loginUser: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export const logoutUser: (
@@ -5512,14 +5572,14 @@ export const logoutUser: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface CreateUserRequest {
@@ -5653,14 +5713,14 @@ export const createUser: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface CreateUsersWithArrayInputRequest {
@@ -5797,14 +5857,14 @@ export const createUsersWithArrayInput: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 export interface CreateUsersWithListInputRequest {
@@ -5941,14 +6001,14 @@ export const createUsersWithListInput: (
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 };
 "

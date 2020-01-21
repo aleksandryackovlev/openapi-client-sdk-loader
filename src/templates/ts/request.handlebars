@@ -68,20 +68,20 @@ try {
     return {
       json: responseJson,
       text: responseText,
-      raw: responseObject,
+      headers: responseObject.headers,
     };
   }
 
   return {
     json: null,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 {{else}}
   return {
     json: responseJson as {{capitalize operation.name}}Response,
     text: responseText,
-    raw: responseObject,
+    headers: responseObject.headers,
   };
 {{/if}}
 

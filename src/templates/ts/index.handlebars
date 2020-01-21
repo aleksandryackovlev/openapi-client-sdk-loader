@@ -12,7 +12,7 @@ const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary']});
 export interface OperationResponse<T> {
   json: T | null;
   text: string;
-  raw: Response;
+  headers: Headers;
 }
 
 {{#each operations}}

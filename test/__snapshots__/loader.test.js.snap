@@ -2482,6 +2482,7 @@ export const createUsersWithListInput = async (
 exports[`loader should work with ts compiler: runner_result 1`] = `
 "import Ajv from 'ajv';
 import { stringify } from 'query-string';
+import objectToFormData from 'object-to-formdata';
 
 const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary'] });
 
@@ -2641,6 +2642,24 @@ export interface ErrorRequestBodyXml {
   id?: string;
   title?: string;
 }
+
+const jsToUrlEncoded: (
+  element: any,
+  key?: string,
+  list?: string[]
+) => string = function jsToUrlEncoded(element, key = '', list = []) {
+  const components = list;
+
+  if (typeof element === 'object') {
+    for (let idx in element) {
+      jsToUrlEncoded(element[idx], key ? \`\${key}[\${idx}]\` : idx, components);
+    }
+  } else {
+    components.push(\`\${encodeURIComponent(key)}=\${encodeURIComponent(element)}\`);
+  }
+
+  return components.join('&');
+};
 
 export interface OperationResponse<T> {
   json: T | null;
@@ -3222,40 +3241,43 @@ export const updatePetWithForm: (
     'Content-Type': 'application/json',
   };
 
-  if (!(data instanceof FormData)) {
-    const bodySchema = {
-      type: 'object',
-      properties: {
-        id: { type: 'integer', format: 'int64' },
-        username: { type: 'string' },
-        firstName: { type: 'string' },
-        lastName: { type: 'string' },
-        email: { type: 'string' },
-        password: { type: 'string' },
-        phone: { type: 'string' },
-        userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
-      },
-      xml: { name: 'User' },
-    };
-    const isBodyValid = ajv.validate(bodySchema, data);
+  const bodySchema = {
+    type: 'object',
+    properties: {
+      id: { type: 'integer', format: 'int64' },
+      username: { type: 'string' },
+      firstName: { type: 'string' },
+      lastName: { type: 'string' },
+      email: { type: 'string' },
+      password: { type: 'string' },
+      phone: { type: 'string' },
+      userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
+    },
+    xml: { name: 'User' },
+  };
+  const isBodyValid = ajv.validate(bodySchema, data);
 
-    if (!isBodyValid) {
-      throw new RequestValidationError({
-        message: 'Request body schema validation error',
-        method: 'updatePetWithForm',
-        element: 'body',
-        errors: ajv.errors || [],
-      });
-    }
+  if (!isBodyValid) {
+    throw new RequestValidationError({
+      message: 'Request body schema validation error',
+      method: 'updatePetWithForm',
+      element: 'body',
+      errors: ajv.errors || [],
+    });
   }
 
   let requestParams;
+  let body = null;
 
-  if (data) {
+  if (data && typeof data === 'object') {
+    body = JSON.stringify(data);
+  }
+
+  if (body) {
     requestParams = {
       method: 'POST',
       headers: requestHeaders,
-      body: data instanceof FormData ? data : JSON.stringify(data),
+      body,
     };
   } else {
     requestParams = {
@@ -3562,33 +3584,36 @@ export const uploadFile: (
     'Content-Type': 'multipart/form-data',
   };
 
-  if (!(data instanceof FormData)) {
-    const bodySchema = {
-      type: 'object',
-      properties: {
-        additionalMetadata: { type: 'string', description: 'Additional data to pass to server' },
-        file: { type: 'object', description: 'file to upload', format: 'binary' },
-      },
-    };
-    const isBodyValid = ajv.validate(bodySchema, data);
+  const bodySchema = {
+    type: 'object',
+    properties: {
+      additionalMetadata: { type: 'string', description: 'Additional data to pass to server' },
+      file: { type: 'object', description: 'file to upload', format: 'binary' },
+    },
+  };
+  const isBodyValid = ajv.validate(bodySchema, data);
 
-    if (!isBodyValid) {
-      throw new RequestValidationError({
-        message: 'Request body schema validation error',
-        method: 'uploadFile',
-        element: 'body',
-        errors: ajv.errors || [],
-      });
-    }
+  if (!isBodyValid) {
+    throw new RequestValidationError({
+      message: 'Request body schema validation error',
+      method: 'uploadFile',
+      element: 'body',
+      errors: ajv.errors || [],
+    });
   }
 
   let requestParams;
+  let body = null;
 
-  if (data) {
+  if (data && typeof data === 'object') {
+    body = objectToFormData(data);
+  }
+
+  if (body) {
     requestParams = {
       method: 'POST',
       headers: requestHeaders,
-      body: data instanceof FormData ? data : JSON.stringify(data),
+      body,
     };
   } else {
     requestParams = {
@@ -3708,59 +3733,62 @@ export const updatePet: (
     'Content-Type': 'application/json; charset=utf-8',
   };
 
-  if (!(data instanceof FormData)) {
-    const bodySchema = {
-      required: ['name', 'photoUrls'],
-      type: 'object',
-      properties: {
-        id: { type: 'integer', format: 'int64' },
-        category: {
+  const bodySchema = {
+    required: ['name', 'photoUrls'],
+    type: 'object',
+    properties: {
+      id: { type: 'integer', format: 'int64' },
+      category: {
+        type: 'object',
+        properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
+        xml: { name: 'Category' },
+      },
+      name: { type: 'string', example: 'doggie' },
+      photoUrls: {
+        type: 'array',
+        xml: { wrapped: true },
+        items: { type: 'string', xml: { name: 'photoUrl' } },
+      },
+      tags: {
+        type: 'array',
+        xml: { wrapped: true },
+        items: {
           type: 'object',
           properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
-          xml: { name: 'Category' },
-        },
-        name: { type: 'string', example: 'doggie' },
-        photoUrls: {
-          type: 'array',
-          xml: { wrapped: true },
-          items: { type: 'string', xml: { name: 'photoUrl' } },
-        },
-        tags: {
-          type: 'array',
-          xml: { wrapped: true },
-          items: {
-            type: 'object',
-            properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
-            xml: { name: 'Tag' },
-          },
-        },
-        status: {
-          type: 'string',
-          description: 'pet status in the store',
-          enum: ['available', 'pending', 'sold'],
+          xml: { name: 'Tag' },
         },
       },
-      xml: { name: 'Pet' },
-    };
-    const isBodyValid = ajv.validate(bodySchema, data);
+      status: {
+        type: 'string',
+        description: 'pet status in the store',
+        enum: ['available', 'pending', 'sold'],
+      },
+    },
+    xml: { name: 'Pet' },
+  };
+  const isBodyValid = ajv.validate(bodySchema, data);
 
-    if (!isBodyValid) {
-      throw new RequestValidationError({
-        message: 'Request body schema validation error',
-        method: 'updatePet',
-        element: 'body',
-        errors: ajv.errors || [],
-      });
-    }
+  if (!isBodyValid) {
+    throw new RequestValidationError({
+      message: 'Request body schema validation error',
+      method: 'updatePet',
+      element: 'body',
+      errors: ajv.errors || [],
+    });
   }
 
   let requestParams;
+  let body = null;
 
-  if (data) {
+  if (data && typeof data === 'object') {
+    body = JSON.stringify(data);
+  }
+
+  if (body) {
     requestParams = {
       method: 'PUT',
       headers: requestHeaders,
-      body: data instanceof FormData ? data : JSON.stringify(data),
+      body,
     };
   } else {
     requestParams = {
@@ -3872,59 +3900,62 @@ export const addPet: (
     'Content-Type': 'application/json',
   };
 
-  if (!(data instanceof FormData)) {
-    const bodySchema = {
-      required: ['name', 'photoUrls'],
-      type: 'object',
-      properties: {
-        id: { type: 'integer', format: 'int64' },
-        category: {
+  const bodySchema = {
+    required: ['name', 'photoUrls'],
+    type: 'object',
+    properties: {
+      id: { type: 'integer', format: 'int64' },
+      category: {
+        type: 'object',
+        properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
+        xml: { name: 'Category' },
+      },
+      name: { type: 'string', example: 'doggie' },
+      photoUrls: {
+        type: 'array',
+        xml: { wrapped: true },
+        items: { type: 'string', xml: { name: 'photoUrl' } },
+      },
+      tags: {
+        type: 'array',
+        xml: { wrapped: true },
+        items: {
           type: 'object',
           properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
-          xml: { name: 'Category' },
-        },
-        name: { type: 'string', example: 'doggie' },
-        photoUrls: {
-          type: 'array',
-          xml: { wrapped: true },
-          items: { type: 'string', xml: { name: 'photoUrl' } },
-        },
-        tags: {
-          type: 'array',
-          xml: { wrapped: true },
-          items: {
-            type: 'object',
-            properties: { id: { type: 'integer', format: 'int64' }, name: { type: 'string' } },
-            xml: { name: 'Tag' },
-          },
-        },
-        status: {
-          type: 'string',
-          description: 'pet status in the store',
-          enum: ['available', 'pending', 'sold'],
+          xml: { name: 'Tag' },
         },
       },
-      xml: { name: 'Pet' },
-    };
-    const isBodyValid = ajv.validate(bodySchema, data);
+      status: {
+        type: 'string',
+        description: 'pet status in the store',
+        enum: ['available', 'pending', 'sold'],
+      },
+    },
+    xml: { name: 'Pet' },
+  };
+  const isBodyValid = ajv.validate(bodySchema, data);
 
-    if (!isBodyValid) {
-      throw new RequestValidationError({
-        message: 'Request body schema validation error',
-        method: 'addPet',
-        element: 'body',
-        errors: ajv.errors || [],
-      });
-    }
+  if (!isBodyValid) {
+    throw new RequestValidationError({
+      message: 'Request body schema validation error',
+      method: 'addPet',
+      element: 'body',
+      errors: ajv.errors || [],
+    });
   }
 
   let requestParams;
+  let body = null;
 
-  if (data) {
+  if (data && typeof data === 'object') {
+    body = JSON.stringify(data);
+  }
+
+  if (body) {
     requestParams = {
       method: 'POST',
       headers: requestHeaders,
-      body: data instanceof FormData ? data : JSON.stringify(data),
+      body,
     };
   } else {
     requestParams = {
@@ -4778,42 +4809,45 @@ export const placeOrder: (
     'Content-Type': 'application/json',
   };
 
-  if (!(data instanceof FormData)) {
-    const bodySchema = {
-      type: 'object',
-      properties: {
-        id: { type: 'integer', format: 'int64' },
-        petId: { type: 'integer', format: 'int64' },
-        quantity: { type: 'integer', format: 'int32' },
-        shipDate: { type: 'string', format: 'date-time' },
-        status: {
-          type: 'string',
-          description: 'Order Status',
-          enum: ['placed', 'approved', 'delivered'],
-        },
-        complete: { type: 'boolean' },
+  const bodySchema = {
+    type: 'object',
+    properties: {
+      id: { type: 'integer', format: 'int64' },
+      petId: { type: 'integer', format: 'int64' },
+      quantity: { type: 'integer', format: 'int32' },
+      shipDate: { type: 'string', format: 'date-time' },
+      status: {
+        type: 'string',
+        description: 'Order Status',
+        enum: ['placed', 'approved', 'delivered'],
       },
-      xml: { name: 'Order' },
-    };
-    const isBodyValid = ajv.validate(bodySchema, data);
+      complete: { type: 'boolean' },
+    },
+    xml: { name: 'Order' },
+  };
+  const isBodyValid = ajv.validate(bodySchema, data);
 
-    if (!isBodyValid) {
-      throw new RequestValidationError({
-        message: 'Request body schema validation error',
-        method: 'placeOrder',
-        element: 'body',
-        errors: ajv.errors || [],
-      });
-    }
+  if (!isBodyValid) {
+    throw new RequestValidationError({
+      message: 'Request body schema validation error',
+      method: 'placeOrder',
+      element: 'body',
+      errors: ajv.errors || [],
+    });
   }
 
   let requestParams;
+  let body = null;
 
-  if (data) {
+  if (data && typeof data === 'object') {
+    body = JSON.stringify(data);
+  }
+
+  if (body) {
     requestParams = {
       method: 'POST',
       headers: requestHeaders,
-      body: data instanceof FormData ? data : JSON.stringify(data),
+      body,
     };
   } else {
     requestParams = {
@@ -5131,40 +5165,43 @@ export const updateUser: (
     'Content-Type': 'application/json',
   };
 
-  if (!(data instanceof FormData)) {
-    const bodySchema = {
-      type: 'object',
-      properties: {
-        id: { type: 'integer', format: 'int64' },
-        username: { type: 'string' },
-        firstName: { type: 'string' },
-        lastName: { type: 'string' },
-        email: { type: 'string' },
-        password: { type: 'string' },
-        phone: { type: 'string' },
-        userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
-      },
-      xml: { name: 'User' },
-    };
-    const isBodyValid = ajv.validate(bodySchema, data);
+  const bodySchema = {
+    type: 'object',
+    properties: {
+      id: { type: 'integer', format: 'int64' },
+      username: { type: 'string' },
+      firstName: { type: 'string' },
+      lastName: { type: 'string' },
+      email: { type: 'string' },
+      password: { type: 'string' },
+      phone: { type: 'string' },
+      userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
+    },
+    xml: { name: 'User' },
+  };
+  const isBodyValid = ajv.validate(bodySchema, data);
 
-    if (!isBodyValid) {
-      throw new RequestValidationError({
-        message: 'Request body schema validation error',
-        method: 'updateUser',
-        element: 'body',
-        errors: ajv.errors || [],
-      });
-    }
+  if (!isBodyValid) {
+    throw new RequestValidationError({
+      message: 'Request body schema validation error',
+      method: 'updateUser',
+      element: 'body',
+      errors: ajv.errors || [],
+    });
   }
 
   let requestParams;
+  let body = null;
 
-  if (data) {
+  if (data && typeof data === 'object') {
+    body = JSON.stringify(data);
+  }
+
+  if (body) {
     requestParams = {
       method: 'PUT',
       headers: requestHeaders,
-      body: data instanceof FormData ? data : JSON.stringify(data),
+      body,
     };
   } else {
     requestParams = {
@@ -5644,40 +5681,43 @@ export const createUser: (
     'Content-Type': 'application/json',
   };
 
-  if (!(data instanceof FormData)) {
-    const bodySchema = {
-      type: 'object',
-      properties: {
-        id: { type: 'integer', format: 'int64' },
-        username: { type: 'string' },
-        firstName: { type: 'string' },
-        lastName: { type: 'string' },
-        email: { type: 'string' },
-        password: { type: 'string' },
-        phone: { type: 'string' },
-        userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
-      },
-      xml: { name: 'User' },
-    };
-    const isBodyValid = ajv.validate(bodySchema, data);
+  const bodySchema = {
+    type: 'object',
+    properties: {
+      id: { type: 'integer', format: 'int64' },
+      username: { type: 'string' },
+      firstName: { type: 'string' },
+      lastName: { type: 'string' },
+      email: { type: 'string' },
+      password: { type: 'string' },
+      phone: { type: 'string' },
+      userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
+    },
+    xml: { name: 'User' },
+  };
+  const isBodyValid = ajv.validate(bodySchema, data);
 
-    if (!isBodyValid) {
-      throw new RequestValidationError({
-        message: 'Request body schema validation error',
-        method: 'createUser',
-        element: 'body',
-        errors: ajv.errors || [],
-      });
-    }
+  if (!isBodyValid) {
+    throw new RequestValidationError({
+      message: 'Request body schema validation error',
+      method: 'createUser',
+      element: 'body',
+      errors: ajv.errors || [],
+    });
   }
 
   let requestParams;
+  let body = null;
 
-  if (data) {
+  if (data && typeof data === 'object') {
+    body = JSON.stringify(data);
+  }
+
+  if (body) {
     requestParams = {
       method: 'POST',
       headers: requestHeaders,
-      body: data instanceof FormData ? data : JSON.stringify(data),
+      body,
     };
   } else {
     requestParams = {
@@ -5785,43 +5825,46 @@ export const createUsersWithArrayInput: (
     'Content-Type': 'application/json',
   };
 
-  if (!(data instanceof FormData)) {
-    const bodySchema = {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'integer', format: 'int64' },
-          username: { type: 'string' },
-          firstName: { type: 'string' },
-          lastName: { type: 'string' },
-          email: { type: 'string' },
-          password: { type: 'string' },
-          phone: { type: 'string' },
-          userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
-        },
-        xml: { name: 'User' },
+  const bodySchema = {
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        id: { type: 'integer', format: 'int64' },
+        username: { type: 'string' },
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+        email: { type: 'string' },
+        password: { type: 'string' },
+        phone: { type: 'string' },
+        userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
       },
-    };
-    const isBodyValid = ajv.validate(bodySchema, data);
+      xml: { name: 'User' },
+    },
+  };
+  const isBodyValid = ajv.validate(bodySchema, data);
 
-    if (!isBodyValid) {
-      throw new RequestValidationError({
-        message: 'Request body schema validation error',
-        method: 'createUsersWithArrayInput',
-        element: 'body',
-        errors: ajv.errors || [],
-      });
-    }
+  if (!isBodyValid) {
+    throw new RequestValidationError({
+      message: 'Request body schema validation error',
+      method: 'createUsersWithArrayInput',
+      element: 'body',
+      errors: ajv.errors || [],
+    });
   }
 
   let requestParams;
+  let body = null;
 
-  if (data) {
+  if (data && typeof data === 'object') {
+    body = JSON.stringify(data);
+  }
+
+  if (body) {
     requestParams = {
       method: 'POST',
       headers: requestHeaders,
-      body: data instanceof FormData ? data : JSON.stringify(data),
+      body,
     };
   } else {
     requestParams = {
@@ -5929,43 +5972,46 @@ export const createUsersWithListInput: (
     'Content-Type': 'application/json',
   };
 
-  if (!(data instanceof FormData)) {
-    const bodySchema = {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'integer', format: 'int64' },
-          username: { type: 'string' },
-          firstName: { type: 'string' },
-          lastName: { type: 'string' },
-          email: { type: 'string' },
-          password: { type: 'string' },
-          phone: { type: 'string' },
-          userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
-        },
-        xml: { name: 'User' },
+  const bodySchema = {
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        id: { type: 'integer', format: 'int64' },
+        username: { type: 'string' },
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+        email: { type: 'string' },
+        password: { type: 'string' },
+        phone: { type: 'string' },
+        userStatus: { type: 'integer', description: 'User Status', format: 'int32' },
       },
-    };
-    const isBodyValid = ajv.validate(bodySchema, data);
+      xml: { name: 'User' },
+    },
+  };
+  const isBodyValid = ajv.validate(bodySchema, data);
 
-    if (!isBodyValid) {
-      throw new RequestValidationError({
-        message: 'Request body schema validation error',
-        method: 'createUsersWithListInput',
-        element: 'body',
-        errors: ajv.errors || [],
-      });
-    }
+  if (!isBodyValid) {
+    throw new RequestValidationError({
+      message: 'Request body schema validation error',
+      method: 'createUsersWithListInput',
+      element: 'body',
+      errors: ajv.errors || [],
+    });
   }
 
   let requestParams;
+  let body = null;
 
-  if (data) {
+  if (data && typeof data === 'object') {
+    body = JSON.stringify(data);
+  }
+
+  if (body) {
     requestParams = {
       method: 'POST',
       headers: requestHeaders,
-      body: data instanceof FormData ? data : JSON.stringify(data),
+      body,
     };
   } else {
     requestParams = {

@@ -133,12 +133,13 @@ paths:
         content:
           multipart/form-data:
             schema:
+              type: object
               properties:
                 additionalMetadata:
                   type: string
                   description: Additional data to pass to server
                 file:
-                  type: string
+                  type: object
                   description: file to upload
                   format: binary
       responses:

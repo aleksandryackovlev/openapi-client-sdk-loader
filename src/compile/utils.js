@@ -1,4 +1,4 @@
-import { toPairs } from 'lodash';
+import { toPairs, cloneDeep } from 'lodash';
 
 import { basepath, dashes2capitals } from '../utils';
 
@@ -29,6 +29,32 @@ export const parseParams = (schemas) =>
     return params;
   }, {});
 
+const normalizeMultipartSchema = (schema) => {
+  const normalizedSchema = cloneDeep(schema);
+
+  if (normalizedSchema.type === 'string' && normalizedSchema.format === 'binary') {
+    normalizedSchema.type = 'object';
+  }
+
+  if (normalizedSchema.type === 'object' && normalizedSchema.properties) {
+    normalizedSchema.properties = toPairs(normalizedSchema.properties).reduce(
+      (nextProperties, [propName, props]) => {
+        return {
+          ...nextProperties,
+          [propName]: normalizeMultipartSchema(props),
+        };
+      },
+      {}
+    );
+  }
+
+  if (normalizedSchema.type === 'array' && normalizedSchema.items) {
+    normalizedSchema.items = normalizeMultipartSchema(normalizedSchema.items);
+  }
+
+  return normalizedSchema;
+};
+
 export const parseBody = (requestBody) => {
   if (Object.keys(requestBody).length) {
     const mimeType =
@@ -37,7 +63,9 @@ export const parseBody = (requestBody) => {
     return {
       mimeType,
       mimeTypeSuffix: prepareMimeType(mimeType),
-      data: requestBody[mimeType].schema,
+      data: mimeType.startsWith('multipart/form-data')
+        ? normalizeMultipartSchema(requestBody[mimeType].schema)
+        : requestBody[mimeType].schema,
     };
   }
 

@@ -201,15 +201,12 @@ describe('js-template', () => {
       }
     );
 
-    const formData = new FormData();
-    formData.append(
-      'file',
-      new File(['foo'], 'foo.txt', {
-        type: 'text/plain',
-      })
-    );
+    const file = new File(['foo'], 'foo.txt', { type: 'text/plain' });
 
-    await uploadFile({ data: formData, params: { petId: 3 } });
+    const formData = new FormData();
+    formData.append('file', file);
+
+    await uploadFile({ data: { file }, params: { petId: 3 } });
 
     expect(fetch).toBeCalledWith('https://petstore.swagger.io/v2/pet/3/uploadImage', {
       body: formData,

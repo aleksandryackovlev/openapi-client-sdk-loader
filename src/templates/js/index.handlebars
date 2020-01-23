@@ -1,11 +1,30 @@
+{{#if (or options.validateRequest options.validateResponse)}}
 import Ajv from 'ajv';
+{{/if}}
 import { stringify } from 'query-string';
+import objectToFormData from 'object-to-formdata';
 
+{{#if (or options.validateRequest options.validateResponse)}}
 const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary']});
+{{/if}}
 
 {{> errors this}}
 
 {{> config this}}
+
+function jsToUrlEncoded(element,key = '',list = []){
+  const components = list;
+
+  if(typeof element === 'object'){
+    for (let idx in element) {
+      jsToUrlEncoded(element[idx], key ? `${key}[${idx}]` : idx, components);
+    }
+  } else {
+    components.push(`${encodeURIComponent(key)}=${encodeURIComponent(element)}`);
+  }
+
+  return components.join('&');
+}
 
 {{#each operations}}
   {{#if (or query header params data)}}

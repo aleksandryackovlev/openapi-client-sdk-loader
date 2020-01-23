@@ -10,6 +10,7 @@ module.exports = {
     '\\.(yaml)$': ['<rootDir>/test/config/openapiTransformer.js', { compiler: 'ts' }],
     '\\.(js)$': 'babel-jest',
   },
+  transformIgnorePatterns: ['node_modules/(?!(object-to-formdata)/)'],
   automock: false,
   setupFiles: ['<rootDir>/test/config/setup.js'],
   globals: {

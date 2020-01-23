@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v1.0.0...v2.0.0) (2020-01-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* **js-template:** parameter data now should be a plain object for content types multipart/formdata
+and application/x-www-form-urlencoded
+
+### Features
+
+* **js-template:** handle different types of requests ([1dc4934](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/1dc49346b344383f695549e4d9b4b2fe567e1b00))
+* **ts-template:** handle different types of requests ([6204441](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/62044418400efbfa4d68ea1983a2d451664b7401))
+
+
+### Bug Fixes
+
+* **compile:** convert string type with binary format into object for schema validation ([950b94a](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/950b94a6d2bcb240cb8a3b33c5e91f77d8c4f3d8))
+
 ## [1.0.0](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v0.3.0...v1.0.0) (2020-01-21)
 
 

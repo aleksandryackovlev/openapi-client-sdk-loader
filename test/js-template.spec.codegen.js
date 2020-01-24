@@ -215,8 +215,32 @@ describe('js-template', () => {
     });
   });
 
-  // TODO: validate form data bodies
-  // it('should throw on incorrect FormData body', async () => {});
+  it('should throw on incorrect form data body if it was compiled with validateRequest flag', async () => {
+    fetch.mockResponseOnce(
+      JSON.stringify({
+        code: 200,
+        type: 'success',
+        message: 'ok',
+      }),
+      {
+        headers: defaultHeaders,
+      }
+    );
+
+    const file = new File(['foo'], 'foo.txt', { type: 'text/plain' });
+
+    try {
+      await uploadFile({ data: { file, additionalMetadata: 3 }, params: { petId: 3 } });
+      throw new Error('exit');
+    } catch (error) {
+      expect(error).toBeInstanceOf(RequestValidationError);
+      expect(error).toHaveProperty('message', 'Request body schema validation error');
+      expect(error).toHaveProperty('element', 'body');
+      expect(error).toHaveProperty('method', 'uploadFile');
+    }
+
+    expect(fetch).not.toBeCalled();
+  });
 
   it('should send a request with correct headers', async () => {
     fetch.mockResponseOnce(JSON.stringify(mockPet), {

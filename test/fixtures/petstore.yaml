@@ -31,6 +31,38 @@ tags:
     description: Find out more about our store
     url: http://swagger.io
 paths:
+  /pet/someOperation:
+    post:
+      tags:
+      - pet
+      summary: Some operation
+      description: Some operation
+      operationId: someOperation
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name
+                meta:
+                  type: object
+                  description: meta information
+                  properties:
+                    title:
+                      type: string
+                    length:
+                      type: number
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
   /pet/{petId}:
     get:
       tags:
@@ -139,7 +171,7 @@ paths:
                   type: string
                   description: Additional data to pass to server
                 file:
-                  type: object
+                  type: string
                   description: file to upload
                   format: binary
       responses:

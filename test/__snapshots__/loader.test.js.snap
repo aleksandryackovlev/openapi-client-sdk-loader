@@ -63,6 +63,125 @@ function jsToUrlEncoded(element, key = '', list = []) {
   return components.join('&');
 }
 
+export const someOperation = async ({ data = {} } = {}, currentConfig = defaultConfig) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  const requestUrl = \`\${config.baseUrl}/pet/someOperation\`;
+
+  const requestHeaders = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  };
+
+  const bodySchema = {
+    type: 'object',
+    properties: {
+      name: { type: 'string', description: 'Name' },
+      meta: {
+        type: 'object',
+        description: 'meta information',
+        properties: { title: { type: 'string' }, length: { type: 'number' } },
+      },
+    },
+  };
+  const isBodyValid = ajv.validate(bodySchema, data);
+
+  if (!isBodyValid) {
+    throw new RequestValidationError({
+      message: 'Request body schema validation error',
+      method: 'someOperation',
+      element: 'body',
+      errors: ajv.errors || [],
+    });
+  }
+
+  let requestParams;
+  let body = null;
+
+  if (data && typeof data === 'object') {
+    body = jsToUrlEncoded(data);
+  }
+
+  if (body) {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+      body,
+    };
+  } else {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+    };
+  }
+
+  const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+  const responseObject = await fetch(processedUrl, processedParams);
+
+  const responseContentType = responseObject.headers.get('Content-Type');
+
+  let responseJson = null;
+  const responseText = await responseObject.text();
+
+  if (responseContentType.startsWith('application/json')) {
+    responseJson = JSON.parse(responseText);
+  }
+
+  if (!responseObject.ok) {
+    throw new ApiError({
+      message: 'Api error while fetching someOperation',
+      status: responseObject.status,
+      statusText: responseObject.statusText,
+      response: responseJson,
+      headers: responseObject.headers,
+    });
+  }
+
+  const responseSchema = {
+    '200': {
+      response: {
+        type: 'object',
+        properties: {
+          code: { type: 'integer', format: 'int32' },
+          type: { type: 'string' },
+          message: { type: 'string' },
+        },
+      },
+      contentTypes: ['application/json'],
+    },
+  };
+  const responseStatus = responseObject.status;
+  const acceptedContentTypes =
+    responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
+
+  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    throw new Error('Incorrect content type');
+  }
+
+  function isResponse(obj) {
+    const isValid =
+      !responseSchema[responseStatus] ||
+      !responseSchema[responseStatus].response ||
+      ajv.validate(responseSchema[responseStatus].response, obj);
+
+    return !!isValid;
+  }
+
+  if (responseContentType.startsWith('application/json')) {
+    if (!isResponse(responseJson)) {
+      throw new ResponseValidationError({
+        message: 'Response schema validation error',
+        method: 'someOperation',
+        errors: ajv.errors || [],
+      });
+    }
+  }
+
+  return {
+    json: responseJson,
+    text: responseText,
+    headers: responseObject.headers,
+  };
+};
 export const getPetById = async ({ params = {} } = {}, currentConfig = defaultConfig) => {
   const config = { ...defaultConfig, ...currentConfig };
 
@@ -2667,6 +2786,27 @@ export interface OperationResponse<T> {
   headers: Headers;
 }
 
+export interface SomeOperationRequestBodyXWwwFormUrlencoded {
+  /**
+   * Name
+   */
+  name?: string;
+  /**
+   * meta information
+   */
+  meta?: {
+    title?: string;
+    length?: number;
+  };
+}
+
+export interface SomeOperationResponse200 {
+  code?: number;
+  type?: string;
+  message?: string;
+}
+
+export type SomeOperationResponse = SomeOperationResponse200;
 export interface GetPetByIdParams {
   petId: number;
 }
@@ -2735,7 +2875,7 @@ export interface UploadFileRequestBodyFormData {
   /**
    * file to upload
    */
-  file?: {};
+  file?: string;
 }
 
 export interface UploadFileResponse200 {
@@ -3015,6 +3155,159 @@ export type CreateUsersWithListInputRequestBodyJson = {
 }[];
 
 export type CreateUsersWithListInputResponse = unknown;
+export interface SomeOperationRequest {
+  data?: FormData | SomeOperationRequestBodyXWwwFormUrlencoded;
+}
+export const someOperation: (
+  request: SomeOperationRequest,
+  config?: Partial<Config>
+) => Promise<OperationResponse<SomeOperationResponse>> = async (
+  { data = {} } = {},
+  currentConfig = defaultConfig
+) => {
+  const config = { ...defaultConfig, ...currentConfig };
+
+  const requestUrl = \`\${config.baseUrl}/pet/someOperation\`;
+
+  const requestHeaders = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  };
+
+  const bodySchema = {
+    type: 'object',
+    properties: {
+      name: { type: 'string', description: 'Name' },
+      meta: {
+        type: 'object',
+        description: 'meta information',
+        properties: { title: { type: 'string' }, length: { type: 'number' } },
+      },
+    },
+  };
+  const isBodyValid = ajv.validate(bodySchema, data);
+
+  if (!isBodyValid) {
+    throw new RequestValidationError({
+      message: 'Request body schema validation error',
+      method: 'someOperation',
+      element: 'body',
+      errors: ajv.errors || [],
+    });
+  }
+
+  let requestParams;
+  let body = null;
+
+  if (data && typeof data === 'object') {
+    body = jsToUrlEncoded(data);
+  }
+
+  if (body) {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+      body,
+    };
+  } else {
+    requestParams = {
+      method: 'POST',
+      headers: requestHeaders,
+    };
+  }
+
+  const responseSchema: {
+    [key: string]: { response: string | boolean | object | null; contentTypes: string[] | null };
+  } = {
+    '200': {
+      response: {
+        type: 'object',
+        properties: {
+          code: { type: 'integer', format: 'int32' },
+          type: { type: 'string' },
+          message: { type: 'string' },
+        },
+      },
+      contentTypes: ['application/json'],
+    },
+  };
+  let responseStatus: number;
+  let acceptedContentTypes: string[] | null;
+  let responseJson: unknown;
+  let responseText: string;
+  let responseObject: Response;
+  let responseContentType: string;
+
+  try {
+    const [processedUrl, processedParams] = await config.preMiddleware(requestUrl, requestParams);
+    responseObject = await fetch(processedUrl, processedParams);
+    responseContentType = responseObject.headers.get('Content-Type') || 'application/json';
+
+    responseText = await responseObject.text();
+
+    if (responseContentType.startsWith('application/json')) {
+      responseJson = JSON.parse(responseText);
+    }
+
+    if (!responseObject.ok) {
+      throw new ApiError<typeof responseJson>({
+        message: 'Api error while fetching someOperation',
+        status: responseObject.status,
+        statusText: responseObject.statusText,
+        response: responseJson,
+        headers: responseObject.headers,
+      });
+    }
+    responseStatus = responseObject.status;
+    acceptedContentTypes =
+      responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
+
+    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+      throw new Error('Incorrect content type');
+    }
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    } else {
+      throw error as ClientCodeError;
+    }
+  }
+
+  function isResponse(obj: unknown): obj is SomeOperationResponse {
+    const isValid = ajv.validate(
+      responseSchema[responseStatus.toString()].response as string | boolean | object,
+      obj
+    );
+
+    return !!isValid;
+  }
+
+  if (
+    responseContentType.startsWith('application/json') &&
+    responseSchema &&
+    responseSchema[responseStatus.toString()] &&
+    responseSchema[responseStatus.toString()].response
+  ) {
+    if (!isResponse(responseJson)) {
+      throw new ResponseValidationError({
+        message: 'Response schema validation error',
+        method: 'someOperation',
+        errors: ajv.errors || [],
+      });
+    }
+
+    return {
+      json: responseJson,
+      text: responseText,
+      headers: responseObject.headers,
+    };
+  }
+
+  return {
+    json: null,
+    text: responseText,
+    headers: responseObject.headers,
+  };
+};
 export interface GetPetByIdRequest {
   params?: GetPetByIdParams;
 }

@@ -5,6 +5,7 @@ import {
   findPetsByTags,
   loginUser,
   uploadFile,
+  someOperation,
   RequestValidationError,
   ResponseValidationError,
   ApiError,
@@ -237,6 +238,51 @@ describe('ts-template', () => {
       expect(error).toHaveProperty('message', 'Request body schema validation error');
       expect(error).toHaveProperty('element', 'body');
       expect(error).toHaveProperty('method', 'uploadFile');
+    }
+
+    expect(fetch).not.toBeCalled();
+  });
+
+  it('should send form urlencoded requests without errors', async () => {
+    fetch.mockResponseOnce(
+      JSON.stringify({
+        code: 200,
+        type: 'success',
+        message: 'ok',
+      }),
+      {
+        headers: defaultHeaders,
+      }
+    );
+
+    await someOperation({ data: { name: 'some name', meta: { title: 'some title', length: 2 } } });
+
+    expect(fetch).toBeCalledWith('https://petstore.swagger.io/v2/pet/someOperation', {
+      body: 'name=some%20name&meta%5Btitle%5D=some%20title&meta%5Blength%5D=2',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      method: 'POST',
+    });
+  });
+
+  it('should throw on incorrect form urlencoded body if it was compiled with validateRequest flag', async () => {
+    fetch.mockResponseOnce(
+      JSON.stringify({
+        code: 200,
+        type: 'success',
+        message: 'ok',
+      }),
+      {
+        headers: defaultHeaders,
+      }
+    );
+    try {
+      await someOperation({ data: { name: 'some name', meta: 'wrong meta' } });
+      throw new Error('exit');
+    } catch (error) {
+      expect(error).toBeInstanceOf(RequestValidationError);
+      expect(error).toHaveProperty('message', 'Request body schema validation error');
+      expect(error).toHaveProperty('element', 'body');
+      expect(error).toHaveProperty('method', 'someOperation');
     }
 
     expect(fetch).not.toBeCalled();

@@ -122,7 +122,10 @@ export const someOperation = async ({ data = {} } = {}, currentConfig = defaultC
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -166,7 +169,10 @@ export const someOperation = async ({ data = {} } = {}, currentConfig = defaultC
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -234,7 +240,10 @@ export const getPetById = async ({ params = {} } = {}, currentConfig = defaultCo
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -305,7 +314,10 @@ export const getPetById = async ({ params = {} } = {}, currentConfig = defaultCo
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -416,7 +428,10 @@ export const updatePetWithForm = async (
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -448,7 +463,10 @@ export const updatePetWithForm = async (
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -542,7 +560,10 @@ export const deletePet = async (
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -577,7 +598,10 @@ export const deletePet = async (
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -681,7 +705,10 @@ export const uploadFile = async (
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -725,7 +752,10 @@ export const uploadFile = async (
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -822,7 +852,10 @@ export const updatePet = async ({ data = {} } = {}, currentConfig = defaultConfi
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -858,7 +891,10 @@ export const updatePet = async ({ data = {} } = {}, currentConfig = defaultConfi
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -955,7 +991,10 @@ export const addPet = async ({ data = {} } = {}, currentConfig = defaultConfig) 
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -987,7 +1026,10 @@ export const addPet = async ({ data = {} } = {}, currentConfig = defaultConfig) 
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -1056,7 +1098,10 @@ export const findPetsByStatus = async ({ query = {} } = {}, currentConfig = defa
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -1129,7 +1174,10 @@ export const findPetsByStatus = async ({ query = {} } = {}, currentConfig = defa
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -1193,7 +1241,10 @@ export const findPetsByTags = async ({ query = {} } = {}, currentConfig = defaul
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -1266,7 +1317,10 @@ export const findPetsByTags = async ({ query = {} } = {}, currentConfig = defaul
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -1304,7 +1358,10 @@ export const getInventory = async (currentConfig = defaultConfig) => {
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -1341,7 +1398,10 @@ export const getInventory = async (currentConfig = defaultConfig) => {
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -1409,7 +1469,10 @@ export const getOrderById = async ({ params = {} } = {}, currentConfig = default
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -1463,7 +1526,10 @@ export const getOrderById = async ({ params = {} } = {}, currentConfig = default
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -1531,7 +1597,10 @@ export const deleteOrder = async ({ params = {} } = {}, currentConfig = defaultC
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -1566,7 +1635,10 @@ export const deleteOrder = async ({ params = {} } = {}, currentConfig = defaultC
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -1646,7 +1718,10 @@ export const placeOrder = async ({ data = {} } = {}, currentConfig = defaultConf
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -1699,7 +1774,10 @@ export const placeOrder = async ({ data = {} } = {}, currentConfig = defaultConf
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -1767,7 +1845,10 @@ export const getUserByName = async ({ params = {} } = {}, currentConfig = defaul
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -1819,7 +1900,10 @@ export const getUserByName = async ({ params = {} } = {}, currentConfig = defaul
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -1930,7 +2014,10 @@ export const updateUser = async (
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -1965,7 +2052,10 @@ export const updateUser = async (
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -2033,7 +2123,10 @@ export const deleteUser = async ({ params = {} } = {}, currentConfig = defaultCo
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -2068,7 +2161,10 @@ export const deleteUser = async ({ params = {} } = {}, currentConfig = defaultCo
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -2132,7 +2228,10 @@ export const loginUser = async ({ query = {} } = {}, currentConfig = defaultConf
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -2167,7 +2266,10 @@ export const loginUser = async ({ query = {} } = {}, currentConfig = defaultConf
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -2205,7 +2307,10 @@ export const logoutUser = async (currentConfig = defaultConfig) => {
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -2237,7 +2342,10 @@ export const logoutUser = async (currentConfig = defaultConfig) => {
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -2315,7 +2423,10 @@ export const createUser = async ({ data = {} } = {}, currentConfig = defaultConf
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -2347,7 +2458,10 @@ export const createUser = async ({ data = {} } = {}, currentConfig = defaultConf
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -2431,7 +2545,10 @@ export const createUsersWithArrayInput = async (
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -2463,7 +2580,10 @@ export const createUsersWithArrayInput = async (
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -2547,7 +2667,10 @@ export const createUsersWithListInput = async (
   let responseJson = null;
   const responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -2579,7 +2702,10 @@ export const createUsersWithListInput = async (
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (
+    responseContentType.startsWith('application/json') ||
+    responseContentType.startsWith('application/hal+json')
+  ) {
     if (!isResponse(responseJson)) {
       throw new ResponseValidationError({
         message: 'Response schema validation error',
@@ -3244,7 +3370,10 @@ export const someOperation: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -3282,7 +3411,8 @@ export const someOperation: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -3419,7 +3549,10 @@ export const getPetById: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -3457,7 +3590,8 @@ export const getPetById: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -3596,7 +3730,10 @@ export const updatePetWithForm: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -3634,7 +3771,8 @@ export const updatePetWithForm: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -3762,7 +3900,10 @@ export const deletePet: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -3800,7 +3941,8 @@ export const deletePet: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -3944,7 +4086,10 @@ export const uploadFile: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -3982,7 +4127,8 @@ export const uploadFile: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -4111,7 +4257,10 @@ export const updatePet: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -4149,7 +4298,8 @@ export const updatePet: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -4274,7 +4424,10 @@ export const addPet: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -4312,7 +4465,8 @@ export const addPet: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -4450,7 +4604,10 @@ export const findPetsByStatus: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -4488,7 +4645,8 @@ export const findPetsByStatus: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -4621,7 +4779,10 @@ export const findPetsByTags: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -4659,7 +4820,8 @@ export const findPetsByTags: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -4723,7 +4885,10 @@ export const getInventory: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -4761,7 +4926,8 @@ export const getInventory: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -4881,7 +5047,10 @@ export const getOrderById: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -4919,7 +5088,8 @@ export const getOrderById: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -5020,7 +5190,10 @@ export const deleteOrder: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -5058,7 +5231,8 @@ export const deleteOrder: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -5187,7 +5361,10 @@ export const placeOrder: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -5225,7 +5402,8 @@ export const placeOrder: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -5343,7 +5521,10 @@ export const getUserByName: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -5381,7 +5562,8 @@ export const getUserByName: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -5523,7 +5705,10 @@ export const updateUser: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -5561,7 +5746,8 @@ export const updateUser: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -5662,7 +5848,10 @@ export const deleteUser: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -5700,7 +5889,8 @@ export const deleteUser: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -5795,7 +5985,10 @@ export const loginUser: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -5833,7 +6026,8 @@ export const loginUser: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -5892,7 +6086,10 @@ export const logoutUser: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -5930,7 +6127,8 @@ export const logoutUser: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -6036,7 +6234,10 @@ export const createUser: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -6074,7 +6275,8 @@ export const createUser: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -6183,7 +6385,10 @@ export const createUsersWithArrayInput: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -6221,7 +6426,8 @@ export const createUsersWithArrayInput: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response
@@ -6330,7 +6536,10 @@ export const createUsersWithListInput: (
 
     responseText = await responseObject.text();
 
-    if (responseContentType.startsWith('application/json')) {
+    if (
+      responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')
+    ) {
       responseJson = JSON.parse(responseText);
     }
 
@@ -6368,7 +6577,8 @@ export const createUsersWithListInput: (
   }
 
   if (
-    responseContentType.startsWith('application/json') &&
+    (responseContentType.startsWith('application/json') ||
+      responseContentType.startsWith('application/hal+json')) &&
     responseSchema &&
     responseSchema[responseStatus.toString()] &&
     responseSchema[responseStatus.toString()].response

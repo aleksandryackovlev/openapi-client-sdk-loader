@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.3](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v2.0.2...v2.0.3) (2020-01-29)
+
+
+### Bug Fixes
+
+* **templates:** add application/hal+json handling ([c86666b](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/c86666b09d8988edc7f4996c6ff9b973a0ecfde6))
+
 ### [2.0.2](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v2.0.1...v2.0.2) (2020-01-26)
 
 ### [2.0.1](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v2.0.0...v2.0.1) (2020-01-24)

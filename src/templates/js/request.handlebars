@@ -6,7 +6,7 @@ const responseContentType = responseObject.headers.get('Content-Type');
 let responseJson = null;
 const responseText = await responseObject.text();
 
-if (responseContentType.startsWith('application/json')) {
+if (responseContentType.startsWith('application/json') || responseContentType.startsWith('application/hal+json')) {
   responseJson = JSON.parse(responseText);
 }
 
@@ -40,7 +40,7 @@ if (!responseObject.ok) {
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')) {
+  if (responseContentType.startsWith('application/json') || responseContentType.startsWith('application/hal+json')) {
       if (!isResponse(responseJson)) {
         throw new ResponseValidationError({
           message: 'Response schema validation error',

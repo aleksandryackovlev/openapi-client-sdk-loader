@@ -17,7 +17,7 @@ try {
 
   responseText = await responseObject.text();
 
-  if (responseContentType.startsWith('application/json')) {
+  if (responseContentType.startsWith('application/json') || responseContentType.startsWith('application/hal+json')) {
     responseJson = JSON.parse(responseText);
   }
 
@@ -53,7 +53,7 @@ try {
     return !!isValid;
   }
 
-  if (responseContentType.startsWith('application/json')
+  if ((responseContentType.startsWith('application/json') || responseContentType.startsWith('application/hal+json'))
     && responseSchema
     && responseSchema[responseStatus.toString()]
     && responseSchema[responseStatus.toString()].response) {

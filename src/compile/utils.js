@@ -4,7 +4,8 @@ import { basepath, dashes2capitals } from '../utils';
 
 export const prepareMimeType = (mimeType) => dashes2capitals(basepath(mimeType.split(';')[0]));
 
-export const isApplicationJson = (mimeType) => mimeType.startsWith('application/json');
+export const isApplicationJson = (mimeType) =>
+  mimeType.startsWith('application/json') || mimeType.startsWith('application/hal+json');
 
 export const parseParams = (schemas) =>
   schemas.reduce((prevParams, { name, in: inPath, required, schema }) => {

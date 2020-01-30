@@ -9,7 +9,7 @@ exports[`loader should work with babel-loader: warnings 1`] = `Array []`;
 exports[`loader should work with js compiler: runner_result_js 1`] = `
 "import Ajv from 'ajv';
 import { stringify } from 'query-string';
-import objectToFormData from 'object-to-formdata';
+import { objectToFormData } from 'object-to-formdata';
 
 const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary'] });
 
@@ -2727,7 +2727,7 @@ export const createUsersWithListInput = async (
 exports[`loader should work with ts compiler: runner_result 1`] = `
 "import Ajv from 'ajv';
 import { stringify } from 'query-string';
-import objectToFormData from 'object-to-formdata';
+import { objectToFormData } from 'object-to-formdata';
 
 const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary'] });
 

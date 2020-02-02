@@ -1,19 +1,11 @@
-# Contributing in @webpack-contrib
+# Contributing
 
-We'd always love contributions to further improve the webpack / webpack-contrib ecosystem!
 Here are the guidelines we'd like you to follow:
 
-- [Questions and Problems](#question)
 - [Issues and Bugs](#issue)
 - [Feature Requests](#feature)
 - [Pull Request Submission Guidelines](#submit-pr)
 - [Commit Message Conventions](#commit)
-
-## <a name="question"></a> Got a Question or Problem?
-
-Please submit support requests and questions to StackOverflow using the tag [[webpack]](http://stackoverflow.com/tags/webpack).
-StackOverflow is better suited for this kind of support though you may also inquire in [Webpack Gitter](https://gitter.im/webpack/webpack).
-The issue tracker is for bug reports and feature discussions.
 
 ## <a name="issue"></a> Found an Issue or Bug?
 
@@ -46,7 +38,7 @@ Before you submit your Pull Request (PR) consider the following guidelines:
 - Fill out our `Pull Request Template`. Your pull request will not be considered if it is ignored.
 - Please sign the `Contributor License Agreement (CLA)` when a pull request is opened. We cannot accept your pull request without this. Make sure you sign with the primary email address associated with your local / github account.
 
-## <a name="commit"></a> Webpack Contrib Commit Conventions
+## <a name="commit"></a> Commit Conventions
 
 Each commit message consists of a **header**, a **body** and a **footer**. The header has a special
 format that includes a **type**, a **scope** and a **subject**:
@@ -121,15 +113,6 @@ reference GitHub issues that this commit **Closes**.
 
 **Breaking Changes** should start with the word `BREAKING CHANGE:` with a space or two newlines. The rest of the commit message is then used for this.
 
-Example
-
-```
-BREAKING CHANGE: Updates to `Chunk.mapModules`.
-
-This release is not backwards compatible with `Webpack 2.x` due to breaking changes in webpack/webpack#4764
-Migration: see webpack/webpack#5225
-
-```
 
 ## Testing Your Pull Request
 

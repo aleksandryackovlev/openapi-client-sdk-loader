@@ -10,8 +10,6 @@ about: Something went awry and you'd like to tell us about it.
   of Github will appear and pile-drive the close button from a great height
   while making animal noises.
 
-  👉🏽 Need support, advice, or help? Don't open an issue!
-  Head to StackOverflow or https://gitter.im/webpack/webpack.
 -->
 
 - Operating System:

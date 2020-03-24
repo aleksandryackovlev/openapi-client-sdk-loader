@@ -1,6 +1,6 @@
 {
   "name": "openapi-client-sdk-loader",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "An Open API loader for webpack. Compiles yaml to client sdk.",
   "license": "MIT",
   "repository": "git@github.com:aleksandryackovlev/openapi-client-sdk-loader.git",
@@ -37,16 +37,16 @@
     "webpack": "^4.0.0 || ^5.0.0"
   },
   "dependencies": {
+    "@apidevtools/swagger-parser": "^9.0.1",
     "ajv": "^6.10.2",
     "glob": "^7.1.6",
     "handlebars": "^4.5.3",
     "json-schema-to-typescript": "^8.0.0",
-    "loader-utils": "^1.2.3",
+    "loader-utils": "^2.0.0",
     "lodash": "^4.17.15",
     "object-to-formdata": "^3.0.3",
-    "prettier": "^1.19.1",
-    "query-string": "^6.9.0",
-    "swagger-parser": "^8.0.3"
+    "prettier": "^2.0.2",
+    "query-string": "^6.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.5",

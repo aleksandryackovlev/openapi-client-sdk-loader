@@ -1,6 +1,6 @@
 {
   "name": "openapi-client-sdk-loader",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "An Open API loader for webpack. Compiles yaml to client sdk.",
   "license": "MIT",
   "repository": "git@github.com:aleksandryackovlev/openapi-client-sdk-loader.git",

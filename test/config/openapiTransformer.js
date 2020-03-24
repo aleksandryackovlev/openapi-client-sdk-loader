@@ -6,7 +6,7 @@ const typescriptPreset = require('@babel/preset-typescript');
 
 const deasync = require('deasync');
 const crypto = require('crypto');
-const SwaggerParser = require('swagger-parser');
+const SwaggerParser = require('@apidevtools/swagger-parser');
 
 const format = require('../../dist/format').default;
 const compileTemplate = require('../../dist/templates').default;

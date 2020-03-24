@@ -1,6 +1,6 @@
 import path from 'path';
 
-import SwaggerParser from 'swagger-parser';
+import SwaggerParser from '@apidevtools/swagger-parser';
 
 export default {
   compiler: 'ts',

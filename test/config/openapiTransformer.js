@@ -6,7 +6,7 @@ const typescriptPreset = require('@babel/preset-typescript');
 
 const deasync = require('deasync');
 const crypto = require('crypto');
-const SwaggerParser = require('swagger-parser');
+const SwaggerParser = require('@apidevtools/swagger-parser');
 
 const format = require('../../dist/format').default;
 const compileTemplate = require('../../dist/templates').default;
@@ -78,10 +78,7 @@ const compileSdk = async (filename, source, { compiler }) => {
 
 module.exports = {
   getCacheKey(src) {
-    return crypto
-      .createHash('md5')
-      .update(src)
-      .digest('hex');
+    return crypto.createHash('md5').update(src).digest('hex');
   },
   process(src, filename, options) {
     const compiler = options.globals && options.globals['ts-jest'] ? 'ts' : 'js';

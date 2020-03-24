@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import SwaggerParser from 'swagger-parser';
+import SwaggerParser from '@apidevtools/swagger-parser';
 
 export default (options) => {
   if (!options.compiler || typeof options.compiler !== 'function') {

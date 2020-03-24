@@ -6,8 +6,4 @@ export const basepath = (string) => {
   return pathFragments[pathFragments.length - 1];
 };
 
-export const dashes2capitals = (string) =>
-  string
-    .split('-')
-    .map(capitalize)
-    .join('');
+export const dashes2capitals = (string) => string.split('-').map(capitalize).join('');

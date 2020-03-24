@@ -78,10 +78,7 @@ const compileSdk = async (filename, source, { compiler }) => {
 
 module.exports = {
   getCacheKey(src) {
-    return crypto
-      .createHash('md5')
-      .update(src)
-      .digest('hex');
+    return crypto.createHash('md5').update(src).digest('hex');
   },
   process(src, filename, options) {
     const compiler = options.globals && options.globals['ts-jest'] ? 'ts' : 'js';

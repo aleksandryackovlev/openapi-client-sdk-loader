@@ -71,7 +71,9 @@ async function compile(schema, name, options = defaultOptions) {
 
   return format(
     generate(
-      optimize(parse(await dereference(normalize(normalizeRefs(schema), name), options), options)),
+      optimize(
+        parse(await dereference(normalize(normalizeRefs(schema), name, {}), options), options)
+      ),
       options
     ),
     options

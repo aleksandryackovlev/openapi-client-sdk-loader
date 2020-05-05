@@ -3479,7 +3479,7 @@ export const getPetById: (
   const paramsKeys = Object.keys(params) as GetPetByIdParamsKeys[];
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -3659,7 +3659,7 @@ export const updatePetWithForm: (
   const paramsKeys = Object.keys(params) as UpdatePetWithFormParamsKeys[];
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -3840,7 +3840,7 @@ export const deletePet: (
   const paramsKeys = Object.keys(params) as DeletePetParamsKeys[];
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -4010,7 +4010,7 @@ export const uploadFile: (
   const paramsKeys = Object.keys(params) as UploadFileParamsKeys[];
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -4994,7 +4994,7 @@ export const getOrderById: (
   const paramsKeys = Object.keys(params) as GetOrderByIdParamsKeys[];
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -5156,7 +5156,7 @@ export const deleteOrder: (
   const paramsKeys = Object.keys(params) as DeleteOrderParamsKeys[];
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -5470,7 +5470,7 @@ export const getUserByName: (
   const paramsKeys = Object.keys(params) as GetUserByNameParamsKeys[];
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -5631,7 +5631,7 @@ export const updateUser: (
   const paramsKeys = Object.keys(params) as UpdateUserParamsKeys[];
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }
@@ -5814,7 +5814,7 @@ export const deleteUser: (
   const paramsKeys = Object.keys(params) as DeleteUserParamsKeys[];
 
   if (paramsKeys.length) {
-    paramsKeys.forEach(param => {
+    paramsKeys.forEach((param) => {
       requestUrl = requestUrl.replace(\`{\${param}}\`, encodeURIComponent(String(params[param])));
     });
   }

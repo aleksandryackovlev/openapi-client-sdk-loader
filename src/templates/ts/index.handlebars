@@ -2,7 +2,7 @@
 import Ajv from 'ajv';
 {{/if}}
 import { stringify } from 'query-string';
-import { objectToFormData } from 'object-to-formdata';
+import { serialize as objectToFormData } from 'object-to-formdata';
 
 {{#if (or options.validateRequest options.validateResponse)}}
 const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary']});

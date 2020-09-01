@@ -11,7 +11,7 @@ exports[`loader should work with js compiler: runner_result_js 1`] = `
 import { stringify } from 'query-string';
 import { serialize as objectToFormData } from 'object-to-formdata';
 
-const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary'] });
+const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'float', 'double', 'binary'] });
 
 export class ApiError extends Error {
   constructor({ status, statusText, response, message, headers }) {
@@ -156,7 +156,14 @@ export const someOperation = async ({ data = {} } = {}, currentConfig = defaultC
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -301,7 +308,14 @@ export const getPetById = async ({ params = {} } = {}, currentConfig = defaultCo
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -450,7 +464,14 @@ export const updatePetWithForm = async (
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -585,7 +606,14 @@ export const deletePet = async (
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -739,7 +767,14 @@ export const uploadFile = async (
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -878,7 +913,14 @@ export const updatePet = async ({ data = {} } = {}, currentConfig = defaultConfi
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -1013,7 +1055,14 @@ export const addPet = async ({ data = {} } = {}, currentConfig = defaultConfig) 
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -1161,7 +1210,14 @@ export const findPetsByStatus = async ({ query = {} } = {}, currentConfig = defa
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -1304,7 +1360,14 @@ export const findPetsByTags = async ({ query = {} } = {}, currentConfig = defaul
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -1385,7 +1448,14 @@ export const getInventory = async (currentConfig = defaultConfig) => {
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -1513,7 +1583,14 @@ export const getOrderById = async ({ params = {} } = {}, currentConfig = default
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -1622,7 +1699,14 @@ export const deleteOrder = async ({ params = {} } = {}, currentConfig = defaultC
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -1761,7 +1845,14 @@ export const placeOrder = async ({ data = {} } = {}, currentConfig = defaultConf
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -1887,7 +1978,14 @@ export const getUserByName = async ({ params = {} } = {}, currentConfig = defaul
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -2039,7 +2137,14 @@ export const updateUser = async (
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -2148,7 +2253,14 @@ export const deleteUser = async ({ params = {} } = {}, currentConfig = defaultCo
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -2253,7 +2365,14 @@ export const loginUser = async ({ query = {} } = {}, currentConfig = defaultConf
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -2329,7 +2448,14 @@ export const logoutUser = async (currentConfig = defaultConfig) => {
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -2445,7 +2571,14 @@ export const createUser = async ({ data = {} } = {}, currentConfig = defaultConf
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -2567,7 +2700,14 @@ export const createUsersWithArrayInput = async (
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -2689,7 +2829,14 @@ export const createUsersWithListInput = async (
   const acceptedContentTypes =
     responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-  if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+  if (
+    acceptedContentTypes &&
+    !acceptedContentTypes.includes(responseContentType) &&
+    (!responseContentType.startsWith('application/json') ||
+      !acceptedContentTypes.find((acceptedContentType) =>
+        acceptedContentType.startsWith('application/json')
+      ))
+  ) {
     throw new Error('Incorrect content type');
   }
 
@@ -2729,7 +2876,9 @@ exports[`loader should work with ts compiler: runner_result 1`] = `
 import { stringify } from 'query-string';
 import { serialize as objectToFormData } from 'object-to-formdata';
 
-const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary'] });
+const ajv = new Ajv({
+  unknownFormats: ['int32', 'int64', 'float', 'double', 'binary', 'byte', 'password'],
+});
 
 export class ApiError<T> extends Error {
   status: number;
@@ -3390,7 +3539,14 @@ export const someOperation: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -3569,7 +3725,14 @@ export const getPetById: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -3750,7 +3913,14 @@ export const updatePetWithForm: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -3920,7 +4090,14 @@ export const deletePet: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -4106,7 +4283,14 @@ export const uploadFile: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -4277,7 +4461,14 @@ export const updatePet: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -4444,7 +4635,14 @@ export const addPet: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -4624,7 +4822,14 @@ export const findPetsByStatus: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -4799,7 +5004,14 @@ export const findPetsByTags: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -4905,7 +5117,14 @@ export const getInventory: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -5067,7 +5286,14 @@ export const getOrderById: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -5210,7 +5436,14 @@ export const deleteOrder: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -5381,7 +5614,14 @@ export const placeOrder: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -5541,7 +5781,14 @@ export const getUserByName: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -5725,7 +5972,14 @@ export const updateUser: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -5868,7 +6122,14 @@ export const deleteUser: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -6005,7 +6266,14 @@ export const loginUser: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -6106,7 +6374,14 @@ export const logoutUser: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -6254,7 +6529,14 @@ export const createUser: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -6405,7 +6687,14 @@ export const createUsersWithArrayInput: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {
@@ -6556,7 +6845,14 @@ export const createUsersWithListInput: (
     acceptedContentTypes =
       responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (
+      acceptedContentTypes &&
+      !acceptedContentTypes.includes(responseContentType) &&
+      (!responseContentType.startsWith('application/json') ||
+        !acceptedContentTypes.find((acceptedContentType) =>
+          acceptedContentType.startsWith('application/json')
+        ))
+    ) {
       throw new Error('Incorrect content type');
     }
   } catch (error) {

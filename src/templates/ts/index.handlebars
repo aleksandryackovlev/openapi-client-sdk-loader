@@ -5,7 +5,7 @@ import { stringify } from 'query-string';
 import { serialize as objectToFormData } from 'object-to-formdata';
 
 {{#if (or options.validateRequest options.validateResponse)}}
-const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'binary']});
+const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'float', 'double', 'binary', 'byte', 'password']});
 {{/if}}
 
 {{> errors this}}

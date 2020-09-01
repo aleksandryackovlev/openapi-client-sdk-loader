@@ -34,7 +34,11 @@ try {
     responseStatus = responseObject.status;
     acceptedContentTypes = responseSchema[responseStatus] && responseSchema[responseStatus].contentTypes;
 
-    if (acceptedContentTypes && !acceptedContentTypes.includes(responseContentType)) {
+    if (acceptedContentTypes
+      && !acceptedContentTypes.includes(responseContentType)
+      && (!responseContentType.startsWith('application/json')
+        || !acceptedContentTypes.find(acceptedContentType => acceptedContentType.startsWith('application/json')))
+    ) {
       throw new Error('Incorrect content type');
     }
   {{/if}}

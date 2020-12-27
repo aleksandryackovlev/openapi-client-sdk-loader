@@ -11,7 +11,18 @@ exports[`loader should work with js compiler: runner_result_js 1`] = `
 import { stringify } from 'query-string';
 import { serialize as objectToFormData } from 'object-to-formdata';
 
-const ajv = new Ajv({ unknownFormats: ['int32', 'int64', 'float', 'double', 'binary'] });
+const ajv = new Ajv({
+  strict: false,
+  formats: {
+    int32: true,
+    int64: true,
+    float: true,
+    double: true,
+    binary: true,
+    byte: true,
+    password: true,
+  },
+});
 
 export class ApiError extends Error {
   constructor({ status, statusText, response, message, headers }) {
@@ -2872,12 +2883,21 @@ export const createUsersWithListInput = async (
 `;
 
 exports[`loader should work with ts compiler: runner_result 1`] = `
-"import Ajv from 'ajv';
-import { stringify } from 'query-string';
+"import Ajv, { ErrorObject } from 'ajv';
+import { stringify, StringifiableRecord } from 'query-string';
 import { serialize as objectToFormData } from 'object-to-formdata';
 
 const ajv = new Ajv({
-  unknownFormats: ['int32', 'int64', 'float', 'double', 'binary', 'byte', 'password'],
+  strict: false,
+  formats: {
+    int32: true,
+    int64: true,
+    float: true,
+    double: true,
+    binary: true,
+    byte: true,
+    password: true,
+  },
 });
 
 export class ApiError<T> extends Error {
@@ -2917,7 +2937,7 @@ export class RequestValidationError extends Error {
 
   method: string;
 
-  errors: Ajv.ErrorObject[];
+  errors: ErrorObject[];
 
   constructor({
     message,
@@ -2928,7 +2948,7 @@ export class RequestValidationError extends Error {
     message: string;
     element: 'query' | 'params' | 'body' | 'headers';
     method: string;
-    errors?: Ajv.ErrorObject[];
+    errors?: ErrorObject[];
   }) {
     super(message);
 
@@ -2941,7 +2961,7 @@ export class RequestValidationError extends Error {
 export class ResponseValidationError extends Error {
   method: string;
 
-  errors: Ajv.ErrorObject[];
+  errors: ErrorObject[];
 
   constructor({
     message,
@@ -2950,7 +2970,7 @@ export class ResponseValidationError extends Error {
   }: {
     message: string;
     method: string;
-    errors?: Ajv.ErrorObject[];
+    errors?: ErrorObject[];
   }) {
     super(message);
 
@@ -4732,7 +4752,9 @@ export const findPetsByStatus: (
   }
 
   if (Object.keys(query)) {
-    requestUrl = \`\${requestUrl}?\${stringify(query, { arrayFormat: 'bracket' })}\`;
+    requestUrl = \`\${requestUrl}?\${stringify((query as unknown) as StringifiableRecord, {
+      arrayFormat: 'bracket',
+    })}\`;
   }
 
   const requestHeaders = {
@@ -4914,7 +4936,9 @@ export const findPetsByTags: (
   }
 
   if (Object.keys(query)) {
-    requestUrl = \`\${requestUrl}?\${stringify(query, { arrayFormat: 'bracket' })}\`;
+    requestUrl = \`\${requestUrl}?\${stringify((query as unknown) as StringifiableRecord, {
+      arrayFormat: 'bracket',
+    })}\`;
   }
 
   const requestHeaders = {
@@ -6214,7 +6238,9 @@ export const loginUser: (
   }
 
   if (Object.keys(query)) {
-    requestUrl = \`\${requestUrl}?\${stringify(query, { arrayFormat: 'bracket' })}\`;
+    requestUrl = \`\${requestUrl}?\${stringify((query as unknown) as StringifiableRecord, {
+      arrayFormat: 'bracket',
+    })}\`;
   }
 
   const requestHeaders = {

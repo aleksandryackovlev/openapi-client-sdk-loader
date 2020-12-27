@@ -20,6 +20,6 @@
 
 
   if (Object.keys(query)) {
-    requestUrl = `${requestUrl}?${stringify(query, { arrayFormat: 'bracket' })}`;
+    requestUrl = `${requestUrl}?${stringify((query as unknown) as StringifiableRecord, { arrayFormat: 'bracket' })}`;
   }
 {{/if}}

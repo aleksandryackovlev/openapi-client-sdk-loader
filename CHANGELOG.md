@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.1](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v2.1.0...v2.1.1) (2020-12-27)
+
+
+### Bug Fixes
+
+* **ts-template:** fix the query string validation ([0c821e8](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/commit/0c821e89148f2a7d0d77221f786c550564d0f555))
+
 ## [2.1.0](https://github.com/aleksandryackovlev/openapi-client-sdk-loader/compare/v2.0.9...v2.1.0) (2020-09-01)
 
 

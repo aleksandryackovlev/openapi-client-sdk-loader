@@ -35,7 +35,7 @@ export class RequestValidationError extends Error {
 
   method: string;
 
-  errors: Ajv.ErrorObject[];
+  errors: ErrorObject[];
 
   constructor({
     message,
@@ -46,7 +46,7 @@ export class RequestValidationError extends Error {
       message: string;
       element: 'query' | 'params' | 'body' | 'headers';
       method: string;
-      errors?: Ajv.ErrorObject[];
+      errors?: ErrorObject[];
     }) {
     super(message);
 
@@ -59,7 +59,7 @@ export class RequestValidationError extends Error {
 export class ResponseValidationError extends Error {
   method: string;
 
-  errors: Ajv.ErrorObject[];
+  errors: ErrorObject[];
 
   constructor({
     message,
@@ -68,7 +68,7 @@ export class ResponseValidationError extends Error {
   }: {
     message: string;
     method: string;
-    errors?: Ajv.ErrorObject[];
+    errors?: ErrorObject[];
   }) {
     super(message);
 

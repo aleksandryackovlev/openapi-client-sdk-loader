@@ -1,7 +1,7 @@
 {{#if (or options.validateRequest options.validateResponse)}}
 import Ajv from 'ajv';
 {{/if}}
-import { stringify } from 'query-string';
+import { stringify, StringifiableRecord } from 'query-string';
 import { serialize as objectToFormData } from 'object-to-formdata';
 
 {{#if (or options.validateRequest options.validateResponse)}}
